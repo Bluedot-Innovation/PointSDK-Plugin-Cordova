@@ -1,7 +1,7 @@
 {
-  "name": "PointSDK-Plugin-Cordova",
-  "version": "1.4.0",
-  "description": "Integrates the Android and iOS Point SDK libraries through a Cordova / PhoneGap plugin",
+  "name": "bluedot-plugin",
+  "version": "1.4.1",
+  "description": "Bluedot Point SDK; integrates the Android and iOS Point SDK libraries through a Cordova / PhoneGap plugin",
   "cordova": {
     "id": "au.com.bluedot.bdpointsdk",
     "platforms": [
@@ -16,7 +16,10 @@
   "keywords": [
     "ecosystem:cordova",
     "cordova-ios",
-    "cordova-android"
+    "cordova-android",
+    "location",
+    "geolocation",
+    "bluedot"
   ],
   "engines": [
     {
