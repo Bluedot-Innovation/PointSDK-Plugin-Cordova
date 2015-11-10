@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
+    id="au.com.bluedot.bdpointsdk"
+    version="1.4">
+
+    <!-- This plugin requires Cordova version 3.1.0 or newer. -->
+    <engines>
+        <engine name="cordova" version=">=3.1.0" />
+    </engines>
+
+    <name>Bluedot Point SDK</name>
+
+    <js-module src="bluedotPointSDKCDVPlugin.js" name="BluedotPointSDKCDVPlugin">
+        <clobbers target="au.com.bluedot" />
+    </js-module>
+
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="BDPointSDK">
+                <param name="ios-package" value="BluedotPointSDKCDVPlugin" />
+            </feature>
+        </config-file>
+
+        <!-- The app provides a description for the use of background location updates -->
+        <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
+            <string>Allow location-based actions to be triggered while in the background</string>
+        </config-file>
+        
+        <!-- The app is able to run in background through location updates -->
+        <config-file target="*-Info.plist" parent="UIBackgroundModes">
+            <array>
+                <string>location</string>
+                <string>audio</string>
+            </array>
+        </config-file>
+        <header-file src="src/ios/BluedotPointSDKCDVPlugin.h" />
+        <source-file src="src/ios/BluedotPointSDKCDVPlugin.m" />
+
+        <!--  The following lists the frameworks required for building the SDK -->
+        <framework src="Foundation.framework" />
+        <framework src="CoreLocation.framework" />
+        <framework src="CoreMotion.framework" />
+        <framework src="CoreGraphics.framework" />
+        <framework src="AVFoundation.framework" />
+        <framework src="MapKit.framework" />
+        <framework src="QuartzCore.framework" />
+        <framework src="UIKit.framework" />
+        <framework src="AudioToolbox.framework" />
+        <framework src="SystemConfiguration.framework" />
+
+        <!--  The files below refer to the files included in the Bluedot Point SDK -->
+        <header-file src="src/ios/BDPointSDK/include/BDPointSDK.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDAuthenticationState.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDBeaconInfo.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDBoundingBox.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDCircle.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDFenceInfo.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDGeometry.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDGeospatialUnits.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDLineString.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDLocation.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDLocationManager.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDLocationManager+BDPointSDK.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPAuthenticationStateProvider.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPDeepCopy.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPGeometry.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPLocationDelegate.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPManagedObject.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPMKShape.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPNamedDescribed.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPoint.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPointDelegate.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPointOverlayRendererFactory.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPointSessionException.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPolygon.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPolygonal.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPRestartAlertDelegate.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPSessionDelegate.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPSpatialObject.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPSpatialObjectInfo.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDPValidatable.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDZoneInfo.h" />
+        <header-file src="src/ios/BDPointSDK/include/MKMapView+BDPointSDK.h" />
+        <header-file src="src/ios/BDPointSDK/include/NSString+BDURLEncoding.h" />
+
+        <source-file src="src/ios/BDPointSDK/libBDPointSDK.a" framework="true" />
+    </platform>
+
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="BDPointSDK" >
+                <param name="android-package" value="au.com.bluedot.BDPointSDKWrapper"/>
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+          <uses-permission android:name="android.permission.INTERNET" />
+          <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+          <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+          <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+          <uses-permission android:name="android.permission.VIBRATE" />
+          <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+          <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+          <uses-permission android:name="android.permission.BLUETOOTH"/>
+          <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+          <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+        </config-file>
+       
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+          <service android:name="au.com.bluedot.point.beacon.BlueDotBLEService" android:exported="false"/>
+          <service android:name="au.com.bluedot.point.net.engine.BlueDotPointService" android:exported="false"/>
+          <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="8115000" />
+        </config-file>
+ 
+        <source-file src="src/android/BDPointSDKWrapper.java" target-dir="src/au/com/bluedot/minimalLocationApp" />
+        <source-file src="src/android/bluedot-point-sdk-release.jar" target-dir="libs" />
+        
+        <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
+        <source-file src="src/android/google-play-services.jar" target-dir="libs" />
+    </platform>
+</plugin>
