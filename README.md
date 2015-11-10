@@ -11,7 +11,7 @@ Applications powered by the Point SDK will then download and execute such rules,
 ## Installing the Bluedot plug-in
 Run the following standard command to add the plug-in to your Cordova app:
 
-    cordova plugin add <location TBD>/bluedot-plugin
+    cordova plugin add bluedot-plugin
 
 ### Supported platforms
 The Bluedot plugin supports iOS and Android platforms.  These can be added to your app with the following commands:

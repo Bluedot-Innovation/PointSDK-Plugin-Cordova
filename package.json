@@ -1,0 +1,33 @@
+{
+  "name": "PointSDK-Plugin-Cordova",
+  "version": "1.4.0",
+  "description": "Integrates the Android and iOS Point SDK libraries through a Cordova / PhoneGap plugin",
+  "cordova": {
+    "id": "au.com.bluedot.bdpointsdk",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bluedot-Innovation/PointSDK-Plugin-Cordova.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.1.0"
+    }
+  ],
+  "author": "Roddy McNeill",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bluedot-Innovation/PointSDK-Plugin-Cordova/issues"
+  },
+  "homepage": "https://github.com/Bluedot-Innovation/PointSDK-Plugin-Cordova#readme"
+}
