@@ -298,9 +298,9 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             jsonObjectBeacon.put("1", _beaconInfo.getDescription());
             jsonObjectBeacon.put("2", _beaconInfo.getId());
             jsonObjectBeacon.put("3", false);
-            jsonObjectBeacon.put("4", _beaconInfo.getProximityUUID());
-            jsonObjectBeacon.put("5", _beaconInfo.getMajor());
-            jsonObjectBeacon.put("6", _beaconInfo.getMinor());
+            jsonObjectBeacon.put("4", "");
+            jsonObjectBeacon.put("5", 0);
+            jsonObjectBeacon.put("6", 0);
             jsonObjectBeacon.put("7", _beaconInfo.getMacAddress());
             jsonObjectBeacon.put("8", _beaconInfo.getLocation().getLatitude());
             jsonObjectBeacon.put("9", _beaconInfo.getLocation().getLongitude());
