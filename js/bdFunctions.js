@@ -10,14 +10,10 @@
 /*
  *  Setup session authentication credentials.
  *  These are obtained from creating an API in the Bluedot Point Access web site.
- *
- *  =====
- *  The string content must be removed before submitting as public.
- *  =====
  */
-const username = "roddy@bluedot.com.au";
-const packageName = "au.com.bluedot.beacontest";
-const apiKey = "d01bf290-6e36-11e5-85e7-b8ca3a6b879d";
+const username = "";
+const packageName = "";
+const apiKey = "";
 
 //  Set up enums
 const zoneInfoEnum =
