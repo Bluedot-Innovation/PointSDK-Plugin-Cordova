@@ -185,6 +185,11 @@ The following methods must be added to the app delegate should they not already 
         // when integrating Bluedot Point SDK v1.x, even if it is empty.
     }
 
+## Support
+Should you require support for any issues in the Bluedot Point plug-in, then please contact us using <support@bluedotinnovation.com>.
+<br>
+<br>
+
 ## BDPoint SDK Plug-in Methods
 The following methods are available to your app to allow your app to utilise the low-energy, high accuracy Bluedot SDK.  These methods are provided in the **bluedotPointSDKCDVPlugin.js** file and provide cross-platform access to iOS and Android.
 
