@@ -77,11 +77,6 @@ function updateStatus( statusText )
 function authenticationSuccessful()
 {
     updateStatus( "Authentication successful" );
-    
-    //  Add the delegate functions for receiving data
-    au.com.bluedot.zoneInfoCallback( zoneUpdate );
-    au.com.bluedot.checkedIntoFenceCallback( fenceTrigger );
-    au.com.bluedot.checkedIntoBeaconCallback( beaconTrigger );
 }
 
 /*
@@ -113,6 +108,11 @@ function logOutFailed( error )
  */
 function doAuthenticate()
 {
+    //  Add the delegate functions for receiving data
+    au.com.bluedot.zoneInfoCallback( zoneUpdate );
+    au.com.bluedot.checkedIntoFenceCallback( fenceTrigger );
+    au.com.bluedot.checkedIntoBeaconCallback( beaconTrigger );
+
     au.com.bluedot.authenticate( authenticationSuccessful, authenticationFailed,
         username, apiKey, packageName );
 }
