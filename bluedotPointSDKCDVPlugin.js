@@ -15,6 +15,9 @@ var argscheck = require( 'cordova/argscheck' ),
 
 /*
  *  Authenticate a Bluedot Point session.
+ *  The success function call provides an error code and an optional string for any warnings after successful
+ *  authentication.
+ *      An error code of 0 entails no additional warnings.
  *  The fail function call provides a string with the reason for failure.
  */
 exports.authenticate = function( success, fail, username, apiKey, packageName )

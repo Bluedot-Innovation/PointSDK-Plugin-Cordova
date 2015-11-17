@@ -309,8 +309,12 @@
             return;
         }
 
-        //  Authentication has been succesful
-        CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK ];
+        //  Authentication has been successful; on iOS there are no possible warning issues
+        NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: @( 0 ), nil ];
+
+        CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                                                         messageAsMultipart: returnMultiPart ];
+
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdAuthentication ];
         
         //  Reset the authentication callback

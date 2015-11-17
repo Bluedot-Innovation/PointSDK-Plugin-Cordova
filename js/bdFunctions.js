@@ -73,10 +73,19 @@ function updateStatus( statusText )
 
 /*
  *  The delegate function for dealing with successful authentication.
+ *  If authentication was successful but has an issue, then this is passed back to the app with
+ *  an associated message.
  */
-function authenticationSuccessful()
+function authenticationSuccessful( errorCode, message )
 {
-    updateStatus( "Authentication successful" );
+    if ( typeof message === "undefined" || errorCode == 0 )
+    {
+        updateStatus( "Authentication successful" );
+    }
+    else
+    {
+        updateStatus( "Authentication successful but " + warning );
+    }
 }
 
 /*
