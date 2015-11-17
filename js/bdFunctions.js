@@ -84,7 +84,7 @@ function authenticationSuccessful( errorCode, message )
     }
     else
     {
-        updateStatus( "Authentication successful but " + warning );
+        updateStatus( "Authentication successful but " + message );
     }
 }
 

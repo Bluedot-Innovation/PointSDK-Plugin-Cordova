@@ -48,6 +48,10 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public static final String ACTION_ENABLE_ZONE = "enableZone";
     private final static String TAG = "BDPointSDKWrapper";
 
+    // An error code of 0 entails no additional warnings. For error code higher then zero please refer BDError.
+    private int errorCode = 0;
+    private String errorMsg = "";
+
     private ServiceManager mServiceManager;
     private CallbackContext mAuthCallbackContext;
     private CallbackContext mLogOutCallbackContext;
@@ -124,7 +128,25 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     @Override
     public void onBlueDotPointServiceStartedSuccess() {
         if (mAuthCallbackContext != null) {
-            mAuthCallbackContext.success();
+        PluginResult prErrorCode,prErrorMsg;
+
+        List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
+    
+            if(errorCode == 0){
+                 prErrorCode = new PluginResult(PluginResult.Status.OK, "" + errorCode);
+                 prErrorMsg = new PluginResult(PluginResult.Status.OK, "");
+            } else{
+                prErrorCode = new PluginResult(PluginResult.Status.OK, "" + errorCode);
+                prErrorMsg = new PluginResult(PluginResult.Status.OK, errorMsg);
+            }
+
+            multipartMessages.add(prErrorCode);
+            multipartMessages.add(prErrorMsg);
+            PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
+            result.setKeepCallback(true);
+            mAuthCallbackContext.sendPluginResult(result);
+            errorCode = 0;
+            errorMsg = "";
         }
         mServiceManager.subscribeForApplicationNotification(this);
     }
@@ -149,7 +171,11 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     @Override
     public void onBlueDotPointServiceError(BDError bdError) {
         if (mAuthCallbackContext != null) {
-            if (bdError instanceof LocationServiceNotEnabledError) {
+
+            if(!bdError.isFatal()){
+                errorCode = bdError.getErrorCode();
+                errorMsg = bdError.getReason();
+            } else if (bdError instanceof LocationServiceNotEnabledError) {
                 mRequiringUserInterventionForLocationServicesCallbackContext = mAuthCallbackContext;
                 mRequiringUserInterventionForLocationServicesCallbackContext.error(bdError.getClass().getSimpleName() + " " + bdError.getReason());
             } else if (bdError instanceof BluetoothNotEnabledError) {
