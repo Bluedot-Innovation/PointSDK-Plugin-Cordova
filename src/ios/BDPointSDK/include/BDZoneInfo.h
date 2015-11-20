@@ -8,7 +8,7 @@
 
 /**
 
-  @brief Contains information about a Zone, including the set of @ref BDFence "fences" that comprise it.
+  @brief Contains information about a Zone, including the set of @ref BDFenceInfo "fences" that comprise it.
 
   A set of @ref BDZoneInfo objects will be delivered to your application's BDPLocationDelegate#locationDelegate at
   the time of their download from the Bluedot Point web-service.

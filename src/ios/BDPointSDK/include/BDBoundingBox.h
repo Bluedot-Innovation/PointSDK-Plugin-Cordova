@@ -35,7 +35,7 @@
                          east: (BDLocationDegrees)east;
 
 /**
- * Initializes a BDBoundingBox with @ref BDPointSDK point values for two of the bounding corners.
+ * Initializes a BDBoundingBox with @ref BDPoint point values for two of the bounding corners.
  */
 - (instancetype)initWithNorthEast: (BDPoint *)northEast
                         southWest: (BDPoint*)southWest;

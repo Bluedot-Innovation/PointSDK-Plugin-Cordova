@@ -49,8 +49,8 @@
  * Implement them according to whether you have Custom Actions in your geo-location scenario, and whether those actions
  * may be triggered by entering Fences, Beacon proximities, or both.</p>
  *
- * <p><b>For clarity</b>: When a user's device checks into a @ref BDZone "Zone", this method is called only if
- * <b>Custom Action</b> is chosen as one of the @ref BDZone "Zone"'s Actions in the <b>Point Access</b> web-interface.</p>
+ * <p><b>For clarity</b>: When a user's device checks into a @ref BDZoneInfo "Zone", this method is called only if
+ * <b>Custom Action</b> is chosen as one of the @ref BDZoneInfo "Zone"'s Actions in the <b>Point Access</b> web-interface.</p>
  *
  * @param fence The fence that the user entered in order to trigger this custom action.
  * @param zoneInfo The zone containing the entered fence.
@@ -70,8 +70,8 @@
  * Implement them according to whether you have Custom Actions in your geo-location scenario, and whether those actions
  * may be triggered by entering Fences, Beacon proximities or both.</p>
  *
- * <p><b>For clarity</b>: When a user's device checks into a @ref BDZone "Zone", this method is called only if
- * <b>Custom Action</b> is chosen as one of the @ref BDZone "Zone"'s Actions in the <b>Point Access</b> web-interface.</p>
+ * <p><b>For clarity</b>: When a user's device checks into a @ref BDZoneInfo "Zone", this method is called only if
+ * <b>Custom Action</b> is chosen as one of the @ref BDZoneInfo "Zone"'s Actions in the <b>Point Access</b> web-interface.</p>
  *
  * @param beacon The beacon that the user entered the required proximity of, in order to trigger this custom action.
  * @param zoneInfo The zone containing the beacon in proximity.

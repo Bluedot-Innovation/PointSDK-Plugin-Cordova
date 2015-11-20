@@ -53,8 +53,8 @@
 /**
   <p>Immediately ends a currently active session with <b>Point Access</b>.
   According to the authentication lifecycle, this method should only be called when <b>authenticationState</b> is
-  @ref BDAuthenticationStateAuthenticated. Otherwise, a BDPointSessionException will be thrown.</p>
-  @exception BDPointSessionException Thrown if @BDLocationManager is already logged out.
+  BDAuthenticationStateAuthenticated. Otherwise, a BDPointSessionException will be thrown.</p>
+  @exception BDPointSessionException Thrown if @ref BDLocationManager is already logged out.
  */
 - (void)logOut;
 
@@ -89,7 +89,7 @@
 @property (readonly) BDAuthenticationState authenticationState;
 
 /**
-  Disabled or re-enable a specific @ref BDZoneInfo "zone".  Information about valid @ref @BDZoneInfo "zones", including
+  Disabled or re-enable a specific @ref BDZoneInfo "zone".  Information about valid @ref BDZoneInfo "zones", including
   their respective <i>zoneId</i>'s for use in this method, is delivered to BDPLocationDelegate::didUpdateZoneInfo:.
  */
 - (BOOL)setZone: (NSString *)zoneId disableByApplication: (BOOL)disable;

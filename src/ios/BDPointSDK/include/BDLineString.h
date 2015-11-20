@@ -13,7 +13,7 @@
 
   Unlike a @ref BDPolygon "polygon" this geometry is open-ended and has no area.
 
-  When used as a @ref BDFence "fence" geometry, @ref BDLineString is typically used to represent a geographic boundary or
+  When used as a @ref BDFenceInfo "fence" geometry, @ref BDLineString is typically used to represent a geographic boundary or
   check-point along a road or other travel path.
 
   @copyright Bluedot Innovation

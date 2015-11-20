@@ -11,10 +11,11 @@
 #import <UIKit/UIKit.h>
 #import "BDLocationManager.h"
 #import "BDLocationManager+BDPointSDK.h"
-#import "BDPointOverlayRendererFactory.h"
-#import "BDPMKShape.h"
 #import "MKMapView+BDPointSDK.h"
+#import "BDPointOverlayRendererFactory.h"
 #endif
+
+#import "BDGeospatialUnits.h"
 
 // Bluedot classes
 #import "BDAuthenticationState.h"
@@ -22,12 +23,14 @@
 #import "BDBoundingBox.h"
 #import "BDCircle.h"
 #import "BDPoint.h"
+#import "BDLineString.h"
 #import "BDPolygon.h"
+#import "BDPolygonal.h"
 #import "BDLocation.h"
 #import "BDZoneInfo.h"
 #import "BDFenceInfo.h"
 #import "BDBeaconInfo.h"
-#import "BDPointOverlayRendererFactory.h"
+#import "BDPointSessionException.h"
 
 // Bluedot protocols
 #import "BDPointDelegate.h"
@@ -35,11 +38,12 @@
 #import "BDPDeepCopy.h"
 #import "BDPGeometry.h"
 #import "BDPLocationDelegate.h"
-#import "BDPolygonal.h"
 #import "BDPValidatable.h"
 #import "BDPRestartAlertDelegate.h"
 #import "BDPSpatialObjectInfo.h"
 #import "BDPSpatialObject.h"
+#import "BDPNamedDescribed.h"
+#import "BDPAuthenticationStateProvider.h"
 
 // Bluedot categories
 #import "NSString+BDURLEncoding.h"
