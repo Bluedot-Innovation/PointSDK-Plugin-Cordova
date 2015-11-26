@@ -124,7 +124,7 @@ These functions are for your use and adaptation.
 
 #### 6. Run the following command to add the local Bluedot SDK plugin:
 
-    cordova plugin add <TBD location>/bluedot-plugin/
+    cordova plugin add bluedot-plugin
 
 #### 7.  Run the following command to add iOS and Android to the app:
 
