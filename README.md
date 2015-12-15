@@ -342,26 +342,26 @@ These strings can be accessed using an enum as demonstrated in the **bdFunctions
 <br>
 ## checkedIntoFenceCallback
 
-  /*
-   *  Provide a multi-part callback for a fence with a Custom Action being checked into.
-   *
-   *  Returns the following multipart status to the callback function:
-   *      Parameter 1: Array identifying fence:
-   *          name (String)
-   *          description (String)
-   *          ID (String)
-   *      Parameter 2: Array of strings identifying zone containing fence:
-   *          name (String)
-   *          description (String)
-   *          ID (String)
-   *      Parameter 3: Latitude of check-in (Double)
-   *      Parameter 4: Longitude of check-in (Double)
-   *      Parameter 5: Date of check-in (Integer - UNIX timestamp)
-   */
-  exports.checkedIntoFenceCallback = function( callback )
-  {
-      exec( callback, null, "BDPointSDK", "checkedIntoFenceCallback", [] );
-  }
+    /*
+     *  Provide a multi-part callback for a fence with a Custom Action being checked into.
+     *
+     *  Returns the following multipart status to the callback function:
+     *      Parameter 1: Array identifying fence:
+     *          name (String)
+     *          description (String)
+     *          ID (String)
+     *      Parameter 2: Array of strings identifying zone containing fence:
+     *          name (String)
+     *          description (String)
+     *          ID (String)
+     *      Parameter 3: Latitude of check-in (Double)
+     *      Parameter 4: Longitude of check-in (Double)
+     *      Parameter 5: Date of check-in (Integer - UNIX timestamp)
+     */
+    exports.checkedIntoFenceCallback = function( callback )
+    {
+        exec( callback, null, "BDPointSDK", "checkedIntoFenceCallback", [] );
+    }
 
 ### Description
 This function provides a callback function to the SDK that will be called the device has triggered a Geofence or crossed a Geoline™.  Identifying information on the fence, the zone and location are passed back to the callback function as separate parameters.
@@ -626,13 +626,13 @@ This function is only called on iOS devices.
 <br>
 ## disableZone
 
-  /*
-   *  Disable a zone from within the app using the Zone Id.
-   */
-  exports.disableZone = function( success, fail, zoneId )
-  {
-      exec( success, fail, "BDPointSDK", "disableZone", [ zoneId ] );
-  }
+    /*
+     *  Disable a zone from within the app using the Zone Id.
+     */
+    exports.disableZone = function( success, fail, zoneId )
+    {
+        exec( success, fail, "BDPointSDK", "disableZone", [ zoneId ] );
+    }
 
 ### Description
 An app may optionally disable (and later re-enable) Zones it receives from Point Access.
