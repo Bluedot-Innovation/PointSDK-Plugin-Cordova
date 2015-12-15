@@ -1,32 +1,24 @@
 
-Bluedot Point SDK iOS v1.4 Release Notes
+
+Bluedot Point SDK iOS v1.5 Release Notes
 ----------------------------------------
 
-- New feature: 	Beacon support - Benefit from full integration between indoor and outdoor location scenarios in your App.
-				See: http://www.bluedotinnovation.com/devresources/pages/
+- New feature:  The 'InstallRef', a unique UUID for a specific App installation, is now revealed through BDLocationManager.
+                This was previously shown only in each Zone's 'Activity Log', in Point Access, and made available via the Public API.
+                Revealing this on the client as well as the back-end provides App Developers with the opportunity to more easily implement App behaviours based on Check-In history. 
 
-- New feature:	App Restart - A new API allows users to be prompted to re-launch your App, following it's termination.
-				See: http://www.bluedotinnovation.com/devresources/pages/
+- Enhancement:  Point SDK is now compatible with Swift 2.1.
 
-- New feature: 	Map Rendering - A suite of new MapKit extension methods to assist with rendering Fences and Beacons on an MKMapView.
-				See the MKMapView(BDPointSDK) category in the iOS API reference at:
-				http://www.bluedotinnovation.com/devresources/pages/iOSAPI/html/
+- Enhancement:  A speed field has now been added to the BDLocation object.
 
-- New feature: 	User Intervention callbacks - Your App can now be notified when Location Services or Bluetooth settings could prevent triggering.
-				See: http://www.bluedotinnovation.com/devresources/pages/
+- Bug fix:      Fixed an issue with the 'Custom Action' callback in BDPLocationDelegate:
+                When a Zone consisting of multiple Fences was triggered, the specific Fence nominated as causing the trigger was occasionally incorrect.
+                This has been fixed and thoroughly re-tested.
 
-- Enhancement: 	The BDZoneInfo class has changed to provide collections of both Fences and Beacons.
+- Bug fix:      Fixed an issue where Date-range Conditions could be inaccurate by several hours depending on the device's Time-Zone.
+                Date-range Conditions are now always fixed to the device's Time-Zone.
 
-- Enhancement: 	Swift 2.0 integration examples for Point SDK v1.3 and v1.4 are now available on GitHub (Beta).
-				See: https://github.com/Bluedot-Innovation/PointSDK-SampleApp-iOS-Swift
+- Bug fix:	 Sometimes a trigger would not occur if a the Point SDK session was started while already inside a geofence.  This has now been corrected.
 
-- Change: 		The [BDLocationManager sharedLocationManager] method which returns the shared instance of BDLocationManager has been simplified to just [BDLocationManager instance].
-
-- Change: 		Uses of the BDFence class have been replaced by the BDFenceInfo class (and matched by BDBeaconInfo).
-
-- Change: 		In BDPLocationDelegate, the signature of the didCheckIntoFence:inZone:atCoordinate:onDate: method has changed:
-  				The previous (CLLocationCoordinate2D)coordinate parameter is now of type BDLocationCoordinate2D.
- 				This is an alias defined in BDGeospatialUnits.h and the underlying type has not changed.
-
-- Change:		The NSObject(BDKVOBlocks) category has been removed.
+- Bug fix:	 If Session and Location delegate assignment was made immediately after calling the BDLocationManager authentication method (and not before as prescribed in the 			 documentation) then the calling thread could be deadlocked.  This has now been fixed.
 

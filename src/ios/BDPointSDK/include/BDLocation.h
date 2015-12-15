@@ -31,7 +31,8 @@
                        longitude: (BDLocationDegrees)longitude
                         altitude: (BDLocationDistance)altitude
                         accuracy: (BDLocationAccuracy)accuracy
-                altitudeAccuracy: (BDLocationAccuracy)altitudeAccuracy;
+                altitudeAccuracy: (BDLocationAccuracy)altitudeAccuracy
+                           speed: (BDLocationSpeed)speed;
 
 /**
  * The accuracy, in metres, to which this location is known.  Sometimes referred to as the 'horizontal accuracy' or just 'error'.
@@ -52,6 +53,11 @@
  * The altitude of this geographic location in metres.
  */
 @property (nonatomic) BDLocationDistance  altitude;
+
+/**
+ * The speed of the device at the point of the location.
+ */
+@property (nonatomic) BDLocationSpeed  speed;
 
 /**
  * Publicly available methods for evaluating locations.

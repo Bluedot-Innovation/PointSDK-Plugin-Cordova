@@ -16,7 +16,7 @@
 @interface BDPoint : BDGeometry <NSCopying>
 
 /**
-  Convenience constructor to create a @ref BDPoint "point" with a longitude and latitude, in degrees.
+  Convenience constructor to create a @ref BDPointSDK "point" with a longitude and latitude, in degrees.
   @param longitude The longitude in degrees.  Values should be in the range <b>-180 < 0 <= 180</b>.
   @param latitude The latitude in degrees.  Values should be in the range <b>-90 < 0 <= 90</b>.
 */

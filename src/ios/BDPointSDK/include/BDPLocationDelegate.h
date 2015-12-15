@@ -95,12 +95,12 @@
 - (void)didStopRequiringUserInterventionForBluetooth;
 
 /**
-* <p>When the SDK is authenticated with Point Access, these methods can be implemented to monitor whether iOS Location Services are in a valid state.</p>
-*
-* <p>If Point SDK is authenticated with Point Access and Location Services have not been enabled, then didStartRequiringUserInterventionForLocationServices will be called.</p>
-* <p>Thereafter, if the Point SDK logs out from the authenticated state, then didStopRequiringUserInterventionForLocationServices is called.</p>
-* <p>If Location Services are both required and enabled, then these callbacks will not be invoked.</p>
-*/
+ * <p>When the SDK is authenticated with Point Access, these methods can be implemented to monitor whether iOS Location Services are in a valid state.</p>
+ *
+ * <p>If Point SDK is authenticated with Point Access and Location Services have not been enabled, then didStartRequiringUserInterventionForLocationServices will be called.</p>
+ * <p>Thereafter, if the Point SDK logs out from the authenticated state, then didStopRequiringUserInterventionForLocationServices is called.</p>
+ * <p>If Location Services are both required and enabled, then these callbacks will not be invoked.</p>
+ */
 - (void)didStartRequiringUserInterventionForLocationServices;
 - (void)didStopRequiringUserInterventionForLocationServices;
 

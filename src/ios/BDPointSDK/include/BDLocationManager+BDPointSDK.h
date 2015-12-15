@@ -96,4 +96,12 @@
 
 - (BOOL)isZoneDisabledByApplication: (NSString *)zoneId;
 
+/**
+ * Returns the installation reference of this Point SDK enabled App.
+ * This is the same as the Install Ref that appears in a Zone's Activity Log in Point Access, or queried via Open API.
+ * This reference is randomly generated at the first run-time of the App and remains fixed for the duration of the App
+ * installation.
+ */
+- (NSString*)installRef;
+
 @end

@@ -7,12 +7,13 @@
 
 typedef CLLocationDegrees      BDLocationDegrees;
 typedef CLLocationDistance     BDLocationDistance;
+typedef CLLocationAccuracy     BDLocationAccuracy;
+typedef CLLocationSpeed        BDLocationSpeed;
 
 /**
 @brief Alias of CLLocationCoordinate2D
 */
 typedef CLLocationCoordinate2D BDLocationCoordinate2D;
-typedef CLLocationAccuracy     BDLocationAccuracy;
 
 #define BDLocationCoordinate2DMake CLLocationCoordinate2DMake
 
@@ -28,6 +29,7 @@ typedef CLLocationAccuracy     BDLocationAccuracy;
 typedef double BDLocationDegrees;
 typedef double BDLocationDistance;
 typedef double BDLocationAccuracy;
+typedef double BDLocationSpeed;
 
 /**
 @brief Alias of CLLocationCoordinate2D
