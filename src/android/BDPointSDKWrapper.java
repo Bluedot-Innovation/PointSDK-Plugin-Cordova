@@ -223,27 +223,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     }
 
     /**
-     * <p>The method delivers the error from BlueDotPointService by a generic BDError. Invoked for fatal errors and notifies of service stop
-     * @param error
-     */
-    @Override
-    public void onBlueDotPointServiceStopWithError(final BDError bdError) {
-        if (mAuthCallbackContext != null) {
-            if (bdError instanceof LocationServiceNotEnabledError) {
-                mRequiringUserInterventionForLocationServicesCallbackContext = mAuthCallbackContext;
-                mRequiringUserInterventionForLocationServicesCallbackContext.error(bdError.getClass().getSimpleName() + " " + bdError.getReason());
-            } else if (bdError instanceof BluetoothNotEnabledError) {
-                mRequiringUserInterventionForBluetoothCallbackContext = mAuthCallbackContext;
-                mRequiringUserInterventionForBluetoothCallbackContext.error(bdError.getClass().getSimpleName() + " " + bdError.getReason());
-            } else {
-                mAuthCallbackContext.error(bdError.getClass().getSimpleName() + " " + bdError.getReason());
-            }
-
-        }
-        mServiceManager.unsubscribeForApplicationNotification(this);
-    }
-
-    /**
      * This callback happens when user is subscribed to Application Notification
      * and check into any fence under that Zone
      *
@@ -252,7 +231,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     @Override
     public void onCheckIntoFence(ApplicationNotification applicationNotification) {
 
-        Fence _fence = applicationNotification.getFence();
+        Fence _fence = applicationNotification.getFence();                
+        ZoneInfo _zoneInfo = applicationNotification.getZoneInfo();
         double _lat = applicationNotification.getLocation().getLatitude();
         double _lon = applicationNotification.getLocation().getLongitude();
         long _date = applicationNotification.getLocation().getTime();
@@ -270,9 +250,9 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         JSONObject jsonObjectZone = new JSONObject();
 
         try {
-            jsonObjectZone.put("0", applicationNotification.getZoneName());
-            jsonObjectZone.put("1", "");
-            jsonObjectZone.put("2", applicationNotification.getZoneId());
+            jsonObjectZone.put("0", _zoneInfo.getZoneName());
+            jsonObjectZone.put("1", _zoneInfo.getDescription());
+            jsonObjectZone.put("2", _zoneInfo.getZoneId());
         } catch (Exception e) {
             jsonObjectZone = null;
         }
@@ -310,15 +290,16 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public void onCheckIntoBeacon(ApplicationNotification applicationNotification) {
 
         BeaconInfo _beaconInfo = applicationNotification.getBeaconInfo();
+        ZoneInfo _zoneInfo = applicationNotification.getZoneInfo();
         long _date = applicationNotification.getLocation().getTime();
-        int _txPower = 0;
+        int _txPower = applicationNotification.getBeaconInfo().getTxPower();
 
         JSONObject jsonObjectBeacon = new JSONObject();
 
         try {
 
             jsonObjectBeacon.put("0", _beaconInfo.getName());
-            jsonObjectBeacon.put("1", "");
+            jsonObjectBeacon.put("1", _beaconInfo.getDescription());
             jsonObjectBeacon.put("2", _beaconInfo.getId());
             jsonObjectBeacon.put("3", false);
             jsonObjectBeacon.put("4", "");
@@ -334,9 +315,9 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         JSONObject jsonObjectZone = new JSONObject();
 
         try {
-            jsonObjectZone.put("0", applicationNotification.getZoneName());
-            jsonObjectZone.put("1", "");
-            jsonObjectZone.put("2", applicationNotification.getZoneId());
+            jsonObjectZone.put("0", _zoneInfo.getZoneName());
+            jsonObjectZone.put("1", _zoneInfo.getDescription());
+            jsonObjectZone.put("2", _zoneInfo.getZoneId());
         } catch (Exception e) {
             jsonObjectZone = null;
         }
