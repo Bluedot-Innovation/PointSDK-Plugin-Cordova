@@ -1,3 +1,8 @@
+/****
+ *    BDPSpatialObject.h
+ *
+ *    Copyright (C) 2015 Bluedot Innovation.  All rights reserved.
+ */
 
 @class BDGeometry;
 

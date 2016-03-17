@@ -6,6 +6,9 @@
 
 #import <Foundation/Foundation.h>
 
+@class BDFenceInfo;
+@class BDBeaconInfo;
+
 /**
 
   @brief Contains information about a Zone, including the set of @ref BDFenceInfo "fences" that comprise it.
@@ -36,11 +39,23 @@
 /**
  * The set of BDFenceInfo fences included in this Zone.
  */
-@property (copy,readonly) NSSet  *fences;
+@property (copy,readonly) NSSet<BDFenceInfo *>  *fences;
 
 /**
 * The set of BDBeaconInfo beacons included in this Zone.
 */
-@property (copy,readonly) NSSet  *beacons;
+@property (copy,readonly) NSSet<BDBeaconInfo *>  *beacons;
+
+/**
+ * Whether CheckOuts should be generated for any CheckIns to this Zone.
+ */
+@property (readonly) BOOL checkOut;
+
+- (BOOL)isEqual:(id)other;
+
+- (BOOL)isEqualToInfo:(BDZoneInfo *)info;
+
+- (NSUInteger)hash;
+
 
 @end

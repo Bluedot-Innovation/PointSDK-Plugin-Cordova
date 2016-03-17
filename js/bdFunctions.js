@@ -122,6 +122,9 @@ function doAuthenticate()
     au.com.bluedot.checkedIntoFenceCallback( fenceTrigger );
     au.com.bluedot.checkedIntoBeaconCallback( beaconTrigger );
 
+    au.com.bluedot.checkedOutOfFenceCallback( fenceCheckOut );
+    au.com.bluedot.checkedOutOfBeaconCallback( beaconCheckOut );
+
     au.com.bluedot.authenticate( authenticationSuccessful, authenticationFailed,
         username, apiKey, packageName );
 }
@@ -159,20 +162,38 @@ function zoneUpdate( zoneInfos )
  *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
  *  Refer to bluedotPointSDKCDVPlugin.js for more information.
  */
-function fenceTrigger( fenceInfo, zoneInfo, lat, lon, date )
+function fenceTrigger( fenceInfo, zoneInfo, lat, lon, date, willCheckOut )
 {
     //  Extract details for a status update
     var fenceName = fenceInfo[ fenceInfoEnum.name ];
     var zoneName = zoneInfo[ zoneInfoEnum.name ];
     
     updateStatus( fenceName + " has been triggered in " + zoneName + " at " + lat + ":" + lon );
+    
+    if ( willCheckOut == true )
+    {
+        updateStatus( "Fence is awaiting check-out" )
+    }
+}
+
+/*
+ *  This delegate function receives the data of a fence with a Custom action that has been checked out of by the SDK.
+ *  Refer to bluedotPointSDKCDVPlugin.js for more information.
+ */
+function fenceCheckOut( fenceInfo, zoneInfo, date, dwellTime )
+{
+    //  Extract details for a status update
+    var fenceName = fenceInfo[ fenceInfoEnum.name ];
+    var zoneName = zoneInfo[ zoneInfoEnum.name ];
+    
+    updateStatus( fenceName + " has been left in " + zoneName + " after " + dwellTime + "minutes" );
 }
 
 /*
  *  This delegate function receives the data of a beacon with a Custom action that has been triggered by the SDK.
  *  Refer to bluedotPointSDKCDVPlugin.js for more information.
  */
-function beaconTrigger( beaconInfo, zoneInfo, proximity, date )
+function beaconTrigger( beaconInfo, zoneInfo, proximity, date, willCheckOut )
 {
     //  Extract details for a status update
     var beaconName = beaconInfo[ beaconInfoEnum.name ];
@@ -181,6 +202,26 @@ function beaconTrigger( beaconInfo, zoneInfo, proximity, date )
     var proximityName = proximityEnum.properties[ proximity ].name;
     
     updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been triggered in " + zoneName + " with a proximity of " + proximityName );
+    
+    if ( willCheckOut == true )
+    {
+        updateStatus( "Beacon is awaiting check-out" )
+    }
+}
+
+/*
+ *  This delegate function receives the data of a beacon with a Custom action that has been checked out of by the SDK.
+ *  Refer to bluedotPointSDKCDVPlugin.js for more information.
+ */
+function beaconCheckOut( beaconInfo, zoneInfo, proximity, date, dwellTime )
+{
+    //  Extract details for a status update
+    var beaconName = beaconInfo[ beaconInfoEnum.name ];
+    var isiBeacon = beaconInfo[ beaconInfoEnum.isiBeacon ];
+    var zoneName = zoneInfo[ zoneInfoEnum.name ];
+    var proximityName = proximityEnum.properties[ proximity ].name;
+    
+    updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been left in " + zoneName + " after " + dwellTime + " minutes" );
 }
 
 /*

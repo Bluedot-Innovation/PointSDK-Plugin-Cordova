@@ -1,24 +1,37 @@
-
-
-Bluedot Point SDK iOS v1.5 Release Notes
+Bluedot Point SDK iOS v1.6 Release Notes
 ----------------------------------------
 
-- New feature:  The 'InstallRef', a unique UUID for a specific App installation, is now revealed through BDLocationManager.
-                This was previously shown only in each Zone's 'Activity Log', in Point Access, and made available via the Public API.
-                Revealing this on the client as well as the back-end provides App Developers with the opportunity to more easily implement App behaviours based on Check-In history. 
+- New feature:  Check out from a fence or beacon.
+                
+        The delegate methods for checking-in have been updated to:
 
-- Enhancement:  Point SDK is now compatible with Swift 2.1.
+            - (void)didCheckIntoFence:inZone:atCoordinate:onDate:willCheckOut:
+            - (void)didCheckIntoBeacon:inZone:withProximity:onDate:willCheckOut:
 
-- Enhancement:  A speed field has now been added to the BDLocation object.
+        There are two new delegate methods for notification of checking out:
 
-- Bug fix:      Fixed an issue with the 'Custom Action' callback in BDPLocationDelegate:
-                When a Zone consisting of multiple Fences was triggered, the specific Fence nominated as causing the trigger was occasionally incorrect.
-                This has been fixed and thoroughly re-tested.
+            - (void)didCheckOutFromFence:inZone:onDate:withDuration:
+            - (void)didCheckOutFromBeacon:inZone:withProximity:onDate:withDuration:
 
-- Bug fix:      Fixed an issue where Date-range Conditions could be inaccurate by several hours depending on the device's Time-Zone.
-                Date-range Conditions are now always fixed to the device's Time-Zone.
 
-- Bug fix:	 Sometimes a trigger would not occur if a the Point SDK session was started while already inside a geofence.  This has now been corrected.
+- Note:  The previous didCheckInto... methods have been deprecated and will be removed in a future version.
 
-- Bug fix:	 If Session and Location delegate assignment was made immediately after calling the BDLocationManager authentication method (and not before as prescribed in the 			 documentation) then the calling thread could be deadlocked.  This has now been fixed.
+        - (void)didCheckIntoFence:inZone:atCoordinate:onDate:  (Deprecated)
+        - (void)didCheckIntoBeacon:inZone:withProximity:onDate:  (Deprecated)
 
+
+- Note:  The Minimum Re-trigger Time for a fence or beacon within any zone configured for Check Out is now initiated upon checking out of a fence or beacon.
+
+
+- Enhancement: Point SDK has been enhanced to trigger within highly canyoned, city environments that are unable to obtain a GPS signal.
+
+- Enhancement:  Point SDK is now compatible with Swift 2.2.
+
+
+- Enhancement:  Added methods for notification of device set in Low Power Mode:
+    
+        - (void)didStartRequiringUserInterventionForPowerMode
+        - (void)didStopRequiringUserInterventionForPowerMode
+
+
+- Enhancement:  Improved thread handling.

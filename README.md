@@ -1,6 +1,6 @@
 # Bluedot Point SDK
 
-The Bluedot Point SDK combines low-energy Geolines™, Geofencing and proximity-Beacon capabilities to provide 'always-on' location awareness in indoor and outdoor scenarios on iOS and Android devices.
+The Bluedot Point SDK combines low-energy Geolines™, Geofencing and proximity-Beacon capabilities to provide 'always-on' location awareness in indoor and outdoor scenarios on iOS and Android devices.  With the release of v1.6, a device can be notified when a device has exited from a Geofence or from the range of a beacon and provide the dwell time.
 
 By integrating the simple Bluedot API, your apps will benefit from accurate location awareness (up to the maximum achievable precision of GPS), while substantially reducing battery consumption compared to Core Location and other standard SDK methods.
 
@@ -203,7 +203,9 @@ The functions in the plug-in encapsulate cross-platform functionality.  Should m
 - logOut
 - zoneInfoCallback
 - checkedIntoFenceCallback
+- checkedOutOfFenceCallback
 - checkedIntoBeaconCallback
+- checkedOutOfBeaconCallback
 - startRequiringUserInterventionForBluetoothCallback
 - stopRequiringUserInterventionForBluetoothCallback
 - startRequiringUserInterventionForLocationServicesCallback
@@ -385,8 +387,9 @@ The callback function is passed 5 parameters of fence information, including the
 - Parameter 3: Latitudinal co-ordinate at the point of check-in
 - Parameter 4: Longitudinal co-ordinate at the point of check-in
 - Parameter 5: Date of check-in; this is provided as a UNIX timestamp
+- Parameter 6: Fence is awaiting check-out (Boolean)
 
-These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundles with the Bluedot plug-in.
+These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundled with the Bluedot plug-in.
 
     const zoneInfoEnum =
     {
@@ -405,13 +408,91 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
      *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
      *  Refer to bluedotPointSDKCDVPlugin.js for more information.
      */
-    function fenceTrigger( fenceInfo, zoneInfo, lat, lon, date )
+    function fenceTrigger( fenceInfo, zoneInfo, lat, lon, date, willCheckOut )
+    {
+        //  Extract details for a status update
+        var fenceName = fenceInfo[ fenceInfoEnum.name ];
+        var zoneName = zoneInfo[ zoneInfoEnum.name ];
+
+        updateStatus( fenceName + " has been triggered in " + zoneName + " at " + lat + ":" + lon );
+
+        if ( willCheckOut == true )
+        {
+            updateStatus( "Fence is awaiting check-out" )
+        }
+    }
+
+<br>
+## checkedOutOfFenceCallback
+
+    /*
+     *  Provide a multi-part callback for a fence with a Custom Action being checked out of.
+     *
+     *  Returns the following multipart status to the callback function:
+     *      Parameter 1: Array identifying fence:
+     *          name (String)
+     *          description (String)
+     *          ID (String)
+     *      Parameter 2: Array of strings identifying zone containing fence:
+     *          name (String)
+     *          description (String)
+     *          ID (String)
+     *      Parameter 3: Date of check-in (Integer - UNIX timestamp)
+     *      Parameter 4: Dwell time in minutes
+     */
+    exports.checkedOutOfFenceCallback = function( callback )
+    {
+        exec( callback, null, "BDPointSDK", "checkedOutOfFenceCallback", [] );
+    }
+
+### Description
+This function provides a callback function to the SDK that will be called the device has left a Geofence in a Check-Out Zone that had been previously checked into.  Identifying information on the fence, the zone and the dwell time in minutes are passed back to the callback function as separate parameters.
+
+### Parameters
+
+#### callback (Function)
+This is a function that will be called when the device has left a Geofence in a Check-Out Zone that had been previously checked into.
+
+##### Function parameters
+The callback function is passed 4 parameters of fence information, including the zone the fence is within; each entry contains the following information in the order provided:
+
+- Parameter 1: Fence Info array
+  - Fence name
+  - Fence description
+  - Fence id
+- Parameter 2: Zone Info array
+  - Zone name
+  - Zone description
+  - Zone id
+- Parameter 3: Date of check-in; this is provided as a UNIX timestamp
+- Parameter 4: Dwell time in minutes
+
+These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundled with the Bluedot plug-in.
+
+    const zoneInfoEnum =
+    {
+        name: 0,
+        description: 1,
+        ID: 2
+    }
+    const fenceInfoEnum =
+    {
+        name: 0,
+        description: 1,
+        ID: 2
+    }
+     
+    /*
+     *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
+     *  Refer to bluedotPointSDKCDVPlugin.js for more information.
+     */
+    function fenceCheckOut( fenceInfo, zoneInfo, date, dwellTime )
     {
         //  Extract details for a status update
         var fenceName = fenceInfo[ fenceInfoEnum.name ];
         var zoneName = zoneInfo[ zoneInfoEnum.name ];
          
-        updateStatus( fenceName + " has been triggered in " + zoneName + " at " + lat + ":" + lon );
+        updateStatus( fenceName + " has been left in " + zoneName + " after " + dwellTime + " minutes" );
     }
 
 <br>
@@ -443,6 +524,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
      *          2 = Near
      *          3 = Far
      *      Parameter 4: Date of check-in (Integer - UNIX timestamp)
+     *      Parameter 5: Beacon is awaiting check-out (Boolean)
      */
     exports.checkedIntoBeaconCallback = function( callback )
     {
@@ -458,7 +540,7 @@ This function provides a callback function to the SDK that will be called the de
 This is a function that will be called when the device has been triggered a beacon at a configured proximity.
 
 ##### Function parameters
-The callback function is passed four parameters of beacon information, including the zone the beacon is within; each entry contains the following information in the order provided:
+The callback function is passed 5 parameters of beacon information, including the zone the beacon is within; each entry contains the following information in the order provided:
 - Parameter 1: Beacon Info array
   - Beacon name
   - Beacon description
@@ -475,8 +557,9 @@ The callback function is passed four parameters of beacon information, including
   - Zone id
 - Parameter 3: Proximity of the beacon at point of check-in
 - Parameter 4: Date of check-in; this is provided as a UNIX timestamp
+- Parameter 5: Beacon is awaiting check-out (Boolean)
 
-These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundles with the Bluedot plug-in.
+These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundled with the Bluedot plug-in.
 
     const zoneInfoEnum =
     {
@@ -518,15 +601,137 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
      *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
      *  Refer to bluedotPointSDKCDVPlugin.js for more information.
      */
-    function beaconTrigger( beaconInfo, zoneInfo, proximity, date )
+    function beaconTrigger( beaconInfo, zoneInfo, proximity, date, willCheckOut )
     {
         //  Extract details for a status update
         var beaconName = beaconInfo[ beaconInfoEnum.name ];
         var isiBeacon = beaconInfo[ beaconInfoEnum.isiBeacon ];
         var zoneName = zoneInfo[ zoneInfoEnum.name ];
         var proximityName = proximityEnum.properties[ proximity ].name;
-    
+
         updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been triggered in " + zoneName + " with a proximity of " + proximityName );
+
+        if ( willCheckOut == true )
+        {
+            updateStatus( "Beacon is awaiting check-out" )
+        }
+    }
+
+<br>
+## checkedOutOfBeaconCallback
+
+    /*
+     *  Provide a callback for a beacon with a Custom Action being checked into.  The isiBeacon boolean is used to determine
+     *  if the proximityUUID/major/minor should be utilised or the MAC Address.
+     *
+     *  Returns the following multipart status:
+     *      Parameter 1: Array identifying beacon:
+     *          name (String)
+     *          description (String)
+     *          ID (String)
+     *          isiBeacon (BOOL)
+     *          proximity UUID (String)
+     *          major (Integer)
+     *          minor (Integer)
+     *          MAC address (String)
+     *          latitude (Double)
+     *          longitude (Double)
+     *      Parameter 2: Array of strings identifying zone containing beacon:
+     *          name (String)
+     *          description (String)
+     *          ID (String)
+     *      Parameter 3: Proximity of check-in to beacon (Integer)
+     *          0 = Unknown
+     *          1 = Immediate
+     *          2 = Near
+     *          3 = Far
+     *      Parameter 4: Date of check-in (Integer - UNIX timestamp)
+     *      Parameter 5: Dwell time in minutes (Unsigned integer)
+     */
+    exports.checkedOutOfBeaconCallback = function( callback )
+    {
+        exec( callback, null, "BDPointSDK", "checkedOutOfBeaconCallback", [] );
+    }
+
+### Description
+This function provides a callback function to the SDK that will be called the device has left the detection range of a beacon.  Identifying information on the beacon, the zone, the proximity at which the beacon caused the initial trigger and the dwell time of the device within the range of the beacon are passed back to the callback function.
+
+### Parameters
+
+#### callback (Function)
+This is a function that will be called when the device has left the detection range of a beacon.
+
+##### Function parameters
+The callback function is passed 5 parameters of beacon information, including the zone the beacon is within; each entry contains the following information in the order provided:
+- Parameter 1: Beacon Info array
+  - Beacon name
+  - Beacon description
+  - Beacon id
+  - Is an iBeacon - is set to true if the Beacon is an iBeacon
+  - Proximity UUID of iBeacon
+  - Major value of iBeacon
+  - Minor value of iBeacon
+  - MAC Address
+  - Latitudinal co-ordinate of the beacon placement
+- Parameter 2: Zone Info array
+  - Zone name
+  - Zone description
+  - Zone id
+- Parameter 3: Proximity of the beacon at point of check-in
+- Parameter 4: Date of check-in; this is provided as a UNIX timestamp
+- Parameter 5: Dwell time in minutes (Unsigned integer)
+
+These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundled with the Bluedot plug-in.
+
+    const zoneInfoEnum =
+    {
+        name: 0,
+        description: 1,
+        ID: 2
+    }
+     
+    const beaconInfoEnum =
+    {
+        name: 0,
+        description: 1,
+        ID: 2,
+        isiBeacon: 3,
+        proximityUUID: 4,
+        major: 5,
+        minor: 6,
+        MACAddress: 7,
+        lat: 8,
+        lon: 9
+    }
+    
+    const proximityEnum = 
+    {
+        Unknown : 0,
+        Immediate : 1,
+        Near : 2,
+        Far : 3,
+        properties:
+        {
+            0: { name: "Unknown", value: 0, code: "U" },
+            1: { name: "Immediate", value: 1, code: "I" },
+            2: { name: "Near", value: 2, code: "N" },
+            3: { name: "Far", value: 3, code: "F" }
+        }
+    }
+     
+    /*
+     *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
+     *  Refer to bluedotPointSDKCDVPlugin.js for more information.
+     */
+    function beaconCheckOut( beaconInfo, zoneInfo, proximity, date, dwellTime )
+    {
+        //  Extract details for a status update
+        var beaconName = beaconInfo[ beaconInfoEnum.name ];
+        var isiBeacon = beaconInfo[ beaconInfoEnum.isiBeacon ];
+        var zoneName = zoneInfo[ zoneInfoEnum.name ];
+        var proximityName = proximityEnum.properties[ proximity ].name;
+
+        updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been left in " + zoneName + " after " + dwellTime + " minutes" );
     }
 
 <br>

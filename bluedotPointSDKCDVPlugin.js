@@ -62,10 +62,31 @@ exports.zoneInfoCallback = function( callback )
  *      Parameter 3: Latitude of check-in (Double)
  *      Parameter 4: Longitude of check-in (Double)
  *      Parameter 5: Date of check-in (Integer - UNIX timestamp)
+ *      Parameter 6: Fence is awaiting check-out (Boolean)
  */
 exports.checkedIntoFenceCallback = function( callback )
 {
     exec( callback, null, "BDPointSDK", "checkedIntoFenceCallback", [] );
+}
+
+/*
+ *  A fence with a Custom Action has been checked out of.
+ *
+ *  Returns the following multipart status:
+ *      Parameter 1: Array identifying fence:
+ *          name (String)
+ *          description (String)
+ *          ID (String)
+ *      Parameter 2: Array of strings identifying zone containing fence:
+ *          name (String)
+ *          description (String)
+ *          ID (String)
+ *      Parameter 3: Date of check-out (Integer - UNIX timestamp)
+ *      Parameter 4: Dwell time in minutes (Unsigned integer)
+ */
+exports.checkedOutOfFenceCallback = function( callback )
+{
+    exec( callback, null, "BDPointSDK", "checkedOutOfFenceCallback", [] );
 }
 
 /*
@@ -94,10 +115,44 @@ exports.checkedIntoFenceCallback = function( callback )
  *          2 = Near
  *          3 = Far
  *      Parameter 4: Date of check-in (Integer - UNIX timestamp)
+ *      Parameter 5: Beacon is awaiting check-out (Boolean)
  */
 exports.checkedIntoBeaconCallback = function( callback )
 {
     exec( callback, null, "BDPointSDK", "checkedIntoBeaconCallback", [] );
+}
+
+/*
+ *  Provide a callback for a beacon with a Custom Action being checked out of.  The isiBeacon boolean is used to determine
+ *  if the proximityUUID/major/minor should be utilised or the MAC Address.
+ *
+ *  Returns the following multipart status:
+ *      Parameter 1: Array identifying beacon:
+ *          name (String)
+ *          description (String)
+ *          ID (String)
+ *          isiBeacon (BOOL)
+ *          proximity UUID (String)
+ *          major (Integer)
+ *          minor (Integer)
+ *          MAC address (String)
+ *          latitude (Double)
+ *          longitude (Double)
+ *      Parameter 2: Array of strings identifying zone containing beacon:
+ *          name (String)
+ *          description (String)
+ *          ID (String)
+ *      Parameter 3: Proximity of check-in to beacon (Integer)
+ *          0 = Unknown
+ *          1 = Immediate
+ *          2 = Near
+ *          3 = Far
+ *      Parameter 4: Date of check-in (Integer - UNIX timestamp)
+ *      Parameter 5: Dwell time in minutes (Unsigned integer)
+ */
+exports.checkedOutOfBeaconCallback = function( callback )
+{
+    exec( callback, null, "BDPointSDK", "checkedOutOfBeaconCallback", [] );
 }
 
 /*

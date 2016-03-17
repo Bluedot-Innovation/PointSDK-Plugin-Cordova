@@ -21,8 +21,12 @@
 
 //  Setup delegate functions for call backs from the SDK
 - (void)zoneInfoCallback: (CDVInvokedUrlCommand *)command;
+
 - (void)checkedIntoFenceCallback: (CDVInvokedUrlCommand *)command;
 - (void)checkedIntoBeaconCallback: (CDVInvokedUrlCommand *)command;
+
+- (void)checkedOutOfFenceCallback: (CDVInvokedUrlCommand *)command;
+- (void)checkedOutOfBeaconCallback: (CDVInvokedUrlCommand *)command;
 
 - (void)startRequiringUserInterventionForBluetoothCallback: (CDVInvokedUrlCommand *)command;
 - (void)stopRequiringUserInterventionForBluetoothCallback: (CDVInvokedUrlCommand *)command;

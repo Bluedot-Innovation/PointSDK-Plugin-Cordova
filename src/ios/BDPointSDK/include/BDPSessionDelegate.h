@@ -50,4 +50,11 @@
  */
 - (void)didEndSession;
 
+/**
+ *  This method is called if an authenticated Point session ends unexpectedly.
+ *  Details from NSError objects delivered here are intended for development logging purposes
+ *  and are not intended to be seen by your application's users.
+ */
+- (void)didEndSessionWithError: (NSError *)error;
+
 @end

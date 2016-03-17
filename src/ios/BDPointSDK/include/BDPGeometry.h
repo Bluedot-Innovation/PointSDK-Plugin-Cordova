@@ -1,7 +1,7 @@
 /****
  *    BDPGeometry.h
  *
- *    Copyright (C) 2015 Bluedot.  All rights reserved.
+ *    Copyright (C) 2015 Bluedot Innovation.  All rights reserved.
  */
 
 #import <Foundation/Foundation.h>
@@ -26,6 +26,12 @@
   @returns YES if the point falls on or inside the bounds, NO if the point falls outside the bounds
  */
 - (BOOL)intersects: (BDGeometry *)geometry;
+
+/**
+ * <p>Currently, only Circles may receive this message; other shapes will throw an assertion error in DEBUG or return NO in RELEASE.</p>
+  @returns YES if this shape fully encloses the specified shape, NO otherwise.
+ */
+- (BOOL)isEnclosedBy:(BDGeometry *)geometry;
 
 /**
   <p>Calculates the minimum @ref BDBoundingBox "bounding-box" that encloses this geometry.</p>

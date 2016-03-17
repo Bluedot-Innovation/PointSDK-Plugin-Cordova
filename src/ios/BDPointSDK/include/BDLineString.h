@@ -1,7 +1,8 @@
-//
-// Created by Christopher Hatton on 12/12/14.
-// Copyright (c) 2014 Bluedot. All rights reserved.
-//
+/****
+ *    BDLineString.h
+ *
+ *    Copyright (C) 2015 Bluedot Innovation.  All rights reserved.
+ */
 
 #import <Foundation/Foundation.h>
 #import "BDPolygonal.h"

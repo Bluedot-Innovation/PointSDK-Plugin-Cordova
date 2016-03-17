@@ -14,7 +14,6 @@ import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import java.util.Date;
 
-import au.com.bluedot.point.ApplicationNotification;
 import au.com.bluedot.point.ApplicationNotificationListener;
 import au.com.bluedot.point.net.engine.BDError;
 import au.com.bluedot.point.ServiceStatusListener;
@@ -23,15 +22,14 @@ import au.com.bluedot.point.net.engine.ZoneInfo;
 import au.com.bluedot.point.net.engine.ServiceManager;
 import au.com.bluedot.point.BluetoothNotEnabledError;
 import au.com.bluedot.point.LocationServiceNotEnabledError;
-
+import au.com.bluedot.application.model.Proximity;
 import au.com.bluedot.application.model.geo.Fence;
 import au.com.bluedot.model.geo.BoundingBox;
 import au.com.bluedot.model.geo.Circle;
 import au.com.bluedot.model.geo.LineString;
 import au.com.bluedot.model.geo.Point;
-import au.com.bluedot.point.ApplicationNotification;
-import au.com.bluedot.point.ApplicationNotificationListener;
 
+import android.location.Location;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
@@ -41,6 +39,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public static final String ACTION_LOGOUT = "logOut";
     public static final String ACTION_APP_NOTIFICATION_FENCE = "checkedIntoFenceCallback";
     public static final String ACTION_APP_NOTIFICATION_BEACON = "checkedIntoBeaconCallback";
+    public static final String ACTION_APP_NOTIFICATION_FENCE_CHECKOUT = "checkedOutOfFenceCallback";
+    public static final String ACTION_APP_NOTIFICATION_BEACON_CHECKOUT = "checkedOutOfBeaconCallback";
     public static final String ACTION_ZONE_INFO_CALLBACK = "zoneInfoCallback";
     public static final String ACTION_REQUIRE_USER_INTERVENTION_FOR_BLUETOOTH = "startRequiringUserInterventionForBluetoothCallback";
     public static final String ACTION_REQUIRE_USER_INTERVENTION_FOR_LOCATION = "startRequiringUserInterventionForLocationServicesCallback";
@@ -57,6 +57,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     private CallbackContext mLogOutCallbackContext;
     private CallbackContext mAppNotifyFenceCallbackContext;
     private CallbackContext mAppNotifyBeaconCallbackContext;
+    private CallbackContext mAppNotifyFenceCheckOutCallbackContext;
+    private CallbackContext mAppNotifyBeaconCheckOutCallbackContext;
     private CallbackContext mZoneInfoCallbackContext;
     private CallbackContext mRequiringUserInterventionForLocationServicesCallbackContext;
     private CallbackContext mRequiringUserInterventionForBluetoothCallbackContext;
@@ -96,6 +98,12 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             result = true;
         } else if (action.equals(ACTION_APP_NOTIFICATION_BEACON)) {
             mAppNotifyBeaconCallbackContext = callbackContext;
+            result = true;
+        } else if (action.equals(ACTION_APP_NOTIFICATION_FENCE_CHECKOUT)) {
+            mAppNotifyFenceCheckOutCallbackContext = callbackContext;
+            result = true;
+        } else if (action.equals(ACTION_APP_NOTIFICATION_BEACON_CHECKOUT)) {
+            mAppNotifyBeaconCheckOutCallbackContext = callbackContext;
             result = true;
         } else if (action.equals(ACTION_ZONE_INFO_CALLBACK)) {
             mZoneInfoCallbackContext = callbackContext;
@@ -225,17 +233,17 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     /**
      * This callback happens when user is subscribed to Application Notification
      * and check into any fence under that Zone
-     *
-     * @param applicationNotification
+     * @param fence      - Fence triggered
+     * @param zoneInfo   - Zone information Fence belongs to
+     * @param location   - geographical coordinate where trigger happened
+     * @param isCheckOut - CheckOut will be tracked and delivered once device left the Fence
      */
     @Override
-    public void onCheckIntoFence(ApplicationNotification applicationNotification) {
+    public void onCheckIntoFence(Fence _fence, ZoneInfo _zoneInfo, Location _location, boolean _isCheckOut) {
 
-        Fence _fence = applicationNotification.getFence();                
-        ZoneInfo _zoneInfo = applicationNotification.getZoneInfo();
-        double _lat = applicationNotification.getLocation().getLatitude();
-        double _lon = applicationNotification.getLocation().getLongitude();
-        long _date = applicationNotification.getLocation().getTime();
+        double _lat = _location.getLatitude();
+        double _lon = _location.getLongitude();
+        long _date =  _location.getTime();
 
         JSONObject jsonObjectFence = new JSONObject();
 
@@ -262,6 +270,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         PluginResult lat = new PluginResult(PluginResult.Status.OK, "" + _lat);
         PluginResult lon = new PluginResult(PluginResult.Status.OK, "" + _lon);
         PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
+        PluginResult isCheckOut = new PluginResult(PluginResult.Status.OK, "" + _isCheckOut);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
@@ -270,6 +279,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         multipartMessages.add(lat);
         multipartMessages.add(lon);
         multipartMessages.add(date);
+        multipartMessages.add(isCheckOut);
         PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
         result.setKeepCallback(true);
 
@@ -283,16 +293,17 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     /**
      * This callback happens when user is subscribed to Application Notification
      * and check into any beacon under that Zone
-     *
-     * @param applicationNotification
+     * @param beaconInfo - Beacon triggered
+     * @param zoneInfo   - Zone information Beacon belongs to
+     * @param location   - geographical coordinate where trigger happened
+     * @param proximity  - the proximity at which the trigger occurred
+     * @param isCheckOut - CheckOut will be tracked and delivered once device left the Beacon advertisement range
      */
     @Override
-    public void onCheckIntoBeacon(ApplicationNotification applicationNotification) {
+    public void onCheckIntoBeacon(BeaconInfo _beaconInfo, ZoneInfo _zoneInfo, Location _location, Proximity _proximity, boolean _isCheckOut) {
 
-        BeaconInfo _beaconInfo = applicationNotification.getBeaconInfo();
-        ZoneInfo _zoneInfo = applicationNotification.getZoneInfo();
-        long _date = applicationNotification.getLocation().getTime();
-        int _txPower = applicationNotification.getBeaconInfo().getTxPower();
+        long _date = _location.getTime();
+        int _txPower = _beaconInfo.getTxPower();
 
         JSONObject jsonObjectBeacon = new JSONObject();
 
@@ -324,15 +335,17 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
 
         PluginResult beaconInfo = new PluginResult(PluginResult.Status.OK, jsonObjectBeacon);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
-        PluginResult txPower = new PluginResult(PluginResult.Status.OK, "" + _txPower);
+        PluginResult proximity = new PluginResult(PluginResult.Status.OK, "" + getIntForProximity(_proximity));
         PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
+        PluginResult isCheckOut = new PluginResult(PluginResult.Status.OK, "" + _isCheckOut);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
         multipartMessages.add(beaconInfo);
         multipartMessages.add(zoneInfo);
-        multipartMessages.add(txPower);
+        multipartMessages.add(proximity);
         multipartMessages.add(date);
+        multipartMessages.add(isCheckOut);
         PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
         result.setKeepCallback(true);
 
@@ -340,6 +353,118 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             mAppNotifyBeaconCallbackContext.sendPluginResult(result);
         }
 
+    }
+
+    /**
+     * This callback happens when user is subscribed to Application Notification
+     * and checked out from fence under that Zone
+     * @param fence     - Fence user is checked out from
+     * @param zoneInfo  - Zone information Fence belongs to
+     * @param dwellTime - time spent inside the Fence; in minutes
+     */
+    @Override
+    public void onCheckedOutFromFence(Fence _fence, ZoneInfo _zoneInfo, int _dwellTime) {
+        long _date = System.currentTimeMillis();
+
+        JSONObject jsonObjectFence = new JSONObject();
+
+        try {
+            jsonObjectFence.put("0", _fence.getName());
+            jsonObjectFence.put("1", _fence.getDescription());
+            jsonObjectFence.put("2", _fence.getID());
+        } catch (Exception e) {
+            jsonObjectFence = null;
+        }
+
+        JSONObject jsonObjectZone = new JSONObject();
+
+        try {
+            jsonObjectZone.put("0", _zoneInfo.getZoneName());
+            jsonObjectZone.put("1", _zoneInfo.getDescription());
+            jsonObjectZone.put("2", _zoneInfo.getZoneId());
+        } catch (Exception e) {
+            jsonObjectZone = null;
+        }
+
+        PluginResult fenceInfo = new PluginResult(PluginResult.Status.OK, jsonObjectFence);
+        PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
+        PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
+        PluginResult dwellTime = new PluginResult(PluginResult.Status.OK, "" + _dwellTime);
+
+        List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
+
+        multipartMessages.add(fenceInfo);
+        multipartMessages.add(zoneInfo);
+        multipartMessages.add(date);
+        multipartMessages.add(dwellTime);
+        PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
+        result.setKeepCallback(true);
+
+        if (mAppNotifyFenceCheckOutCallbackContext != null) {
+            mAppNotifyFenceCheckOutCallbackContext.sendPluginResult(result);
+        }
+    }
+
+    /**
+     * This callback happens when user is subscribed to Application Notification
+     * and checked out from beacon under that Zone
+     * @param beaconInfo - Beacon is checked out from
+     * @param zoneInfo   - Zone information Beacon belongs to
+     * @param dwellTime  - time spent inside the Beacon area; in minutes
+     */
+    @Override
+    public void onCheckedOutFromBeacon(BeaconInfo _beaconInfo, ZoneInfo _zoneInfo, int _dwellTime) {
+
+        long _date = System.currentTimeMillis();
+        int _txPower = _beaconInfo.getTxPower();
+
+        JSONObject jsonObjectBeacon = new JSONObject();
+
+        try {
+
+            jsonObjectBeacon.put("0", _beaconInfo.getName());
+            jsonObjectBeacon.put("1", _beaconInfo.getDescription());
+            jsonObjectBeacon.put("2", _beaconInfo.getId());
+            jsonObjectBeacon.put("3", false);
+            jsonObjectBeacon.put("4", "");
+            jsonObjectBeacon.put("5", 0);
+            jsonObjectBeacon.put("6", 0);
+            jsonObjectBeacon.put("7", _beaconInfo.getMacAddress());
+            jsonObjectBeacon.put("8", _beaconInfo.getLocation().getLatitude());
+            jsonObjectBeacon.put("9", _beaconInfo.getLocation().getLongitude());
+        } catch (Exception e) {
+            jsonObjectBeacon = null;
+        }
+
+        JSONObject jsonObjectZone = new JSONObject();
+
+        try {
+            jsonObjectZone.put("0", _zoneInfo.getZoneName());
+            jsonObjectZone.put("1", _zoneInfo.getDescription());
+            jsonObjectZone.put("2", _zoneInfo.getZoneId());
+        } catch (Exception e) {
+            jsonObjectZone = null;
+        }
+
+        PluginResult beaconInfo = new PluginResult(PluginResult.Status.OK, jsonObjectBeacon);
+        PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
+        PluginResult proximity = new PluginResult(PluginResult.Status.OK, "" + 0);
+        PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
+        PluginResult dwellTime = new PluginResult(PluginResult.Status.OK, "" + _dwellTime);
+
+        List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
+
+        multipartMessages.add(beaconInfo);
+        multipartMessages.add(zoneInfo);
+        multipartMessages.add(proximity);
+        multipartMessages.add(date);
+        multipartMessages.add(dwellTime);
+        PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
+        result.setKeepCallback(true);
+
+        if (mAppNotifyBeaconCheckOutCallbackContext != null) {
+            mAppNotifyBeaconCheckOutCallbackContext.sendPluginResult(result);
+        }
     }
 
     /**
@@ -358,4 +483,22 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         }
     }
 
+    private int getIntForProximity(Proximity value) {
+        int result = 0;
+        switch (value) {
+            case Unknown:
+                result = 0;
+                break;
+            case Immediate:
+                result = 1;
+                break;
+            case Near:
+                result = 2;
+                break;
+            case Far:
+                result = 3;
+                break;
+        }
+        return result;
+    }
 }

@@ -23,11 +23,11 @@
 
 // Adding Point features to the map
 
-- (void)addOverlaysForBeacon:(BDBeaconInfo *)beacon
+- (void)addOverlaysForBeacon:(BDBeaconInfo *)beaconInfo
                    iconImage:(UIImage *)icon
                    iconScale:(CGFloat)scale;
 
-- (void)addOverlaysForFence:(BDFenceInfo *)beacon;
+- (void)addOverlaysForFence:(BDFenceInfo *)fenceInfo;
 
 - (void)addOverlaysForZone:(BDZoneInfo *)zoneInfo
        withBeaconIconImage:(UIImage *)beaconIconImage

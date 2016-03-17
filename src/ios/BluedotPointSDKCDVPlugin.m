@@ -34,6 +34,9 @@
     id  _callbackIdZoneInfo;
     id  _callbackIdCheckedIntoFence;
     id  _callbackIdCheckedIntoBeacon;
+
+    id  _callbackIdCheckedOutOfFence;
+    id  _callbackIdCheckedOutOfBeacon;
     
     id  _callbackIdStartRequiringUserInterventionForBluetooth;
     id  _callbackIdStopRequiringUserInterventionForBluetooth;
@@ -70,6 +73,8 @@
     _callbackIdZoneInfo = nil;
     _callbackIdCheckedIntoFence = nil;
     _callbackIdCheckedIntoBeacon = nil;
+    _callbackIdCheckedOutOfFence = nil;
+    _callbackIdCheckedOutOfBeacon = nil;
     
     _callbackIdStartRequiringUserInterventionForLocationServices = nil;
     _callbackIdStopRequiringUserInterventionForLocationServices = nil;
@@ -194,6 +199,26 @@
     
     //  Set the zone info callback when triggering a beacon
     _callbackIdCheckedIntoBeacon = command.callbackId;
+}
+
+/*
+ *  Entry method for setting up the fence check-out delegate.
+ */
+- (void)checkedOutOfFenceCallback: (CDVInvokedUrlCommand *)command
+{
+    
+    //  Set the callback when triggering a fence
+    _callbackIdCheckedOutOfFence = command.callbackId;
+}
+
+/*
+ *  Entry method for setting up the beacon check-out delegate.
+ */
+- (void)checkedOutOfBeaconCallback: (CDVInvokedUrlCommand *)command
+{
+    
+    //  Set the zone info callback when triggering a beacon
+    _callbackIdCheckedOutOfBeacon = command.callbackId;
 }
 
 /*
@@ -452,15 +477,18 @@
  *      Latitude of check-in (Double)
  *      Longitude of check-in (Double)
  *      Date of check-in (Integer - UNIX timestamp)
+ *      Fence is awaiting check-out (BOOL)
  */
 - (void)didCheckIntoFence: (BDFenceInfo *)fence
                    inZone: (BDZoneInfo *)zone
              atCoordinate: (BDLocationCoordinate2D)coordinate
                    onDate: (NSDate *)date
+             willCheckOut: (BOOL)willCheckOut
 {
     
-    NSLog( @"You have checked into fence '%@' in zone '%@', at %@",
-                fence.name, zone.name, [ _dateFormatter stringFromDate: date ] );
+    NSLog( @"You have checked into fence '%@' in zone '%@', at %@%@",
+                fence.name, zone.name, [ _dateFormatter stringFromDate: date ],
+                ( willCheckOut == YES ) ? @" and awaiting check out" : @"" );
 
     //  Ensure that a delegate for fence info has been setup
     if ( _callbackIdCheckedIntoFence == nil )
@@ -476,7 +504,7 @@
     double  lon = coordinate.longitude;
 
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnFence, returnZone,
-                                 @( lat ), @( lon ), @( unixDate ), nil ];
+                                 @( lat ), @( lon ), @( unixDate ), @( willCheckOut ), nil ];
     
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
                                                      messageAsMultipart: returnMultiPart ];
@@ -485,6 +513,52 @@
     pluginResult.keepCallback = @(YES);
 
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdCheckedIntoFence ];
+}
+
+/*
+ *  A fence with a Custom Action has been checked out of.
+ *
+ *  Returns the following multipart status:
+ *      Array identifying fence:
+ *          name (String)
+ *          description (String)
+ *      Array of strings identifying zone:
+ *          name (String)
+ *          description (String)
+ *          ID (String)
+ *      Date of check-out (Integer - UNIX timestamp)
+ *      Dwell time in minutes (Unsigned integer)
+ */
+- (void)didCheckOutFromFence: (BDFenceInfo *)fence
+                      inZone: (BDZoneInfo *)zone
+                      onDate: (NSDate *)date
+                withDuration: (NSUInteger)checkedInDuration
+{
+    
+    NSLog( @"You left fence '%@' in zone '%@', after %lu minutes",
+               fence.name, zone.name, (unsigned int)checkedInDuration );
+    
+    //  Ensure that a delegate for fence info has been setup
+    if ( _callbackIdCheckedOutOfFence == nil )
+    {
+        NSLog( @"Callback for fence check-outs has not been setup." );
+        return;
+    }
+    
+    NSArray  *returnFence = [ self fenceToArray: fence ];
+    NSArray  *returnZone = [ self zoneToArray: zone ];
+    NSTimeInterval  unixDate = [ date timeIntervalSince1970 ];
+    
+    NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnFence, returnZone,
+                                  @( unixDate ), @( checkedInDuration ), nil ];
+    
+    CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                                                     messageAsMultipart: returnMultiPart ];
+    
+    //  Keep the callback after returning the result
+    pluginResult.keepCallback = @(YES);
+    
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdCheckedOutOfFence ];
 }
 
 /*
@@ -509,15 +583,18 @@
  *          2 = Near
  *          3 = Far
  *      Date of check-in (Integer - UNIX timestamp)
+ *      Beacon is awaiting check-out (BOOL)
  */
 - (void)didCheckIntoBeacon: (BDBeaconInfo *)beacon
                     inZone: (BDZoneInfo *)zone
              withProximity: (CLProximity)proximity
                     onDate: (NSDate *)date
+             willCheckOut: (BOOL)willCheckOut
 {
     
     NSLog( @"You have checked into beacon '%@' in zone '%@' with proximity %d at %@",
-                beacon.name, zone.name, (int)proximity, [ _dateFormatter stringFromDate: date ] );
+                beacon.name, zone.name, (int)proximity, [ _dateFormatter stringFromDate: date ],
+                ( willCheckOut == YES ) ? @" and awaiting check out" : @"" );
     
     //  Ensure that a delegate for fence info has been setup
     if ( _callbackIdCheckedIntoBeacon == nil )
@@ -531,7 +608,7 @@
     NSTimeInterval  unixDate = [ date timeIntervalSince1970 ];
     
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnBeacon, returnZone,
-                                 @( proximity ), @( unixDate ), nil ];
+                                 @( proximity ), @( unixDate ), @( willCheckOut ), nil ];
     
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
                                                      messageAsMultipart: returnMultiPart ];
@@ -540,6 +617,64 @@
     pluginResult.keepCallback = @(YES);
 
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdCheckedIntoBeacon ];
+}
+
+/*
+ *  A beacon with a Custom Action has been checked out of.
+ *
+ *  Returns the following multipart status:
+ *      Array identifying beacon:
+ *          name (String)
+ *          description (String)
+ *          proximity UUID (String)
+ *          major (Integer)
+ *          minor (Integer)
+ *          latitude (Double)
+ *          longitude (Double)
+ *      Array of strings identifying zone:
+ *          name (String)
+ *          description (String)
+ *          ID (String)
+ *      Proximity of check-in to beacon (Integer)
+ *          0 = Unknown
+ *          1 = Immediate
+ *          2 = Near
+ *          3 = Far
+ *      Date of check-in (Integer - UNIX timestamp)
+ *      Dwell time in minutes (Unsigned integer)
+ */
+- (void)didCheckOutFromBeacon: (BDBeaconInfo *)beacon
+                       inZone: (BDZoneInfo *)zone
+                withProximity: (CLProximity)proximity
+                       onDate: (NSDate *)date
+                 withDuration: (NSUInteger)checkedInDuration
+{
+    
+    NSLog( @"You have left beacon '%@' in zone '%@' with proximity %d after %lu minutes",
+           beacon.name, zone.name, (int)proximity, [ _dateFormatter stringFromDate: date ],
+           checkedInDuration );
+    
+    //  Ensure that a delegate for fence info has been setup
+    if ( _callbackIdCheckedOutOfBeacon == nil )
+    {
+        NSLog( @"Callback for beacon check-outs has not been setup." );
+        return;
+    }
+    
+    NSArray  *returnBeacon = [ self beaconToArray: beacon ];
+    NSArray  *returnZone = [ self zoneToArray: zone ];
+    NSTimeInterval  unixDate = [ date timeIntervalSince1970 ];
+    
+    NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnBeacon, returnZone,
+                                 @( proximity ), @( unixDate ), @( checkedInDuration ), nil ];
+    
+    CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                                                     messageAsMultipart: returnMultiPart ];
+    
+    //  Keep the callback after returning the result
+    pluginResult.keepCallback = @(YES);
+    
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdCheckedOutOfBeacon ];
 }
 
 /*

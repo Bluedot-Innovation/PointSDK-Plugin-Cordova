@@ -6,7 +6,7 @@
  *
  *    Implement the Bluedot location manager enhanced functionality.
  *
- *    Copyright (C) 2015 Bluedot.  All rights reserved.
+ *    Copyright (C) 2015 Bluedot Innovation.  All rights reserved.
  */
 
 #import <Foundation/Foundation.h>
