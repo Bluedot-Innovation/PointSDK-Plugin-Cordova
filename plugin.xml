@@ -92,32 +92,27 @@
             </feature>
         </config-file>
 
+        <framework src="com.android.support:support-v4:+" />
+        <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
+        <framework src="com.google.android.gms:play-services:8.+" />
+
         <config-file target="AndroidManifest.xml" parent="/*">
           <uses-permission android:name="android.permission.INTERNET" />
           <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
           <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
           <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
           <uses-permission android:name="android.permission.VIBRATE" />
-          <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-          <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
           <uses-permission android:name="android.permission.BLUETOOTH"/>
           <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-          <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
         </config-file>
        
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
           <service android:name="au.com.bluedot.point.beacon.BlueDotBLEService" android:exported="false"/>
           <service android:name="au.com.bluedot.point.net.engine.BlueDotPointService" android:exported="false"/>
-          <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="8115000" />
         </config-file>
  
         <source-file src="src/android/BDPointSDKWrapper.java" target-dir="src/au/com/bluedot/minimalLocationApp" />
         <source-file src="src/android/bluedot-point-sdk-release.jar" target-dir="libs" />
         
-        <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
-        <source-file src="src/android/google-play-services.jar" target-dir="libs" />
     </platform>
 </plugin>
