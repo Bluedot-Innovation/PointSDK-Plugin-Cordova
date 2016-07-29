@@ -13,6 +13,7 @@ import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import java.util.Date;
+import java.util.Map;
 
 import au.com.bluedot.point.ApplicationNotificationListener;
 import au.com.bluedot.point.net.engine.BDError;
@@ -139,7 +140,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         PluginResult prErrorCode,prErrorMsg;
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
-    
+
             if(errorCode == 0){
                  prErrorCode = new PluginResult(PluginResult.Status.OK, "" + errorCode);
                  prErrorMsg = new PluginResult(PluginResult.Status.OK, "");
@@ -239,7 +240,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
      * @param isCheckOut - CheckOut will be tracked and delivered once device left the Fence
      */
     @Override
-    public void onCheckIntoFence(Fence _fence, ZoneInfo _zoneInfo, Location _location, boolean _isCheckOut) {
+    public void onCheckIntoFence(Fence _fence, ZoneInfo _zoneInfo, Location _location, Map<String, String> _customData, boolean _isCheckOut) {
 
         double _lat = _location.getLatitude();
         double _lon = _location.getLongitude();
@@ -265,12 +266,15 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             jsonObjectZone = null;
         }
 
+        JSONObject jsonObjectCustomData = new JSONObject(_customData);
+
         PluginResult fenceInfo = new PluginResult(PluginResult.Status.OK, jsonObjectFence);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
         PluginResult lat = new PluginResult(PluginResult.Status.OK, "" + _lat);
         PluginResult lon = new PluginResult(PluginResult.Status.OK, "" + _lon);
         PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
         PluginResult isCheckOut = new PluginResult(PluginResult.Status.OK, "" + _isCheckOut);
+        PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
@@ -280,6 +284,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         multipartMessages.add(lon);
         multipartMessages.add(date);
         multipartMessages.add(isCheckOut);
+        multipartMessages.add(customData);
         PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
         result.setKeepCallback(true);
 
@@ -300,7 +305,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
      * @param isCheckOut - CheckOut will be tracked and delivered once device left the Beacon advertisement range
      */
     @Override
-    public void onCheckIntoBeacon(BeaconInfo _beaconInfo, ZoneInfo _zoneInfo, Location _location, Proximity _proximity, boolean _isCheckOut) {
+    public void onCheckIntoBeacon(BeaconInfo _beaconInfo, ZoneInfo _zoneInfo, Location _location, Proximity _proximity, Map<String, String> _customData, boolean _isCheckOut) {
 
         long _date = _location.getTime();
         int _txPower = _beaconInfo.getTxPower();
@@ -333,11 +338,14 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             jsonObjectZone = null;
         }
 
+        JSONObject jsonObjectCustomData = new JSONObject(_customData);
+
         PluginResult beaconInfo = new PluginResult(PluginResult.Status.OK, jsonObjectBeacon);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
         PluginResult proximity = new PluginResult(PluginResult.Status.OK, "" + getIntForProximity(_proximity));
         PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
         PluginResult isCheckOut = new PluginResult(PluginResult.Status.OK, "" + _isCheckOut);
+        PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
@@ -346,6 +354,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         multipartMessages.add(proximity);
         multipartMessages.add(date);
         multipartMessages.add(isCheckOut);
+        multipartMessages.add(customData);
         PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
         result.setKeepCallback(true);
 
@@ -363,7 +372,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
      * @param dwellTime - time spent inside the Fence; in minutes
      */
     @Override
-    public void onCheckedOutFromFence(Fence _fence, ZoneInfo _zoneInfo, int _dwellTime) {
+    public void onCheckedOutFromFence(Fence _fence, ZoneInfo _zoneInfo, int _dwellTime, Map<String, String> _customData) {
         long _date = System.currentTimeMillis();
 
         JSONObject jsonObjectFence = new JSONObject();
@@ -386,10 +395,13 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             jsonObjectZone = null;
         }
 
+        JSONObject jsonObjectCustomData = new JSONObject(_customData);
+
         PluginResult fenceInfo = new PluginResult(PluginResult.Status.OK, jsonObjectFence);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
         PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
         PluginResult dwellTime = new PluginResult(PluginResult.Status.OK, "" + _dwellTime);
+        PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
@@ -397,6 +409,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         multipartMessages.add(zoneInfo);
         multipartMessages.add(date);
         multipartMessages.add(dwellTime);
+        multipartMessages.add(customData);
         PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
         result.setKeepCallback(true);
 
@@ -413,7 +426,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
      * @param dwellTime  - time spent inside the Beacon area; in minutes
      */
     @Override
-    public void onCheckedOutFromBeacon(BeaconInfo _beaconInfo, ZoneInfo _zoneInfo, int _dwellTime) {
+    public void onCheckedOutFromBeacon(BeaconInfo _beaconInfo, ZoneInfo _zoneInfo, int _dwellTime, Map<String, String> _customData) {
 
         long _date = System.currentTimeMillis();
         int _txPower = _beaconInfo.getTxPower();
@@ -446,11 +459,14 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             jsonObjectZone = null;
         }
 
+        JSONObject jsonObjectCustomData = new JSONObject(_customData);
+
         PluginResult beaconInfo = new PluginResult(PluginResult.Status.OK, jsonObjectBeacon);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
         PluginResult proximity = new PluginResult(PluginResult.Status.OK, "" + 0);
         PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
         PluginResult dwellTime = new PluginResult(PluginResult.Status.OK, "" + _dwellTime);
+        PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
@@ -459,6 +475,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         multipartMessages.add(proximity);
         multipartMessages.add(date);
         multipartMessages.add(dwellTime);
+        multipartMessages.add(customData);
         PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
         result.setKeepCallback(true);
 
@@ -468,7 +485,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     }
 
     /**
-     * This method enables and disables a Zone. 
+     * This method enables and disables a Zone.
      * @param zoneId, flag
      */
     public void updateZone(String zoneId, boolean flag) {

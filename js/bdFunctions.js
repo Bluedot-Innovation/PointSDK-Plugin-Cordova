@@ -44,7 +44,7 @@ const beaconInfoEnum =
     lon: 9
 }
 
-const proximityEnum = 
+const proximityEnum =
 {
     Unknown : 0,
     Immediate : 1,
@@ -66,9 +66,9 @@ const proximityEnum =
 function updateStatus( statusText )
 {
     var textAreaId = document.getElementById( 'statusText' );
-    
+
     textAreaId.value += statusText + "\n";
-    textAreaId.scrollTop = textAreaId.scrollHeight 
+    textAreaId.scrollTop = textAreaId.scrollHeight
 }
 
 /*
@@ -149,27 +149,28 @@ function zoneUpdate( zoneInfos )
     for( pos = 0; pos < zoneInfos.length; pos++ )
     {
         var zoneInfo = zoneInfos[ pos ];
-        
+
         //  Extract details for a status update
         var name = zoneInfo[ zoneInfoEnum.name ];
         var description = zoneInfo[ zoneInfoEnum.description ];
-        
+
         updateStatus( "Zone " + name + " : " + description );
-    }   
+    }
 }
 
 /*
  *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
  *  Refer to bluedotPointSDKCDVPlugin.js for more information.
  */
-function fenceTrigger( fenceInfo, zoneInfo, lat, lon, date, willCheckOut )
+function fenceTrigger( fenceInfo, zoneInfo, lat, lon, date, willCheckOut, customData )
 {
     //  Extract details for a status update
     var fenceName = fenceInfo[ fenceInfoEnum.name ];
     var zoneName = zoneInfo[ zoneInfoEnum.name ];
-    
+
     updateStatus( fenceName + " has been triggered in " + zoneName + " at " + lat + ":" + lon );
-    
+    updateStatus( JSON.stringify(customData) );
+
     if ( willCheckOut == true )
     {
         updateStatus( "Fence is awaiting check-out" )
@@ -180,29 +181,31 @@ function fenceTrigger( fenceInfo, zoneInfo, lat, lon, date, willCheckOut )
  *  This delegate function receives the data of a fence with a Custom action that has been checked out of by the SDK.
  *  Refer to bluedotPointSDKCDVPlugin.js for more information.
  */
-function fenceCheckOut( fenceInfo, zoneInfo, date, dwellTime )
+function fenceCheckOut( fenceInfo, zoneInfo, date, dwellTime, customData )
 {
     //  Extract details for a status update
     var fenceName = fenceInfo[ fenceInfoEnum.name ];
     var zoneName = zoneInfo[ zoneInfoEnum.name ];
-    
+
     updateStatus( fenceName + " has been left in " + zoneName + " after " + dwellTime + "minutes" );
+    updateStatus( JSON.stringify(customData) );
 }
 
 /*
  *  This delegate function receives the data of a beacon with a Custom action that has been triggered by the SDK.
  *  Refer to bluedotPointSDKCDVPlugin.js for more information.
  */
-function beaconTrigger( beaconInfo, zoneInfo, proximity, date, willCheckOut )
+function beaconTrigger( beaconInfo, zoneInfo, proximity, date, willCheckOut, customData )
 {
     //  Extract details for a status update
     var beaconName = beaconInfo[ beaconInfoEnum.name ];
     var isiBeacon = beaconInfo[ beaconInfoEnum.isiBeacon ];
     var zoneName = zoneInfo[ zoneInfoEnum.name ];
     var proximityName = proximityEnum.properties[ proximity ].name;
-    
+
     updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been triggered in " + zoneName + " with a proximity of " + proximityName );
-    
+    updateStatus( JSON.stringify(customData) );
+
     if ( willCheckOut == true )
     {
         updateStatus( "Beacon is awaiting check-out" )
@@ -213,15 +216,16 @@ function beaconTrigger( beaconInfo, zoneInfo, proximity, date, willCheckOut )
  *  This delegate function receives the data of a beacon with a Custom action that has been checked out of by the SDK.
  *  Refer to bluedotPointSDKCDVPlugin.js for more information.
  */
-function beaconCheckOut( beaconInfo, zoneInfo, proximity, date, dwellTime )
+function beaconCheckOut( beaconInfo, zoneInfo, proximity, date, dwellTime, customData )
 {
     //  Extract details for a status update
     var beaconName = beaconInfo[ beaconInfoEnum.name ];
     var isiBeacon = beaconInfo[ beaconInfoEnum.isiBeacon ];
     var zoneName = zoneInfo[ zoneInfoEnum.name ];
     var proximityName = proximityEnum.properties[ proximity ].name;
-    
+
     updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been left in " + zoneName + " after " + dwellTime + " minutes" );
+    updateStatus( JSON.stringify(customData) );
 }
 
 /*
