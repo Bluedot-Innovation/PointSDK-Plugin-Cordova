@@ -63,6 +63,7 @@ exports.zoneInfoCallback = function( callback )
  *      Parameter 4: Longitude of check-in (Double)
  *      Parameter 5: Date of check-in (Integer - UNIX timestamp)
  *      Parameter 6: Fence is awaiting check-out (Boolean)
+ *      Parameter 7: JSON Object of custom data (JSON Object)
  */
 exports.checkedIntoFenceCallback = function( callback )
 {
@@ -83,6 +84,7 @@ exports.checkedIntoFenceCallback = function( callback )
  *          ID (String)
  *      Parameter 3: Date of check-out (Integer - UNIX timestamp)
  *      Parameter 4: Dwell time in minutes (Unsigned integer)
+ *      Parameter 5: JSON Object of custom data (JSON Object)
  */
 exports.checkedOutOfFenceCallback = function( callback )
 {
@@ -116,6 +118,7 @@ exports.checkedOutOfFenceCallback = function( callback )
  *          3 = Far
  *      Parameter 4: Date of check-in (Integer - UNIX timestamp)
  *      Parameter 5: Beacon is awaiting check-out (Boolean)
+ *      Parameter 6: JSON Object of custom data (JSON Object)
  */
 exports.checkedIntoBeaconCallback = function( callback )
 {
@@ -149,6 +152,7 @@ exports.checkedIntoBeaconCallback = function( callback )
  *          3 = Far
  *      Parameter 4: Date of check-in (Integer - UNIX timestamp)
  *      Parameter 5: Dwell time in minutes (Unsigned integer)
+ *      Parameter 6: JSON Object of custom data (JSON Object)
  */
 exports.checkedOutOfBeaconCallback = function( callback )
 {

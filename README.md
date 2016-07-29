@@ -22,14 +22,14 @@ The Bluedot plugin supports iOS and Android platforms.  These can be added to yo
 For Android, you will need to add the Android Support library, version 4 with the following command if you have not added it already:
 
     cordova plugin add cordova-android-support-v4
-    
+
 ### Provided wrappers
 To assist in getting your app up and running as quickly as possible, Javascript function wrappers are provided in the Bluedot plugin repository at the following location:
 js/bdFunctions.js
- 
+
 These functions provide sample code for the SDK functionality that can be utilised in their current form and expanded upon as the requirements of your app grow.  This file can be copied to your app's Javascript source directory and included in the <head></head> tags of your app's index.html:
 <script type="text/javascript" src="<Javascript source directory>/bdFunctions.js"></script>
- 
+
 In summary, the functions relate to an HTML page that contains the following:
 - A text area with an id of "statusText"
 
@@ -43,7 +43,7 @@ In summary, the functions relate to an HTML page that contains the following:
 - A button with an id of "logOutButton"
 
   This will call the doLogOut() function
- 
+
 These functions are representative and should be adjusted for the use of your particular app.
 
 ## iOS Xcode Updates
@@ -65,13 +65,13 @@ The following methods must be added to the app delegate should they not already 
         // This method implementation must be present in AppDelegate
         // when integrating Bluedot Point SDK v1.x, even if it is empty.
     }
-      
+
     - (void)applicationDidEnterBackground:(UIApplication *)application
     {
         // This method implementation must be present in AppDelegate
         // when integrating Bluedot Point SDK v1.x, even if it is empty.
     }
-      
+
     - (void)applicationWillResignActive:(UIApplication *)application
     {
         // For iOS9 (currently Beta) this method implementation must be present in AppDelegate
@@ -130,7 +130,7 @@ These functions are for your use and adaptation.
 
     cordova platform add ios
     cordova platform add android
-    
+
 For Android, you will need to add the Android Support library, version 4 with the following command:
 
     cordova plugin add cordova-android-support-v4
@@ -172,13 +172,13 @@ The following methods must be added to the app delegate should they not already 
         // This method implementation must be present in AppDelegate
         // when integrating Bluedot Point SDK v1.x, even if it is empty.
     }
-      
+
     - (void)applicationDidEnterBackground:(UIApplication *)application
     {
         // This method implementation must be present in AppDelegate
         // when integrating Bluedot Point SDK v1.x, even if it is empty.
     }
-      
+
     - (void)applicationWillResignActive:(UIApplication *)application
     {
         // For iOS9 (currently Beta) this method implementation must be present in AppDelegate
@@ -319,7 +319,7 @@ These strings can be accessed using an enum as demonstrated in the **bdFunctions
         description: 1,
         ID: 2
     }
-         
+
     /*
      *  This delegate function receives an array of Zone Infos.
      *  Refer to bluedotPointSDKCDVPlugin.js for more information.
@@ -327,16 +327,16 @@ These strings can be accessed using an enum as demonstrated in the **bdFunctions
     function zoneUpdate( zoneInfos )
     {
         updateStatus( "Zones info has been updated for " + zoneInfos.length + " zones" );
-     
+
         //  Process each of the zones
         for( pos = 0; pos < zoneInfos.length; pos++ )
         {
             var zoneInfo = zoneInfos[ pos ];
-             
+
             //  Extract details for a status update
             var name = zoneInfo[ zoneInfoEnum.name ];
             var description = zoneInfo[ zoneInfoEnum.description ];
-             
+
             updateStatus( "Zone " + name + " : " + description );
         }  
     }
@@ -359,6 +359,8 @@ These strings can be accessed using an enum as demonstrated in the **bdFunctions
      *      Parameter 3: Latitude of check-in (Double)
      *      Parameter 4: Longitude of check-in (Double)
      *      Parameter 5: Date of check-in (Integer - UNIX timestamp)
+     *      Parameter 6: Fence is awaiting check-out (Boolean)
+     *      Parameter 7: JSON Object of custom data (JSON Object)
      */
     exports.checkedIntoFenceCallback = function( callback )
     {
@@ -388,6 +390,7 @@ The callback function is passed 5 parameters of fence information, including the
 - Parameter 4: Longitudinal co-ordinate at the point of check-in
 - Parameter 5: Date of check-in; this is provided as a UNIX timestamp
 - Parameter 6: Fence is awaiting check-out (Boolean)
+- Parameter 7: JSON Object of custom data (JSON Object)
 
 These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundled with the Bluedot plug-in.
 
@@ -403,7 +406,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         description: 1,
         ID: 2
     }
-     
+
     /*
      *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
      *  Refer to bluedotPointSDKCDVPlugin.js for more information.
@@ -439,6 +442,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
      *          ID (String)
      *      Parameter 3: Date of check-in (Integer - UNIX timestamp)
      *      Parameter 4: Dwell time in minutes
+     *      Parameter 5: JSON Object of custom data (JSON Object)
      */
     exports.checkedOutOfFenceCallback = function( callback )
     {
@@ -466,6 +470,7 @@ The callback function is passed 4 parameters of fence information, including the
   - Zone id
 - Parameter 3: Date of check-in; this is provided as a UNIX timestamp
 - Parameter 4: Dwell time in minutes
+- Parameter 5: JSON Object of custom data
 
 These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundled with the Bluedot plug-in.
 
@@ -481,7 +486,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         description: 1,
         ID: 2
     }
-     
+
     /*
      *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
      *  Refer to bluedotPointSDKCDVPlugin.js for more information.
@@ -491,7 +496,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         //  Extract details for a status update
         var fenceName = fenceInfo[ fenceInfoEnum.name ];
         var zoneName = zoneInfo[ zoneInfoEnum.name ];
-         
+
         updateStatus( fenceName + " has been left in " + zoneName + " after " + dwellTime + " minutes" );
     }
 
@@ -525,6 +530,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
      *          3 = Far
      *      Parameter 4: Date of check-in (Integer - UNIX timestamp)
      *      Parameter 5: Beacon is awaiting check-out (Boolean)
+     *      Parameter 6: JSON Object of custom data (JSON Object)
      */
     exports.checkedIntoBeaconCallback = function( callback )
     {
@@ -558,6 +564,7 @@ The callback function is passed 5 parameters of beacon information, including th
 - Parameter 3: Proximity of the beacon at point of check-in
 - Parameter 4: Date of check-in; this is provided as a UNIX timestamp
 - Parameter 5: Beacon is awaiting check-out (Boolean)
+- Parameter 6: JSON Object of custom data (JSON Object)
 
 These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundled with the Bluedot plug-in.
 
@@ -567,7 +574,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         description: 1,
         ID: 2
     }
-     
+
     const beaconInfoEnum =
     {
         name: 0,
@@ -581,8 +588,8 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         lat: 8,
         lon: 9
     }
-    
-    const proximityEnum = 
+
+    const proximityEnum =
     {
         Unknown : 0,
         Immediate : 1,
@@ -596,7 +603,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
             3: { name: "Far", value: 3, code: "F" }
         }
     }
-     
+
     /*
      *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
      *  Refer to bluedotPointSDKCDVPlugin.js for more information.
@@ -647,6 +654,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
      *          3 = Far
      *      Parameter 4: Date of check-in (Integer - UNIX timestamp)
      *      Parameter 5: Dwell time in minutes (Unsigned integer)
+     *      Parameter 6: JSON Object of custom data (JSON Object)
      */
     exports.checkedOutOfBeaconCallback = function( callback )
     {
@@ -679,7 +687,8 @@ The callback function is passed 5 parameters of beacon information, including th
   - Zone id
 - Parameter 3: Proximity of the beacon at point of check-in
 - Parameter 4: Date of check-in; this is provided as a UNIX timestamp
-- Parameter 5: Dwell time in minutes (Unsigned integer)
+- Parameter 5: Dwell time in minutes
+- Parameter 6: JSON Object of custom data
 
 These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundled with the Bluedot plug-in.
 
@@ -689,7 +698,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         description: 1,
         ID: 2
     }
-     
+
     const beaconInfoEnum =
     {
         name: 0,
@@ -703,8 +712,8 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         lat: 8,
         lon: 9
     }
-    
-    const proximityEnum = 
+
+    const proximityEnum =
     {
         Unknown : 0,
         Immediate : 1,
@@ -718,7 +727,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
             3: { name: "Far", value: 3, code: "F" }
         }
     }
-     
+
     /*
      *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
      *  Refer to bluedotPointSDKCDVPlugin.js for more information.
