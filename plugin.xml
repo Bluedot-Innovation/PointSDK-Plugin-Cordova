@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="au.com.bluedot.bdpointsdk"
-    version="1.6.1">
+    version="1.8.0">
 
     <!-- This plugin requires Cordova version 3.1.0 or newer. -->
     <engines>
@@ -25,7 +25,7 @@
         <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
             <string>Allow location-based actions to be triggered while in the background</string>
         </config-file>
-        
+
         <!-- The app is able to run in background through location updates -->
         <config-file target="*-Info.plist" parent="UIBackgroundModes">
             <array>
@@ -105,14 +105,14 @@
           <uses-permission android:name="android.permission.BLUETOOTH"/>
           <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
         </config-file>
-       
+
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
           <service android:name="au.com.bluedot.point.beacon.BlueDotBLEService" android:exported="false"/>
           <service android:name="au.com.bluedot.point.net.engine.BlueDotPointService" android:exported="false"/>
         </config-file>
- 
+
         <source-file src="src/android/BDPointSDKWrapper.java" target-dir="src/au/com/bluedot/minimalLocationApp" />
         <source-file src="src/android/bluedot-point-sdk-release.jar" target-dir="libs" />
-        
+
     </platform>
 </plugin>
