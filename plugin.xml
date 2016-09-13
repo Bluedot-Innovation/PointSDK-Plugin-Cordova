@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="au.com.bluedot.bdpointsdk"
-    version="1.8.1">
+    version="1.8.2">
 
     <!-- This plugin requires Cordova version 3.1.0 or newer. -->
     <engines>
@@ -83,6 +83,8 @@
         <header-file src="src/ios/BDPointSDK/include/NSString+BDURLEncoding.h" />
 
         <source-file src="src/ios/BDPointSDK/libBDPointSDK.a" framework="true" />
+
+        <resource-file src="src/ios/BDPointSDK/BDDataModel.bundle" />
     </platform>
 
     <platform name="android">

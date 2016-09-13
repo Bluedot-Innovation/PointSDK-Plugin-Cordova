@@ -810,7 +810,7 @@ This callback allows your app to be notified if user intervention is required as
 This is a function that will be called when Location Services is currently not active.
 
 ##### Function parameters
-- None.
+The callback function is passed a parameter which indicate the current Location Service authorizationStatus.
 
 <br>
 ## stopRequiringUserInterventionForLocationServicesCallback
@@ -832,7 +832,7 @@ This callback allows your app to be notified if user intervention is no longer r
 This is a function that will be called when Location Services has been activated.
 
 ##### Function parameters
-- None.
+The callback function is passed a parameter which indicate the current Location Service authorizationStatus.
 
 ### Notes
 This function is only called on iOS devices.

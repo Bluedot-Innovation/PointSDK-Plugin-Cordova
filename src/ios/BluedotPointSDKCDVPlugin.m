@@ -27,25 +27,25 @@
      *  Session delegate callback funtion identifier.
      */
     id  _callbackIdAuthentication;
-    
+
     /*
      *  Callback identifiers for the Bluedot Location delegates.
      */
     id  _callbackIdZoneInfo;
     id  _callbackIdCheckedIntoFence;
     id  _callbackIdCheckedIntoBeacon;
-    
+
     id  _callbackIdCheckedOutOfFence;
     id  _callbackIdCheckedOutOfBeacon;
-    
+
     id  _callbackIdStartRequiringUserInterventionForBluetooth;
     id  _callbackIdStopRequiringUserInterventionForBluetooth;
     id  _callbackIdStartRequiringUserInterventionForLocationServices;
     id  _callbackIdStopRequiringUserInterventionForLocationServices;
-    
+
     //  A default date formatter
     NSDateFormatter  *_dateFormatter;
-    
+
     //  Is currently authenticated
     BOOL  _authenticated;
 }
@@ -59,15 +59,15 @@
      *  Instantiate the location manager and assign the delegates to this class.
      */
     BDLocationManager  *locationManager = [ BDLocationManager instance ];
-    
+
     //  Assign the delegates to this class
     locationManager.locationDelegate = self;
     locationManager.sessionDelegate = self;
-    
+
     //  Setup a generic date formatter
     _dateFormatter = [ NSDateFormatter new ];
     [ _dateFormatter setDateFormat: @"dd-MMM-yyyy HH:mm" ];
-    
+
     //  Initialise identifiers - unneccessary but explicit
     _callbackIdAuthentication = nil;
     _callbackIdZoneInfo = nil;
@@ -75,12 +75,12 @@
     _callbackIdCheckedIntoBeacon = nil;
     _callbackIdCheckedOutOfFence = nil;
     _callbackIdCheckedOutOfBeacon = nil;
-    
+
     _callbackIdStartRequiringUserInterventionForLocationServices = nil;
     _callbackIdStopRequiringUserInterventionForLocationServices = nil;
     _callbackIdStartRequiringUserInterventionForBluetooth = nil;
     _callbackIdStopRequiringUserInterventionForBluetooth = nil;
-    
+
     _authenticated = NO;
 }
 
@@ -92,32 +92,32 @@
  */
 - (void)authenticate: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  Ensure that the command has the minimum number of arguments
     if ( command.arguments.count < 3 )
     {
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                             messageAsString: @"Incorrect number of arguments supplied to authenticate method." ];
-        
+
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
         return;
     }
-    
+
     //  Retrieve the principle arguments for authentication
     NSString  *username = command.arguments[0];
     NSString  *apiKey = command.arguments[1];
     NSString  *packageName = command.arguments[2];
-    
+
     //  If the app has already authenticated, then do not try to authenticate again
     if ( _authenticated == YES )
     {
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                             messageAsString: @"Already authenticated - please log out from previous session." ];
-        
+
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
         return;
     }
-    
+
     //  Ensure that the authentication process is thread-safe
     @synchronized( _callbackIdAuthentication )
     {
@@ -126,14 +126,14 @@
             //  This is a duplicate call while authentication is already underway, return immediately
             CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                                 messageAsString: @"Already authenticating..." ];
-            
+
             [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
             return;
         }
-        
+
         //  Set the authenticating callback
         _callbackIdAuthentication = command.callbackId;
-        
+
         [ BDLocationManager.instance authenticateWithApiKey: apiKey
                                                 packageName: packageName
                                                    username: username ];
@@ -145,17 +145,17 @@
  */
 - (void)logOut: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  If the app has not been authenticated, then do not try to log out
     if ( _authenticated == NO )
     {
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                             messageAsString: @"There is no current session." ];
-        
+
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
         return;
     }
-    
+
     //  Ensure that the log out process is thread-safe
     @synchronized( _callbackIdAuthentication )
     {
@@ -170,7 +170,7 @@
  */
 - (void)zoneInfoCallback: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  Set the zone info callback
     _callbackIdZoneInfo = command.callbackId;
 }
@@ -180,7 +180,7 @@
  */
 - (void)checkedIntoFenceCallback: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  Set the callback when triggering a fence
     _callbackIdCheckedIntoFence = command.callbackId;
 }
@@ -190,7 +190,7 @@
  */
 - (void)checkedIntoBeaconCallback: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  Set the zone info callback when triggering a beacon
     _callbackIdCheckedIntoBeacon = command.callbackId;
 }
@@ -200,7 +200,7 @@
  */
 - (void)checkedOutOfFenceCallback: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  Set the callback when triggering a fence
     _callbackIdCheckedOutOfFence = command.callbackId;
 }
@@ -210,7 +210,7 @@
  */
 - (void)checkedOutOfBeaconCallback: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  Set the zone info callback when triggering a beacon
     _callbackIdCheckedOutOfBeacon = command.callbackId;
 }
@@ -220,14 +220,14 @@
  */
 - (void)startRequiringUserInterventionForBluetoothCallback: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  Set the zone info callback when triggering a beacon
     _callbackIdStartRequiringUserInterventionForBluetooth = command.callbackId;
 }
 
 - (void)stopRequiringUserInterventionForBluetoothCallback: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  Set the zone info callback when triggering a beacon
     _callbackIdStopRequiringUserInterventionForBluetooth = command.callbackId;
 }
@@ -237,14 +237,14 @@
  */
 - (void)startRequiringUserInterventionForLocationServicesCallback: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  Set the zone info callback when triggering a beacon
     _callbackIdStartRequiringUserInterventionForLocationServices = command.callbackId;
 }
 
 - (void)stopRequiringUserInterventionForLocationServicesCallback: (CDVInvokedUrlCommand *)command
 {
-    
+
     //  Set the zone info callback when triggering a beacon
     _callbackIdStopRequiringUserInterventionForLocationServices = command.callbackId;
 }
@@ -268,35 +268,24 @@
 
 - (void)setZone: (CDVInvokedUrlCommand *)command disableByApplication: (BOOL)disable
 {
-    
+
     //  Ensure that the command has the minimum number of arguments
     if ( command.arguments.count < 1 )
     {
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                             messageAsString: @"No zone id parameter supplied." ];
-        
+
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
         return;
     }
-    
+
     //  Retrieve the principle arguments for authentication
     NSString  *zoneId = command.arguments[0];
-    CDVPluginResult  *pluginResult;
-    BOOL  isZoneValid;
-    
-    isZoneValid = [ BDLocationManager.instance setZone: zoneId disableByApplication: disable ];
-    
-    //  Disabling the zone has been succesful
-    if ( isZoneValid == YES )
-    {
-        pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK ];
-    }
-    else
-    {
-        pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
-                                          messageAsString: @"Zone Id has not been processed." ];
-    }
-    
+
+    [ BDLocationManager.instance setZone: zoneId disableByApplication: disable ];
+
+    CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK ];
+
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
 }
 
@@ -318,7 +307,7 @@
  */
 - (void)authenticationWasSuccessful
 {
-    
+
     //  Ensure that the authentication process is thread-safe
     @synchronized( _callbackIdAuthentication )
     {
@@ -327,18 +316,18 @@
             NSLog( @"Internal error with authentication process" );
             return;
         }
-        
+
         //  Authentication has been successful; on iOS there are no possible warning issues
         NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: @( 0 ), nil ];
-        
+
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
                                                          messageAsMultipart: returnMultiPart ];
-        
+
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdAuthentication ];
-        
+
         //  Reset the authentication callback
         _callbackIdAuthentication = nil;
-        
+
         //  Session is authenticated
         _authenticated = YES;
     }
@@ -349,7 +338,7 @@
  */
 - (void)authenticationWasDeniedWithReason: (NSString *)reason
 {
-    
+
     //  Ensure that the authentication process is thread-safe
     @synchronized( _callbackIdAuthentication )
     {
@@ -358,16 +347,16 @@
             NSLog( @"Internal error with authentication process" );
             return;
         }
-        
+
         //  Authentication has been succesful
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                             messageAsString: reason ];
-        
+
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdAuthentication ];
-        
+
         //  Reset the authentication callback
         _callbackIdAuthentication = nil;
-        
+
         //  Session is not authenticated
         _authenticated = NO;
     }
@@ -378,7 +367,7 @@
  */
 - (void)authenticationFailedWithError: (NSError *)error
 {
-    
+
     //  Ensure that the authentication process is thread-safe
     @synchronized( _callbackIdAuthentication )
     {
@@ -387,16 +376,16 @@
             NSLog( @"Internal error with authentication process" );
             return;
         }
-        
+
         //  Authentication has been succesful
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                             messageAsString: error.localizedDescription ];
-        
+
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdAuthentication ];
-        
+
         //  Reset the authentication callback
         _callbackIdAuthentication = nil;
-        
+
         //  Session is not authenticated
         _authenticated = NO;
     }
@@ -408,17 +397,17 @@
 - (void)didEndSession
 {
     NSLog( @"Logged out" );
-    
+
     //  Ensure that the authentication process is thread-safe
     @synchronized( _callbackIdAuthentication )
     {
         //  Authentication has been succesful
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK ];
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdAuthentication ];
-        
+
         //  Reset the authentication callback
         _callbackIdAuthentication = nil;
-        
+
         //  Session is not authenticated
         _authenticated = NO;
     }
@@ -433,13 +422,13 @@
             NSLog( @"Internal error with authentication process" );
             return;
         }
-        
+
         //  Authentication has been succesful
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                             messageAsString: error.localizedDescription ];
-        
+
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdAuthentication ];
-        
+
         //  Reset the authentication callback
         _callbackIdAuthentication = nil;
     }
@@ -457,29 +446,29 @@
  */
 - (void)didUpdateZoneInfo: (NSSet *)zones
 {
-    
+
     NSLog( @"Point service updated with %lu zones", (unsigned long)zones.count );
-    
+
     //  Ensure that a delegate for zone info has been setup
     if ( _callbackIdZoneInfo == nil )
     {
         NSLog( @"Callback for zone information has not been setup." );
         return;
     }
-    
+
     NSMutableArray  *returnZones = [ NSMutableArray new ];
-    
+
     for( BDZoneInfo *zone in zones )
     {
         [ returnZones addObject: [ self zoneToArray: zone ] ];
     }
-    
+
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
                                                          messageAsArray: returnZones ];
-    
+
     //  Keep the callback after returning the result
     pluginResult.keepCallback = @(YES);
-    
+
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdZoneInfo ];
 }
 
@@ -506,33 +495,33 @@
              willCheckOut: (BOOL)willCheckOut
            withCustomData: (NSDictionary *)customData
 {
-    
+
     NSLog( @"You have checked into fence '%@' in zone '%@', at %@%@",
           fence.name, zone.name, [ _dateFormatter stringFromDate: date ],
           ( willCheckOut == YES ) ? @" and awaiting check out" : @"" );
-    
+
     //  Ensure that a delegate for fence info has been setup
     if ( _callbackIdCheckedIntoFence == nil )
     {
         NSLog( @"Callback for fence check-ins has not been setup." );
         return;
     }
-    
+
     NSArray  *returnFence = [ self fenceToArray: fence ];
     NSArray  *returnZone = [ self zoneToArray: zone ];
     NSTimeInterval  unixDate = [ date timeIntervalSince1970 ];
     double  lat = coordinate.latitude;
     double  lon = coordinate.longitude;
-    
+
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnFence, returnZone,
                                  @( lat ), @( lon ), @( unixDate ), @( willCheckOut ), customData, nil ];
-    
+
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
                                                      messageAsMultipart: returnMultiPart ];
-    
+
     //  Keep the callback after returning the result
     pluginResult.keepCallback = @(YES);
-    
+
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdCheckedIntoFence ];
 }
 
@@ -556,30 +545,30 @@
                 withDuration: (NSUInteger)checkedInDuration
               withCustomData: (NSDictionary *)customData
 {
-    
+
     NSLog( @"You left fence '%@' in zone '%@', after %u minutes",
           fence.name, zone.name, (unsigned int)checkedInDuration );
-    
+
     //  Ensure that a delegate for fence info has been setup
     if ( _callbackIdCheckedOutOfFence == nil )
     {
         NSLog( @"Callback for fence check-outs has not been setup." );
         return;
     }
-    
+
     NSArray  *returnFence = [ self fenceToArray: fence ];
     NSArray  *returnZone = [ self zoneToArray: zone ];
     NSTimeInterval  unixDate = [ date timeIntervalSince1970 ];
-    
+
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnFence, returnZone,
                                  @( unixDate ), @( checkedInDuration ), customData, nil ];
-    
+
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
                                                      messageAsMultipart: returnMultiPart ];
-    
+
     //  Keep the callback after returning the result
     pluginResult.keepCallback = @(YES);
-    
+
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdCheckedOutOfFence ];
 }
 
@@ -614,31 +603,31 @@
               willCheckOut: (BOOL)willCheckOut
             withCustomData: (NSDictionary *)customData
 {
-    
+
     NSLog( @"You have checked into beacon '%@' in zone '%@' with proximity %d at %@%@",
           beacon.name, zone.name, (int)proximity, [ _dateFormatter stringFromDate: date ],
           ( willCheckOut == YES ) ? @" and awaiting check out" : @"" );
-    
+
     //  Ensure that a delegate for fence info has been setup
     if ( _callbackIdCheckedIntoBeacon == nil )
     {
         NSLog( @"Callback for beacon check-ins has not been setup." );
         return;
     }
-    
+
     NSArray  *returnBeacon = [ self beaconToArray: beacon ];
     NSArray  *returnZone = [ self zoneToArray: zone ];
     NSTimeInterval  unixDate = [ date timeIntervalSince1970 ];
-    
+
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnBeacon, returnZone,
                                  @( proximity ), @( unixDate ), @( willCheckOut ), customData, nil ];
-    
+
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
                                                      messageAsMultipart: returnMultiPart ];
-    
+
     //  Keep the callback after returning the result
     pluginResult.keepCallback = @(YES);
-    
+
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdCheckedIntoBeacon ];
 }
 
@@ -673,31 +662,31 @@
                  withDuration: (NSUInteger)checkedInDuration
                withCustomData: (NSDictionary *)customData
 {
-    
+
     NSLog( @"You have left beacon '%@' in zone '%@' with proximity %d at %@ after %u minutes",
           beacon.name, zone.name, (int)proximity, [ _dateFormatter stringFromDate: date ],
           (unsigned int)checkedInDuration );
-    
+
     //  Ensure that a delegate for fence info has been setup
     if ( _callbackIdCheckedOutOfBeacon == nil )
     {
         NSLog( @"Callback for beacon check-outs has not been setup." );
         return;
     }
-    
+
     NSArray  *returnBeacon = [ self beaconToArray: beacon ];
     NSArray  *returnZone = [ self zoneToArray: zone ];
     NSTimeInterval  unixDate = [ date timeIntervalSince1970 ];
-    
+
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnBeacon, returnZone,
                                  @( proximity ), @( unixDate ), @( checkedInDuration ), customData, nil ];
-    
+
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
                                                      messageAsMultipart: returnMultiPart ];
-    
+
     //  Keep the callback after returning the result
     pluginResult.keepCallback = @(YES);
-    
+
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdCheckedOutOfBeacon ];
 }
 
@@ -709,19 +698,19 @@
 {
     NSLog( @"There are nearby Beacons which cannot be detected because Bluetooth is disabled."
           "Re-enable Bluetooth to restore full functionality." );
-    
+
     //  Ensure that a delegate for Bluetooth user intervention has been setup
     if ( _callbackIdStartRequiringUserInterventionForBluetooth == nil )
     {
         NSLog( @"Callback for start requiring user intervention for Bluetooth has not been setup." );
         return;
     }
-    
+
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK ];
-    
+
     //  Keep the callback after returning the result
     pluginResult.keepCallback = @(YES);
-    
+
     [ self.commandDelegate sendPluginResult: pluginResult
                                  callbackId: _callbackIdStartRequiringUserInterventionForBluetooth ];
 }
@@ -734,19 +723,19 @@
 - (void)didStopRequiringUserInterventionForBluetooth
 {
     NSLog( @"User intervention for Bluetooth is no longer required." );
-    
+
     //  Ensure that a delegate for Bluetooth user intervention has been setup
     if ( _callbackIdStopRequiringUserInterventionForBluetooth == nil )
     {
         NSLog( @"Callback for stop requiring user intervention for Bluetooth has not been setup." );
         return;
     }
-    
+
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK ];
-    
+
     //  Keep the callback after returning the result
     pluginResult.keepCallback = @(YES);
-    
+
     [ self.commandDelegate sendPluginResult: pluginResult
                                  callbackId: _callbackIdStopRequiringUserInterventionForBluetooth ];
 }
@@ -755,22 +744,23 @@
  *  This method is part of the Bluedot location delegate and is called when Location Services are not enabled
  *  on the device; requiring user intervention.
  */
-- (void)didStartRequiringUserInterventionForLocationServices
+- (void)didStartRequiringUserInterventionForLocationServicesAuthorizationStatus: (CLAuthorizationStatus)authorizationStatus
 {
-    NSLog( @"This App requires Location Services which are currently disabled." );
-    
+    NSString  *authorizationStatusString = (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse ? @"while in using" : @"disabled");
+    NSLog( @"This App requires Location Services which are currently set to %@.", authorizationStatusString );
+
     //  Ensure that a delegate for Location Services user intervention has been setup
     if ( _callbackIdStartRequiringUserInterventionForLocationServices == nil )
     {
         NSLog( @"Callback for start requiring user intervention for Location Services has not been setup." );
         return;
     }
-    
+
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK ];
-    
+
     //  Keep the callback after returning the result
     pluginResult.keepCallback = @(YES);
-    
+
     [ self.commandDelegate sendPluginResult: pluginResult
                                  callbackId: _callbackIdStartRequiringUserInterventionForLocationServices ];
 }
@@ -780,22 +770,22 @@
  *  been required to enable Location Services and either Location Services has been enabled or the user is no longer
  *  within an authenticated session, thereby no longer requiring Location Services.
  */
-- (void)didStopRequiringUserInterventionForLocationServices
+- (void)didStopRequiringUserInterventionForLocationServicesAuthorizationStatus: (CLAuthorizationStatus)authorizationStatus
 {
     NSLog( @"User intervention for location services is no longer required" );
-    
+
     //  Ensure that a delegate for Location Services user intervention has been setup
     if ( _callbackIdStopRequiringUserInterventionForLocationServices == nil )
     {
         NSLog( @"Callback for stop requiring user intervention for Location Services has not been setup." );
         return;
     }
-    
+
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK ];
-    
+
     //  Keep the callback after returning the result
     pluginResult.keepCallback = @(YES);
-    
+
     [ self.commandDelegate sendPluginResult: pluginResult
                                  callbackId: _callbackIdStopRequiringUserInterventionForLocationServices ];
 }
@@ -809,11 +799,11 @@
 - (NSArray *)zoneToArray: (BDZoneInfo *)zone
 {
     NSMutableArray  *strings = [ NSMutableArray new ];
-    
+
     [ strings addObject: zone.name ];
     [ strings addObject: ( zone.description == nil ) ? @"" : zone.description ];
     [ strings addObject: zone.ID ];
-    
+
     return strings;
 }
 
@@ -827,11 +817,11 @@
 - (NSArray *)fenceToArray: (BDFenceInfo *)fence
 {
     NSMutableArray  *strings = [ NSMutableArray new ];
-    
+
     [ strings addObject: fence.name ];
     [ strings addObject: ( fence.description == nil ) ? @"" : fence.description ];
     [ strings addObject: fence.ID ];
-    
+
     return strings;
 }
 
@@ -852,22 +842,22 @@
 - (NSArray *)beaconToArray: (BDBeaconInfo *)beacon
 {
     NSMutableArray  *objs = [ NSMutableArray new ];
-    
+
     [ objs addObject: beacon.name ];
     [ objs addObject: ( beacon.description == nil ) ? @"" : beacon.description ];
     [ objs addObject: beacon.ID ];
-    
+
     [ objs addObject: @(YES) ];
     [ objs addObject: beacon.proximityUuid ];
     [ objs addObject: @( beacon.major ) ];
     [ objs addObject: @( beacon.minor ) ];
-    
+
     //  Arrays cannot contain nil, add an NSNULL object
     [ objs addObject: [ NSNull null ] ];
-    
+
     [ objs addObject: @( beacon.location.latitude ) ];
     [ objs addObject: @( beacon.location.longitude ) ];
-    
+
     return objs;
 }
 

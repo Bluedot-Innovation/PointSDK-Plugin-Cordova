@@ -1,10 +1,7 @@
-/****
- *    BDLocationManager+BDPointSDK.h
- *
- *    Implement the Bluedot location manager enhanced functionality for the SDK.
- *
- *    Copyright (C) 2015 Bluedot Innovation.  All rights reserved.
- */
+//
+//  Created by Bluedot Innovation
+//  Copyright (c) 2016 Bluedot Innovation. All rights reserved.
+//
 
 #import <Foundation/Foundation.h>
 
@@ -98,7 +95,7 @@
   Disabled or re-enable a specific @ref BDZoneInfo "zone".  Information about valid @ref BDZoneInfo "zones", including
   their respective <i>zoneId</i>'s for use in this method, is delivered to BDPLocationDelegate::didUpdateZoneInfo:.
  */
-- (BOOL)setZone: (NSString *)zoneId disableByApplication: (BOOL)disable;
+- (void)setZone: (NSString *)zoneId disableByApplication: (BOOL)disable;
 
 - (BOOL)isZoneDisabledByApplication: (NSString *)zoneId;
 

@@ -1,13 +1,7 @@
-
-// __BD_APPLE_ONLY__
-
-/****
- *    MKMapView+BDPoint.h
- *
- *    Additional functionality to the MKMapView for processing overlays.
- *
- *    Copyright (C) 2015 Bluedot.  All rights reserved.
- */
+//
+//  Created by Bluedot Innovation
+//  Copyright (c) 2016 Bluedot Innovation. All rights reserved.
+//
 
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
