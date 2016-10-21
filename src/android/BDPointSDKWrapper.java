@@ -14,6 +14,8 @@ import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import java.util.Date;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import au.com.bluedot.point.ApplicationNotificationListener;
 import au.com.bluedot.point.net.engine.BDError;
@@ -47,6 +49,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public static final String ACTION_REQUIRE_USER_INTERVENTION_FOR_LOCATION = "startRequiringUserInterventionForLocationServicesCallback";
     public static final String ACTION_DISABLE_ZONE = "disableZone";
     public static final String ACTION_ENABLE_ZONE = "enableZone";
+    public static final String ACTION_NOTIFY_PUSH_UPDATE = "notifyPushUpdate";
+
     private final static String TAG = "BDPointSDKWrapper";
 
     // An error code of 0 entails no additional warnings. For error code higher then zero please refer BDError.
@@ -124,6 +128,10 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             String zoneId = args.getString(0);
             mZoneUpdateCallbackContext = callbackContext;
             updateZone(zoneId, false);
+            result = true;
+        } else if (action.equals(ACTION_NOTIFY_PUSH_UPDATE)) {
+            JSONObject jsonObject = args.getJSONObject(0);
+            notifyPushUpdate(jsonObject);
             result = true;
         }
 
@@ -489,15 +497,22 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
      * @param zoneId, flag
      */
     public void updateZone(String zoneId, boolean flag) {
-        boolean status = false;
-        status = mServiceManager.setZoneDisableByApplication(zoneId, flag);
+        mServiceManager.setZoneDisableByApplication(zoneId, flag);
         if (mZoneUpdateCallbackContext != null) {
-            if (status) {
-                mZoneUpdateCallbackContext.success();
-            } else {
-                mZoneUpdateCallbackContext.error("");
-            }
+            mZoneUpdateCallbackContext.success();
         }
+    }
+
+    public void notifyPushUpdate(JSONObject jsonObject) {
+        Map<String, String> data = new HashMap<String, String>();
+        Iterator<String> iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            try {
+                String key = iterator.next();
+                data.put(key, jsonObject.getString(key));
+            } catch (JSONException e) {}
+        }
+        mServiceManager.notifyPushUpdate(data);
     }
 
     private int getIntForProximity(Proximity value) {

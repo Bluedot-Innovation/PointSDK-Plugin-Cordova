@@ -33,4 +33,9 @@
 - (void)startRequiringUserInterventionForLocationServicesCallback: (CDVInvokedUrlCommand *)command;
 - (void)stopRequiringUserInterventionForLocationServicesCallback: (CDVInvokedUrlCommand *)command;
 
+- (void)disableZone: (CDVInvokedUrlCommand *)command;
+- (void)enableZone: (CDVInvokedUrlCommand *)command;
+
+- (void)notifyPushUpdate: (CDVInvokedUrlCommand *)command;
+
 @end

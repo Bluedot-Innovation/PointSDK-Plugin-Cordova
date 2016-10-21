@@ -173,7 +173,7 @@ function fenceTrigger( fenceInfo, zoneInfo, lat, lon, date, willCheckOut, custom
 
     if ( willCheckOut == true )
     {
-        updateStatus( "Fence is awaiting check-out" )
+        updateStatus( "Fence is awaiting check-out" );
     }
 }
 
@@ -208,7 +208,7 @@ function beaconTrigger( beaconInfo, zoneInfo, proximity, date, willCheckOut, cus
 
     if ( willCheckOut == true )
     {
-        updateStatus( "Beacon is awaiting check-out" )
+        updateStatus( "Beacon is awaiting check-out" );
     }
 }
 

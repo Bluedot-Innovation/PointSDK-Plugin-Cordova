@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="au.com.bluedot.bdpointsdk"
-    version="1.8.2">
+    version="1.9.0">
 
     <!-- This plugin requires Cordova version 3.1.0 or newer. -->
     <engines>
@@ -110,6 +110,7 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
           <service android:name="au.com.bluedot.point.beacon.BlueDotBLEService" android:exported="false"/>
+          <service android:name="au.com.bluedot.point.net.engine.DataJobScheduler" android:exported="false" android:permission="android.permission.BIND_JOB_SERVICE" />
           <service android:name="au.com.bluedot.point.net.engine.BlueDotPointService" android:exported="false"/>
         </config-file>
 

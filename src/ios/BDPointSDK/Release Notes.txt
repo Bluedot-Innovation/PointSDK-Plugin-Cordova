@@ -1,13 +1,8 @@
-Bluedot Point SDK iOS v1.8 Release Notes
+Bluedot Point SDK iOS v1.9 Release Notes
 ----------------------------------------
 New feature:
-The iOS SDK can deliver to the app any custom data set on the custom action on the backend as a parameter in fence and beacon call back methods.
-- (void)didCheckIntoFence:inZone:atCoordinate:onDate:willCheckOut:withCustomData:
-- (void)didCheckIntoBeacon:inZone:withProximity:onDate:willCheckOut:withCustomData:
-- (void)didCheckOutFromFence:inZone:onDate:withDuration:withCustomData:
-- (void)didCheckOutFromBeacon:inZone:withProximity:onDate:withDuration:withCustomData:
-The custom data can be added and managed using the Point Access user interface or the public APIs.
-Enhancement:
-- `zoneInfos` is now available as a new property through `BDLocationManager` to access all the zone related information which were setup in Point Access user interface.
+Real-Time data synchronisation feature allows for data syncs to occur between the back-end and the mobile devices immediately when locations and settings change on the back-end. The iOS SDK provides API for triggering rule syncs through Google Firebase messaging services.
+Enhancements:
+Check-out is now tracked even if the app is closed and re-launched after the check-in event to provide more accurate dwell-time.
 Defect fixes:
-- General defect fixes
+General minor defect fixes

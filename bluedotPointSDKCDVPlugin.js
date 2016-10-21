@@ -196,7 +196,7 @@ exports.stopRequiringUserInterventionForLocationServicesCallback = function( cal
  */
 exports.disableZone = function( success, fail, zoneId )
 {
-    exec( success, fail, "BDPointSDK", "disableZone", [ zoneId ] );
+    exec( null, null, "BDPointSDK", "disableZone", [ zoneId ] );
 }
 
 /*
@@ -204,5 +204,10 @@ exports.disableZone = function( success, fail, zoneId )
  */
 exports.enableZone = function( success, fail, zoneId )
 {
-    exec( success, fail, "BDPointSDK", "enableZone", [ zoneId ] );
+    exec( null, null, "BDPointSDK", "enableZone", [ zoneId ] );
+}
+
+exports.notifyPushUpdate = function( userInfo )
+{
+    exec( null, null, "BDPointSDK", "notifyPushUpdate", [ userInfo ] );
 }
