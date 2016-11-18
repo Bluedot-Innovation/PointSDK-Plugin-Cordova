@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="au.com.bluedot.bdpointsdk"
-    version="1.9.0">
+    version="1.9.1">
 
     <!-- This plugin requires Cordova version 3.1.0 or newer. -->
     <engines>
@@ -24,6 +24,11 @@
         <!-- The app provides a description for the use of background location updates -->
         <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
             <string>Allow location-based actions to be triggered while in the background</string>
+        </config-file>
+
+        <!-- The app provides a description for the use of motion and activity -->
+        <config-file target="*-Info.plist" parent="NSMotionUsageDescription">
+            <string>Allow the access to utilise your motion sensor for better performance</string>
         </config-file>
 
         <!-- The app is able to run in background through location updates -->

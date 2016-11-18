@@ -274,15 +274,12 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             jsonObjectZone = null;
         }
 
-        JSONObject jsonObjectCustomData = new JSONObject(_customData);
-
         PluginResult fenceInfo = new PluginResult(PluginResult.Status.OK, jsonObjectFence);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
         PluginResult lat = new PluginResult(PluginResult.Status.OK, "" + _lat);
         PluginResult lon = new PluginResult(PluginResult.Status.OK, "" + _lon);
         PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
         PluginResult isCheckOut = new PluginResult(PluginResult.Status.OK, "" + _isCheckOut);
-        PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
@@ -292,7 +289,13 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         multipartMessages.add(lon);
         multipartMessages.add(date);
         multipartMessages.add(isCheckOut);
-        multipartMessages.add(customData);
+
+        if ( _customData != null ) {
+            JSONObject jsonObjectCustomData = new JSONObject(_customData);
+            PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
+            multipartMessages.add(customData);
+        }
+
         PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
         result.setKeepCallback(true);
 
@@ -346,14 +349,11 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             jsonObjectZone = null;
         }
 
-        JSONObject jsonObjectCustomData = new JSONObject(_customData);
-
         PluginResult beaconInfo = new PluginResult(PluginResult.Status.OK, jsonObjectBeacon);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
         PluginResult proximity = new PluginResult(PluginResult.Status.OK, "" + getIntForProximity(_proximity));
         PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
         PluginResult isCheckOut = new PluginResult(PluginResult.Status.OK, "" + _isCheckOut);
-        PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
@@ -362,7 +362,13 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         multipartMessages.add(proximity);
         multipartMessages.add(date);
         multipartMessages.add(isCheckOut);
-        multipartMessages.add(customData);
+
+        if ( _customData != null ) {
+            JSONObject jsonObjectCustomData = new JSONObject(_customData);
+            PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
+            multipartMessages.add(customData);
+        }
+
         PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
         result.setKeepCallback(true);
 
@@ -403,13 +409,10 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             jsonObjectZone = null;
         }
 
-        JSONObject jsonObjectCustomData = new JSONObject(_customData);
-
         PluginResult fenceInfo = new PluginResult(PluginResult.Status.OK, jsonObjectFence);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
         PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
         PluginResult dwellTime = new PluginResult(PluginResult.Status.OK, "" + _dwellTime);
-        PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
@@ -417,7 +420,13 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         multipartMessages.add(zoneInfo);
         multipartMessages.add(date);
         multipartMessages.add(dwellTime);
-        multipartMessages.add(customData);
+
+        if ( _customData != null ) {
+            JSONObject jsonObjectCustomData = new JSONObject(_customData);
+            PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
+            multipartMessages.add(customData);
+        }
+
         PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
         result.setKeepCallback(true);
 
@@ -467,14 +476,11 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             jsonObjectZone = null;
         }
 
-        JSONObject jsonObjectCustomData = new JSONObject(_customData);
-
         PluginResult beaconInfo = new PluginResult(PluginResult.Status.OK, jsonObjectBeacon);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
         PluginResult proximity = new PluginResult(PluginResult.Status.OK, "" + 0);
         PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
         PluginResult dwellTime = new PluginResult(PluginResult.Status.OK, "" + _dwellTime);
-        PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
@@ -483,7 +489,13 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         multipartMessages.add(proximity);
         multipartMessages.add(date);
         multipartMessages.add(dwellTime);
-        multipartMessages.add(customData);
+
+        if ( _customData != null ) {
+            JSONObject jsonObjectCustomData = new JSONObject(_customData);
+            PluginResult customData = new PluginResult(PluginResult.Status.OK, jsonObjectCustomData);
+            multipartMessages.add(customData);
+        }
+
         PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
         result.setKeepCallback(true);
 
