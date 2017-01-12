@@ -189,15 +189,15 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public void onBlueDotPointServiceError(BDError bdError) {
         if (mAuthCallbackContext != null) {
 
-            if(!bdError.isFatal()){
-                errorCode = bdError.getErrorCode();
-                errorMsg = bdError.getReason();
-            } else if (bdError instanceof LocationServiceNotEnabledError) {
+            if (bdError instanceof LocationServiceNotEnabledError) {
                 mRequiringUserInterventionForLocationServicesCallbackContext = mAuthCallbackContext;
                 mRequiringUserInterventionForLocationServicesCallbackContext.error(bdError.getClass().getSimpleName() + " " + bdError.getReason());
             } else if (bdError instanceof BluetoothNotEnabledError) {
                 mRequiringUserInterventionForBluetoothCallbackContext = mAuthCallbackContext;
                 mRequiringUserInterventionForBluetoothCallbackContext.error(bdError.getClass().getSimpleName() + " " + bdError.getReason());
+            } else if(!bdError.isFatal()) {
+                errorCode = bdError.getErrorCode();
+                errorMsg = bdError.getReason();
             } else {
                 mAuthCallbackContext.error(bdError.getClass().getSimpleName() + " " + bdError.getReason());
             }
