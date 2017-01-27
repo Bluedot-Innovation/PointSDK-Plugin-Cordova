@@ -1,6 +1,6 @@
 {
   "name": "bluedot-plugin",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "Bluedot Point SDK; integrates the Android and iOS Point SDK libraries through a Cordova / PhoneGap plugin",
   "cordova": {
     "id": "au.com.bluedot.bdpointsdk",
@@ -27,7 +27,7 @@
       "version": ">=3.1.0"
     }
   ],
-  "author": "Roddy McNeill",
+  "author": "Bluedot Innovation",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Bluedot-Innovation/PointSDK-Plugin-Cordova/issues"
