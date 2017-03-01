@@ -356,11 +356,14 @@ These strings can be accessed using an enum as demonstrated in the **bdFunctions
      *          name (String)
      *          description (String)
      *          ID (String)
-     *      Parameter 3: Latitude of check-in (Double)
-     *      Parameter 4: Longitude of check-in (Double)
-     *      Parameter 5: Date of check-in (Integer - UNIX timestamp)
-     *      Parameter 6: Fence is awaiting check-out (Boolean)
-     *      Parameter 7: JSON Object of custom data (JSON Object)
+     *     Parameter 3: Array of doubles identifying location which triggers fence:
+     *          Date of check-in (Integer - UNIX timestamp)
+     *          Latitude of check-in (Double)
+     *          Longitude of check-in (Double)
+     *          Bearing of check-in (Double)
+     *          Speed of check-in (Double)
+     *      Parameter 4: Fence is awaiting check-out (Boolean)
+     *      Parameter 5: JSON Object of custom data (JSON Object)
      */
     exports.checkedIntoFenceCallback = function( callback )
     {
@@ -376,7 +379,7 @@ This function provides a callback function to the SDK that will be called the de
 This is a function that will be called when the device has triggered a Geofence or crossed a Geoline™.
 
 ##### Function parameters
-The callback function is passed 7 parameters of fence information, including the zone the fence is within; each entry contains the following information in the order provided:
+The callback function is passed 5 parameters of fence information, including the zone the fence is within; each entry contains the following information in the order provided:
 
 - Parameter 1: Fence Info array
   - Fence name
@@ -386,11 +389,14 @@ The callback function is passed 7 parameters of fence information, including the
   - Zone name
   - Zone description
   - Zone id
-- Parameter 3: Latitudinal co-ordinate at the point of check-in
-- Parameter 4: Longitudinal co-ordinate at the point of check-in
-- Parameter 5: Date of check-in; this is provided as a UNIX timestamp
-- Parameter 6: Fence is awaiting check-out (Boolean)
-- Parameter 7: JSON Object of custom data (JSON Object)
+- Parameter 3: Location Info array
+  - Date of check-in; this is provided as a UNIX timestamp
+  - Latitudinal co-ordinate at the point of check-in
+  - Longitudinal co-ordinate at the point of check-in
+  - Bearing degree of check-in
+  - Speed of check-in
+- Parameter 4: Fence is awaiting check-out (Boolean)
+- Parameter 5: JSON Object of custom data (JSON Object)
 
 These strings can be accessed using an enum as demonstrated in the bdFunctions.js Javascript wrapper that is bundled with the Bluedot plug-in.
 
@@ -407,15 +413,26 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         ID: 2
     }
 
+    const locationInfoEnum =
+    {
+        timestamp: 0,
+        latitude: 1,
+        longitude: 2,
+        bearing: 3,
+        speed: 4
+    }
+
     /*
      *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
      *  Refer to bluedotPointSDKCDVPlugin.js for more information.
      */
-    function fenceTrigger( fenceInfo, zoneInfo, lat, lon, date, willCheckOut, customData )
+    function fenceTrigger( fenceInfo, zoneInfo, locationInfo, willCheckOut, customData )
     {
         //  Extract details for a status update
         var fenceName = fenceInfo[ fenceInfoEnum.name ];
         var zoneName = zoneInfo[ zoneInfoEnum.name ];
+        var lat = locationInfo[ locationInfoEnum.latitude ];
+        var lon = locationInfo[ locationInfoEnum.longitude ];
 
         updateStatus( fenceName + " has been triggered in " + zoneName + " at " + lat + ":" + lon );
         updateStatus( JSON.stringify(customData) );
@@ -459,7 +476,7 @@ This function provides a callback function to the SDK that will be called the de
 This is a function that will be called when the device has left a Geofence in a Check-Out Zone that had been previously checked into.
 
 ##### Function parameters
-The callback function is passed 4 parameters of fence information, including the zone the fence is within; each entry contains the following information in the order provided:
+The callback function is passed 5 parameters of fence information, including the zone the fence is within; each entry contains the following information in the order provided:
 
 - Parameter 1: Fence Info array
   - Fence name
@@ -525,12 +542,17 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
      *          name (String)
      *          description (String)
      *          ID (String)
-     *      Parameter 3: Proximity of check-in to beacon (Integer)
+     *      Parameter 3: Array of double values identifying location:
+     *          Date of check-in (Integer - UNIX timestamp)
+     *          Latitude of beacon setting (Double)
+     *          Longitude of beacon setting (Double)
+     *          Bearing of beacon setting (Double)
+     *          Speed of beacon setting (Double)
+     *      Parameter 4: Proximity of check-in to beacon (Integer)
      *          0 = Unknown
      *          1 = Immediate
      *          2 = Near
      *          3 = Far
-     *      Parameter 4: Date of check-in (Integer - UNIX timestamp)
      *      Parameter 5: Beacon is awaiting check-out (Boolean)
      *      Parameter 6: JSON Object of custom data (JSON Object)
      */
@@ -563,8 +585,13 @@ The callback function is passed 6 parameters of beacon information, including th
   - Zone name
   - Zone description
   - Zone id
-- Parameter 3: Proximity of the beacon at point of check-in
-- Parameter 4: Date of check-in; this is provided as a UNIX timestamp
+- Parameter 3: Location Info array
+  - Date of check-in; this is provided as a UNIX timestamp
+  - Latitudinal co-ordinate at the point of beacon
+  - Longitudinal co-ordinate at the point of beacon
+  - Bearing degree at the point of beacon
+  - Speed at the point of beacon
+- Parameter 4: Proximity of the beacon at point of check-in
 - Parameter 5: Beacon is awaiting check-out (Boolean)
 - Parameter 6: JSON Object of custom data (JSON Object)
 
@@ -591,6 +618,15 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         lon: 9
     }
 
+    const locationInfoEnum =
+    {
+        timestamp: 0,
+        latitude: 1,
+        longitude: 2,
+        bearing: 3,
+        speed: 4
+    }
+
     const proximityEnum =
     {
         Unknown : 0,
@@ -610,15 +646,17 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
      *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
      *  Refer to bluedotPointSDKCDVPlugin.js for more information.
      */
-    function beaconTrigger( beaconInfo, zoneInfo, proximity, date, willCheckOut, customData )
+    function beaconTrigger( beaconInfo, zoneInfo, locationInfo, proximity, willCheckOut, customData )
     {
         //  Extract details for a status update
         var beaconName = beaconInfo[ beaconInfoEnum.name ];
         var isiBeacon = beaconInfo[ beaconInfoEnum.isiBeacon ];
         var zoneName = zoneInfo[ zoneInfoEnum.name ];
         var proximityName = proximityEnum.properties[ proximity ].name;
+        var lat = locationInfo [ locationInfoEnum.latitude ];
+        var lon = locationInfo [ locationInfoEnum.longitude ];
 
-        updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been triggered in " + zoneName + " with a proximity of " + proximityName );
+        updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been triggered in " + zoneName + " with a proximity of " + proximityName + " at " + lat + ":" + lon  );
         updateStatus( JSON.stringify(customData) );
 
         if ( willCheckOut == true )

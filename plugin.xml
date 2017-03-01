@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="au.com.bluedot.bdpointsdk"
-    version="1.9.5">
+    version="1.9.6">
 
     <!-- This plugin requires Cordova version 3.1.0 or newer. -->
     <engines>
@@ -58,6 +58,7 @@
         <header-file src="src/ios/BDPointSDK/include/BDGeospatialUnits.h" />
         <header-file src="src/ios/BDPointSDK/include/BDLineString.h" />
         <header-file src="src/ios/BDPointSDK/include/BDLocation.h" />
+        <header-file src="src/ios/BDPointSDK/include/BDLocationInfo.h" />
         <header-file src="src/ios/BDPointSDK/include/BDLocationManager.h" />
         <header-file src="src/ios/BDPointSDK/include/BDLocationManager+BDPointSDK.h" />
         <header-file src="src/ios/BDPointSDK/include/BDPAuthenticationStateProvider.h" />
@@ -102,7 +103,7 @@
           <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
           <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
           <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-          <uses-permission android:name="android.permission.VIBRATE" />
+          <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
           <uses-permission android:name="android.permission.BLUETOOTH"/>
           <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
         </config-file>

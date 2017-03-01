@@ -22,6 +22,7 @@ import au.com.bluedot.point.net.engine.BDError;
 import au.com.bluedot.point.ServiceStatusListener;
 import au.com.bluedot.point.net.engine.BeaconInfo;
 import au.com.bluedot.point.net.engine.ZoneInfo;
+import au.com.bluedot.point.net.engine.LocationInfo;
 import au.com.bluedot.point.net.engine.ServiceManager;
 import au.com.bluedot.point.BluetoothNotEnabledError;
 import au.com.bluedot.point.LocationServiceNotEnabledError;
@@ -248,11 +249,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
      * @param isCheckOut - CheckOut will be tracked and delivered once device left the Fence
      */
     @Override
-    public void onCheckIntoFence(Fence _fence, ZoneInfo _zoneInfo, Location _location, Map<String, String> _customData, boolean _isCheckOut) {
-
-        double _lat = _location.getLatitude();
-        double _lon = _location.getLongitude();
-        long _date =  _location.getTime();
+    public void onCheckIntoFence(Fence _fence, ZoneInfo _zoneInfo, LocationInfo _locationInfo, Map<String, String> _customData, boolean _isCheckOut) {
 
         JSONObject jsonObjectFence = new JSONObject();
 
@@ -273,21 +270,29 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         } catch (Exception e) {
             jsonObjectZone = null;
         }
+        
+        JSONObject jsonObjectLocation = new JSONObject();
+        
+        try {
+            jsonObjectLocation.put("0", _locationInfo.getTimeStamp());
+            jsonObjectLocation.put("1", _locationInfo.getLatitude());
+            jsonObjectLocation.put("2", _locationInfo.getLongitude());
+            jsonObjectLocation.put("3", _locationInfo.getBearing());
+            jsonObjectLocation.put("4", _locationInfo.getSpeed());
+        } catch (Exception e) {
+            jsonObjectLocation = null;
+        }
 
         PluginResult fenceInfo = new PluginResult(PluginResult.Status.OK, jsonObjectFence);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
-        PluginResult lat = new PluginResult(PluginResult.Status.OK, "" + _lat);
-        PluginResult lon = new PluginResult(PluginResult.Status.OK, "" + _lon);
-        PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
+        PluginResult locationInfo = new PluginResult(PluginResult.Status.OK, jsonObjectLocation);
         PluginResult isCheckOut = new PluginResult(PluginResult.Status.OK, "" + _isCheckOut);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
         multipartMessages.add(fenceInfo);
         multipartMessages.add(zoneInfo);
-        multipartMessages.add(lat);
-        multipartMessages.add(lon);
-        multipartMessages.add(date);
+        multipartMessages.add(locationInfo);
         multipartMessages.add(isCheckOut);
 
         if ( _customData != null ) {
@@ -311,14 +316,13 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
      * and check into any beacon under that Zone
      * @param beaconInfo - Beacon triggered
      * @param zoneInfo   - Zone information Beacon belongs to
-     * @param location   - geographical coordinate where trigger happened
+     * @param location   - the location of the beacon as specified on the Bluedot backend
      * @param proximity  - the proximity at which the trigger occurred
      * @param isCheckOut - CheckOut will be tracked and delivered once device left the Beacon advertisement range
      */
     @Override
-    public void onCheckIntoBeacon(BeaconInfo _beaconInfo, ZoneInfo _zoneInfo, Location _location, Proximity _proximity, Map<String, String> _customData, boolean _isCheckOut) {
+    public void onCheckIntoBeacon(BeaconInfo _beaconInfo, ZoneInfo _zoneInfo, LocationInfo _locationInfo, Proximity _proximity, Map<String, String> _customData, boolean _isCheckOut) {
 
-        long _date = _location.getTime();
         int _txPower = _beaconInfo.getTxPower();
 
         JSONObject jsonObjectBeacon = new JSONObject();
@@ -348,11 +352,23 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         } catch (Exception e) {
             jsonObjectZone = null;
         }
+        
+        JSONObject jsonObjectLocation = new JSONObject();
+        
+        try {
+            jsonObjectLocation.put("0", _locationInfo.getTimeStamp());
+            jsonObjectLocation.put("1", _locationInfo.getLatitude());
+            jsonObjectLocation.put("2", _locationInfo.getLongitude());
+            jsonObjectLocation.put("3", _locationInfo.getBearing());
+            jsonObjectLocation.put("4", _locationInfo.getSpeed());
+        } catch (Exception e) {
+            jsonObjectLocation = null;
+        }
 
         PluginResult beaconInfo = new PluginResult(PluginResult.Status.OK, jsonObjectBeacon);
         PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
         PluginResult proximity = new PluginResult(PluginResult.Status.OK, "" + getIntForProximity(_proximity));
-        PluginResult date = new PluginResult(PluginResult.Status.OK, "" + _date);
+        PluginResult locationInfo = new PluginResult(PluginResult.Status.OK, "" + jsonObjectLocation);
         PluginResult isCheckOut = new PluginResult(PluginResult.Status.OK, "" + _isCheckOut);
 
         List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
@@ -360,7 +376,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         multipartMessages.add(beaconInfo);
         multipartMessages.add(zoneInfo);
         multipartMessages.add(proximity);
-        multipartMessages.add(date);
+        multipartMessages.add(locationInfo);
         multipartMessages.add(isCheckOut);
 
         if ( _customData != null ) {

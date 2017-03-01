@@ -59,11 +59,14 @@ exports.zoneInfoCallback = function( callback )
  *          name (String)
  *          description (String)
  *          ID (String)
- *      Parameter 3: Latitude of check-in (Double)
- *      Parameter 4: Longitude of check-in (Double)
- *      Parameter 5: Date of check-in (Integer - UNIX timestamp)
- *      Parameter 6: Fence is awaiting check-out (Boolean)
- *      Parameter 7: JSON Object of custom data (JSON Object)
+ *      Parameter 3: Array of doubles identifying location which triggers fence:
+ *          Date of check-in (Integer - UNIX timestamp)
+ *          Latitude of check-in (Double)
+ *          Longitude of check-in (Double)
+ *          Bearing of check-in (Double)
+ *          Speed of check-in (Double)
+ *      Parameter 4: Fence is awaiting check-out (Boolean)
+ *      Parameter 5: JSON Object of custom data (JSON Object)
  */
 exports.checkedIntoFenceCallback = function( callback )
 {
@@ -111,12 +114,17 @@ exports.checkedOutOfFenceCallback = function( callback )
  *          name (String)
  *          description (String)
  *          ID (String)
- *      Parameter 3: Proximity of check-in to beacon (Integer)
+ *      Parameter 3: Array of double values identifying location:
+ *          Date of check-in (Integer - UNIX timestamp)
+ *          Latitude of beacon setting (Double)
+ *          Longitude of beacon setting (Double)
+ *          Bearing of beacon setting (Double)
+ *          Speed of beacon setting (Double)
+ *      Parameter 4: Proximity of check-in to beacon (Integer)
  *          0 = Unknown
  *          1 = Immediate
  *          2 = Near
  *          3 = Far
- *      Parameter 4: Date of check-in (Integer - UNIX timestamp)
  *      Parameter 5: Beacon is awaiting check-out (Boolean)
  *      Parameter 6: JSON Object of custom data (JSON Object)
  */

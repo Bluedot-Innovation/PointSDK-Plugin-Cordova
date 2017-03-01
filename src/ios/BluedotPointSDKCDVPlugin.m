@@ -499,21 +499,24 @@
  *          name (String)
  *          description (String)
  *          ID (String)
- *      Latitude of check-in (Double)
- *      Longitude of check-in (Double)
- *      Date of check-in (Integer - UNIX timestamp)
+ *      Array of double values identifying location:
+ *          Date of check-in (Integer - UNIX timestamp)
+ *          Latitude of check-in (Double)
+ *          Longitude of check-in (Double)
+ *          Bearing of check-in (Double)
+ *          Speed of check-in (Double)
  *      Fence is awaiting check-out (BOOL)
+ *      Custom fields setup in the <b>Point Access</b> web-interface.</p>
  */
 - (void)didCheckIntoFence: (BDFenceInfo *)fence
                    inZone: (BDZoneInfo *)zone
-             atCoordinate: (BDLocationCoordinate2D)coordinate
-                   onDate: (NSDate *)date
+               atLocation: (BDLocationInfo *)location
              willCheckOut: (BOOL)willCheckOut
            withCustomData: (NSDictionary *)customData
 {
 
     NSLog( @"You have checked into fence '%@' in zone '%@', at %@%@",
-          fence.name, zone.name, [ _dateFormatter stringFromDate: date ],
+          fence.name, zone.name, [ _dateFormatter stringFromDate: location.timestamp ],
           ( willCheckOut == YES ) ? @" and awaiting check out" : @"" );
 
     //  Ensure that a delegate for fence info has been setup
@@ -525,12 +528,10 @@
 
     NSArray  *returnFence = [ self fenceToArray: fence ];
     NSArray  *returnZone = [ self zoneToArray: zone ];
-    NSTimeInterval  unixDate = [ date timeIntervalSince1970 ];
-    double  lat = coordinate.latitude;
-    double  lon = coordinate.longitude;
-
+    NSArray  *returnLocation = [ self locationToArray: location ];
+    
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnFence, returnZone,
-                                 @( lat ), @( lon ), @( unixDate ), @( willCheckOut ), customData, nil ];
+                                 returnLocation, @( willCheckOut ), customData, nil ];
 
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
                                                      messageAsMultipart: returnMultiPart ];
@@ -604,24 +605,30 @@
  *          name (String)
  *          description (String)
  *          ID (String)
+ *      Array of double values identifying location:
+ *          Date of check-in (Integer - UNIX timestamp)
+ *          Latitude of beacon setting (Double)
+ *          Longitude of beacon setting (Double)
+ *          Bearing of beacon setting (Double)
+ *          Speed of beacon setting (Double)
  *      Proximity of check-in to beacon (Integer)
  *          0 = Unknown
  *          1 = Immediate
  *          2 = Near
  *          3 = Far
- *      Date of check-in (Integer - UNIX timestamp)
  *      Beacon is awaiting check-out (BOOL)
+ *      Custom fields setup in the <b>Point Access</b> web-interface.</p>
  */
 - (void)didCheckIntoBeacon: (BDBeaconInfo *)beacon
                     inZone: (BDZoneInfo *)zone
+                atLocation: (BDLocationInfo *)location
              withProximity: (CLProximity)proximity
-                    onDate: (NSDate *)date
               willCheckOut: (BOOL)willCheckOut
             withCustomData: (NSDictionary *)customData
 {
 
     NSLog( @"You have checked into beacon '%@' in zone '%@' with proximity %d at %@%@",
-          beacon.name, zone.name, (int)proximity, [ _dateFormatter stringFromDate: date ],
+          beacon.name, zone.name, (int)proximity, [ _dateFormatter stringFromDate: location.timestamp ],
           ( willCheckOut == YES ) ? @" and awaiting check out" : @"" );
 
     //  Ensure that a delegate for fence info has been setup
@@ -633,10 +640,10 @@
 
     NSArray  *returnBeacon = [ self beaconToArray: beacon ];
     NSArray  *returnZone = [ self zoneToArray: zone ];
-    NSTimeInterval  unixDate = [ date timeIntervalSince1970 ];
+    NSArray  *returnLocation = [ self locationToArray: location ];
 
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnBeacon, returnZone,
-                                 @( proximity ), @( unixDate ), @( willCheckOut ), customData, nil ];
+                                 returnLocation, @( proximity ), @( willCheckOut ), customData, nil ];
 
     CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK
                                                      messageAsMultipart: returnMultiPart ];
@@ -875,6 +882,29 @@
     [ objs addObject: @( beacon.location.longitude ) ];
 
     return objs;
+}
+
+/*
+ *  Return an array with extrapolated location details into Cordova variable types.
+ *      Array identifying location:
+ *          Date of check-in (Integer - UNIX timestamp)
+ *          Latitude of check-in (Double)
+ *          Longitude of check-in (Double)
+ *          Bearing of check-in (Double)
+ *          Speed of check-in (Double)
+ */
+- (NSArray *)locationToArray: (BDLocationInfo *)location
+{
+    NSMutableArray  *doubles = [ NSMutableArray new ];
+    
+    NSTimeInterval  unixDate = [ location.timestamp timeIntervalSince1970 ];
+    [ doubles addObject: @( unixDate ) ];
+    [ doubles addObject: @( location.latitude ) ];
+    [ doubles addObject: @( location.longitude ) ];
+    [ doubles addObject: @( location.bearing ) ];
+    [ doubles addObject: @( location.speed ) ];
+    
+    return doubles;
 }
 
 @end

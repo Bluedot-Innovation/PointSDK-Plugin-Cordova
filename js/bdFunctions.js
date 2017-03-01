@@ -44,6 +44,15 @@ const beaconInfoEnum =
     lon: 9
 }
 
+const locationInfoEnum =
+{
+    timestamp: 0,
+    latitude: 1,
+    longitude: 2,
+    bearing: 3,
+    speed: 4
+}
+
 const proximityEnum =
 {
     Unknown : 0,
@@ -162,11 +171,13 @@ function zoneUpdate( zoneInfos )
  *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
  *  Refer to bluedotPointSDKCDVPlugin.js for more information.
  */
-function fenceTrigger( fenceInfo, zoneInfo, lat, lon, date, willCheckOut, customData )
+function fenceTrigger( fenceInfo, zoneInfo, locationInfo, willCheckOut, customData )
 {
     //  Extract details for a status update
     var fenceName = fenceInfo[ fenceInfoEnum.name ];
     var zoneName = zoneInfo[ zoneInfoEnum.name ];
+    var lat = locationInfo [ locationInfoEnum.latitude ];
+    var lon = locationInfo [ locationInfoEnum.longitude ];
 
     updateStatus( fenceName + " has been triggered in " + zoneName + " at " + lat + ":" + lon );
     updateStatus( JSON.stringify(customData) );
@@ -195,15 +206,17 @@ function fenceCheckOut( fenceInfo, zoneInfo, date, dwellTime, customData )
  *  This delegate function receives the data of a beacon with a Custom action that has been triggered by the SDK.
  *  Refer to bluedotPointSDKCDVPlugin.js for more information.
  */
-function beaconTrigger( beaconInfo, zoneInfo, proximity, date, willCheckOut, customData )
+function beaconTrigger( beaconInfo, zoneInfo, locationInfo, proximity, willCheckOut, customData )
 {
     //  Extract details for a status update
     var beaconName = beaconInfo[ beaconInfoEnum.name ];
     var isiBeacon = beaconInfo[ beaconInfoEnum.isiBeacon ];
     var zoneName = zoneInfo[ zoneInfoEnum.name ];
     var proximityName = proximityEnum.properties[ proximity ].name;
+    var lat = locationInfo [ locationInfoEnum.latitude ];
+    var lon = locationInfo [ locationInfoEnum.longitude ];
 
-    updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been triggered in " + zoneName + " with a proximity of " + proximityName );
+    updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been triggered in " + zoneName + " with a proximity of " + proximityName + " at " + lat + ":" + lon  );
     updateStatus( JSON.stringify(customData) );
 
     if ( willCheckOut == true )
