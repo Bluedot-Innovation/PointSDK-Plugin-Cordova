@@ -3,8 +3,9 @@
  *
  *  This contains Javascript methods for usage in the HTML pages of the example app.
  *
- *  Roddy McNeill  5/10/15
- *  (c) Bluedot Innovations
+ *
+ * @author Bluedot Innovation
+ * Copyright (c) 2018 Bluedot Innovation. All rights reserved.
  */
 
 /*

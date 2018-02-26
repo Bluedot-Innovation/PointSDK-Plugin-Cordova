@@ -3,8 +3,8 @@
  *
  *  This contains Javascript wrapper methods for accessing the Bluedot Point SDK.
  *
- *  Roddy McNeill  5/10/15
- *  (c) Bluedot Innovations
+ * Bluedot Innovation
+ * Copyright (c) 2018 Bluedot Innovation. All rights reserved.
  */
 
 //  Setup a standard Cordova environment

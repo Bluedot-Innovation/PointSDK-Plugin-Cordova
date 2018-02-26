@@ -1,12 +1,12 @@
 # Bluedot Point SDK
 
-The Bluedot Point SDK combines low-energy Geolines™, Geofencing and proximity-Beacon capabilities to provide 'always-on' location awareness in indoor and outdoor scenarios on iOS and Android devices.  With the release of v1.6, a device can be notified when a device has exited from a Geofence or from the range of a beacon and provide the dwell time.
+The Bluedot Point SDK combines low-energy Geolines™, Geofencing and proximity-Beacon capabilities to provide 'always-on' location awareness in indoor and outdoor scenarios on iOS and Android devices.
 
 By integrating the simple Bluedot API, your apps will benefit from accurate location awareness (up to the maximum achievable precision of GPS), while substantially reducing battery consumption compared to Core Location and other standard SDK methods.
 
 Point SDK connects to the Bluedot web interface, Point Access (www.pointaccess.bluedot.com.au), through which business rules comprising of Zones, Geolines™, Geofences, Beacons, Conditions and Actions can be configured.
 
-Applications powered by the Point SDK will then download and execute such rules, both in the foreground and background.  The following provides a guide to integrating Point SDK with a Cordova or Phonegap app across iOS and Android devices.
+Applications powered by the Point SDK will then download and execute such rules, both in the foreground and background.  The following provides a guide to integrate Point SDK with a Cordova or PhoneGap app across iOS and Android devices.
 
 ## Installing the Bluedot plug-in
 Run the following standard command to add the plug-in to your Cordova app:
@@ -40,6 +40,7 @@ In summary, the functions relate to an HTML page that contains the following:
     - username
     - apiKey
     - packageName
+
 - A button with an id of "logOutButton"
 
   This will call the doLogOut() function
@@ -49,13 +50,21 @@ These functions are representative and should be adjusted for the use of your pa
 ## iOS Xcode Updates
 There are some differences between a default Xcode project and the project requirements for an app running the Bluedot Point SDK.  In summary:
 - The Bluedot Point SDK does not enforce Bit Code.
-- The minimum supported version of iOS for Cordova is 6.0 but the Bluedot Point SDK supports 7.0 and above.
+- The minimum supported version of iOS for Cordova and Bluedot Point SDK is 8.0 and above.
 - There are required UIApplication delegate methods that are not implemented in the default Cordova app delegate that are required by the Bluedot Point SDK.
 
 ### Updating the Xcode Project
 #### In the Xcode Project
 - Use of BitCode must be set to **NO** in **Build Settings**.
-- Minimum supported iOS version should be set to **7.0** in **General**.
+- Minimum supported iOS version should be set to **8.0** in **General**.
+
+#### In the info.plist file
+- Locate the app's info.plist file in the Supporting Files folder of the Xcode project.
+- Click on the '+' symbol to create another new row.
+- Enter NSLocationAlwaysAndWhenInUseUsageDescription as the key, and select the type of String. Enter a usage description that denotes the use of location services by your app. For example, Your location is used by the app to get you deals closer to you while in use or in the background. This key is mandatory to support devices running iOS 11 and above.
+- Click on the '+' symbol to create another new row.
+- Enter NSLocationWhenInUseUsageDescription as the key, and select the type of String.
+Enter a usage description that denotes the use of location services by your app. For example, Your location is used by the app to get you deals closer to you while in use. This key is mandatory to support devices running iOS 11 and above.
 
 #### In the AppDelegate.m file
 The following methods must be added to the app delegate should they not already be there:
@@ -136,7 +145,7 @@ For Android, you will need to add the Android Support library, version 4 with th
     cordova plugin add cordova-android-support-v4
 
 #### 8. iOS additional steps
-If you are building for iOS, the instructions in the **iOS Xcode Updates** section must be followed prior to building your app.
+If you are building for iOS, the instructions in the [iOS Xcode Updates](#ios-xcode-updates) section must be followed prior to building your app.
 
 #### 9. Build the app
 
@@ -144,46 +153,12 @@ If you are building for iOS, the instructions in the **iOS Xcode Updates** secti
 
 #### 10. Run the emulator from the command line in a specific iOS simulator:
 
-    cordova emulate ios --target="iPhone-5s"
+    cordova emulate ios
 
 #### 11. Run the app on a physical iOS device:
 
     cordova run --device ios
 
-### iOS Xcode Updates
-There are some differences between a default Xcode project and the project requirements for an app running the Bluedot Point SDK.  In summary:
-
-- The Bluedot Point SDK does not enforce Bit Code.
-- The minimum supported version of iOS for Cordova is 6.0 but the Bluedot Point SDK supports 7.0 and above.
-- There are required UIApplication delegate methods that are not implemented in the default Cordova app delegate that are required by the Bluedot Point SDK.
-
-#### Updating the Xcode Project
-In the Xcode Project:
-- Use of BitCode must be set to **NO** in **Build Settings**.
-- Minimum supported iOS version should be set to **7.0** in **General**.
-
-In the **AppDelegate.m** file:
-
-The following methods must be added to the app delegate should they not already be there:
-
-
-    - (void)applicationWillEnterForeground:(UIApplication *)application
-    {
-        // This method implementation must be present in AppDelegate
-        // when integrating Bluedot Point SDK v1.x, even if it is empty.
-    }
-
-    - (void)applicationDidEnterBackground:(UIApplication *)application
-    {
-        // This method implementation must be present in AppDelegate
-        // when integrating Bluedot Point SDK v1.x, even if it is empty.
-    }
-
-    - (void)applicationWillResignActive:(UIApplication *)application
-    {
-        // For iOS9 (currently Beta) this method implementation must be present in AppDelegate
-        // when integrating Bluedot Point SDK v1.x, even if it is empty.
-    }
 
 ## Support
 Should you require support for any issues in the Bluedot Point plug-in, then please contact us using <support@bluedotinnovation.com>.
@@ -212,6 +187,7 @@ The functions in the plug-in encapsulate cross-platform functionality.  Should m
 - stopRequiringUserInterventionForLocationServicesCallback
 - disableZone
 - enableZone
+- notifyPushUpdate
 
 <br>
 ## authenticate
@@ -507,7 +483,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
 
     /*
      *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
-     *  Refer to bluedotPointSDKCDVPlugin.js for more information.
+     *  Refer to BluedotPointSDKCDVPlugin.js for more information.
      */
     function fenceCheckOut( fenceInfo, zoneInfo, date, dwellTime, customData )
     {

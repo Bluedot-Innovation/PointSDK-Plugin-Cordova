@@ -1,0 +1,10 @@
+//  Created by Bluedot Innovation
+//  Copyright © 2018 Bluedot Innovation. All rights reserved.
+
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.Bluedot-Innovation:PointSDK-Android:1.10'
+}

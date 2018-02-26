@@ -4,8 +4,8 @@
  *  This is the entry point into the plug-in; these methods provide access for both the
  *  the iOS and Android SDKs.
  *
- *  Roddy McNeill  5/10/15
- *  (c) Bluedot Innovations
+ * Bluedot Innovation
+ * Copyright (c) 2018 Bluedot Innovation. All rights reserved.
  */
 
 #import <Foundation/Foundation.h>

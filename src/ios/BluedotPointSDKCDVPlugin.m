@@ -4,8 +4,8 @@
  *  This is the entry point into the plug-in; these methods provide access for both the
  *  the iOS and Android SDKs.
  *
- *  Roddy McNeill  5/10/15
- *  (c) Bluedot Innovations
+ * Bluedot Innovation
+ * Copyright (c) 2018 Bluedot Innovation. All rights reserved.
  */
 
 #import "BluedotPointSDKCDVPlugin.h"
@@ -529,7 +529,7 @@
     NSArray  *returnFence = [ self fenceToArray: fence ];
     NSArray  *returnZone = [ self zoneToArray: zone ];
     NSArray  *returnLocation = [ self locationToArray: location ];
-    
+
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects: returnFence, returnZone,
                                  returnLocation, @( willCheckOut ), customData, nil ];
 
@@ -896,14 +896,14 @@
 - (NSArray *)locationToArray: (BDLocationInfo *)location
 {
     NSMutableArray  *doubles = [ NSMutableArray new ];
-    
+
     NSTimeInterval  unixDate = [ location.timestamp timeIntervalSince1970 ];
     [ doubles addObject: @( unixDate ) ];
     [ doubles addObject: @( location.latitude ) ];
     [ doubles addObject: @( location.longitude ) ];
     [ doubles addObject: @( location.bearing ) ];
     [ doubles addObject: @( location.speed ) ];
-    
+
     return doubles;
 }
 

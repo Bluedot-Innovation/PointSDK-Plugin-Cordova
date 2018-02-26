@@ -16,11 +16,14 @@ import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import android.Manifest;
+import android.content.pm.PackageManager;
 
 import au.com.bluedot.point.ApplicationNotificationListener;
 import au.com.bluedot.point.net.engine.BDError;
 import au.com.bluedot.point.ServiceStatusListener;
 import au.com.bluedot.point.net.engine.BeaconInfo;
+import au.com.bluedot.point.net.engine.FenceInfo;
 import au.com.bluedot.point.net.engine.ZoneInfo;
 import au.com.bluedot.point.net.engine.LocationInfo;
 import au.com.bluedot.point.net.engine.ServiceManager;
@@ -37,6 +40,11 @@ import android.location.Location;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
+
+/*
+ * @author Bluedot Innovation
+ * Copyright (c) 2018 Bluedot Innovation. All rights reserved.
+ */
 
 public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusListener, ApplicationNotificationListener {
     public static final String ACTION_AUTHENTICATE = "authenticate";
@@ -69,8 +77,11 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     private CallbackContext mRequiringUserInterventionForLocationServicesCallbackContext;
     private CallbackContext mRequiringUserInterventionForBluetoothCallbackContext;
     private CallbackContext mZoneUpdateCallbackContext;
+    private final int PERMISSION_REQ_CODE = 137;
+    private String[] locationPermissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
 
     Context context;
+    private String userName, apiKey, packageName;
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         context = this.cordova.getActivity().getApplicationContext();
@@ -81,9 +92,10 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         boolean result = false;
         if (action.equals(ACTION_AUTHENTICATE)) {
-            String username = args.getString(0);
-            String apiKey = args.getString(1);
-            String packageName = args.getString(2);
+          userName = args.getString(0);
+          apiKey = args.getString(1);
+          packageName = args.getString(2);
+          if(cordova.hasPermission(Manifest.permission_group.LOCATION)) {
 
             try {
                 ProviderInstaller.installIfNeeded(context);
@@ -92,9 +104,15 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             } catch (GooglePlayServicesNotAvailableException e) {
 
             }
-            mServiceManager.sendAuthenticationRequest(packageName, apiKey, username, this);
-            mAuthCallbackContext = callbackContext;
+            mServiceManager.sendAuthenticationRequest(packageName, apiKey, userName, this);
+
             result = true;
+          } else {
+            cordova.requestPermissions(this, PERMISSION_REQ_CODE, locationPermissions);
+            result = true;
+          }
+          mAuthCallbackContext = callbackContext;
+
         } else if (action.equals(ACTION_LOGOUT)) {
             mLogOutCallbackContext = callbackContext;
             mServiceManager.stopPointService();
@@ -138,6 +156,27 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
 
         return result;
     }
+
+    @Override
+    public void onRequestPermissionResult(int requestCode, String[] permissions,
+                                         int[] grantResults) throws JSONException
+{
+    for(int r:grantResults)
+    {
+        if(r == PackageManager.PERMISSION_DENIED)
+        {
+            mAuthCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "PERMISSION_DENIED_ERROR"));
+            return;
+        }
+    }
+    switch(requestCode)
+    {
+        case PERMISSION_REQ_CODE:
+              mServiceManager.sendAuthenticationRequest(packageName, apiKey, userName, this);
+            break;
+
+    }
+}
 
     /**
      * <p>It is called when BlueDotPointService started successful, your app logic code using the Bluedot service could start from here.</p>
@@ -184,7 +223,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     /**
      * <p>The method delivers the error from BlueDotPointService by a generic BDError. There are several types of error such as BDAuthenticationError, BDNetworkError etc, you could check the specific error instance.</p>
      * @see au.com.bluedot.point.BDAuthenticationError,au.com.bluedot.point.BDNetworkError,au.com.bluedot.point.BDNetworkError,au.com.bluedot.point.LocationServiceNotEnabledError
-     * @param error
+     * @param bdError
      */
     @Override
     public void onBlueDotPointServiceError(BDError bdError) {
@@ -208,7 +247,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
 
     /**
      * <p>The method deliveries the ZoneInfo list when the rules are updated. Your app is able to get the latest ZoneInfo when the rules are updated.</p>
-     * @param zoneInfoList
+     * @param zoneInfos
      */
     @Override
     public void onRuleUpdate(List < ZoneInfo > zoneInfos) {
@@ -243,20 +282,21 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     /**
      * This callback happens when user is subscribed to Application Notification
      * and check into any fence under that Zone
-     * @param fence      - Fence triggered
-     * @param zoneInfo   - Zone information Fence belongs to
-     * @param location   - geographical coordinate where trigger happened
-     * @param isCheckOut - CheckOut will be tracked and delivered once device left the Fence
+     * @param _fence      - Fence triggered
+     * @param _zoneInfo   - Zone information Fence belongs to
+     * @param _locationInfo   - geographical coordinate where trigger happened
+     * @param _customData - custom data associated with this Custom Action
+     * @param _isCheckOut - CheckOut will be tracked and delivered once device left the Fence
      */
     @Override
-    public void onCheckIntoFence(Fence _fence, ZoneInfo _zoneInfo, LocationInfo _locationInfo, Map<String, String> _customData, boolean _isCheckOut) {
+    public void onCheckIntoFence(FenceInfo _fence, ZoneInfo _zoneInfo, LocationInfo _locationInfo, Map<String, String> _customData, boolean _isCheckOut) {
 
         JSONObject jsonObjectFence = new JSONObject();
 
         try {
             jsonObjectFence.put("0", _fence.getName());
             jsonObjectFence.put("1", _fence.getDescription());
-            jsonObjectFence.put("2", _fence.getID());
+            jsonObjectFence.put("2", _fence.getId());
         } catch (Exception e) {
             jsonObjectFence = null;
         }
@@ -270,9 +310,9 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         } catch (Exception e) {
             jsonObjectZone = null;
         }
-        
+
         JSONObject jsonObjectLocation = new JSONObject();
-        
+
         try {
             jsonObjectLocation.put("0", _locationInfo.getTimeStamp());
             jsonObjectLocation.put("1", _locationInfo.getLatitude());
@@ -314,11 +354,12 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     /**
      * This callback happens when user is subscribed to Application Notification
      * and check into any beacon under that Zone
-     * @param beaconInfo - Beacon triggered
-     * @param zoneInfo   - Zone information Beacon belongs to
-     * @param location   - the location of the beacon as specified on the Bluedot backend
-     * @param proximity  - the proximity at which the trigger occurred
-     * @param isCheckOut - CheckOut will be tracked and delivered once device left the Beacon advertisement range
+     * @param _beaconInfo - Beacon triggered
+     * @param _zoneInfo   - Zone information Beacon belongs to
+     * @param _locationInfo   - the location of the beacon as specified on the Bluedot backend
+     * @param _proximity  - the proximity at which the trigger occurred
+     * @param _customData - custom data associated with this Custom Action
+     * @param _isCheckOut - CheckOut will be tracked and delivered once device left the Beacon advertisement range
      */
     @Override
     public void onCheckIntoBeacon(BeaconInfo _beaconInfo, ZoneInfo _zoneInfo, LocationInfo _locationInfo, Proximity _proximity, Map<String, String> _customData, boolean _isCheckOut) {
@@ -352,9 +393,9 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         } catch (Exception e) {
             jsonObjectZone = null;
         }
-        
+
         JSONObject jsonObjectLocation = new JSONObject();
-        
+
         try {
             jsonObjectLocation.put("0", _locationInfo.getTimeStamp());
             jsonObjectLocation.put("1", _locationInfo.getLatitude());
@@ -397,12 +438,13 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     /**
      * This callback happens when user is subscribed to Application Notification
      * and checked out from fence under that Zone
-     * @param fence     - Fence user is checked out from
-     * @param zoneInfo  - Zone information Fence belongs to
-     * @param dwellTime - time spent inside the Fence; in minutes
+     * @param _fence     - Fence user is checked out from
+     * @param _zoneInfo  - Zone information Fence belongs to
+     * @param _dwellTime - time spent inside the Fence; in minutes
+     * @param _customData - custom data associated with this Custom Action
      */
     @Override
-    public void onCheckedOutFromFence(Fence _fence, ZoneInfo _zoneInfo, int _dwellTime, Map<String, String> _customData) {
+    public void onCheckedOutFromFence(FenceInfo _fence, ZoneInfo _zoneInfo, int _dwellTime, Map<String, String> _customData) {
         long _date = System.currentTimeMillis();
 
         JSONObject jsonObjectFence = new JSONObject();
@@ -410,7 +452,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         try {
             jsonObjectFence.put("0", _fence.getName());
             jsonObjectFence.put("1", _fence.getDescription());
-            jsonObjectFence.put("2", _fence.getID());
+            jsonObjectFence.put("2", _fence.getId());
         } catch (Exception e) {
             jsonObjectFence = null;
         }
@@ -454,9 +496,10 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     /**
      * This callback happens when user is subscribed to Application Notification
      * and checked out from beacon under that Zone
-     * @param beaconInfo - Beacon is checked out from
-     * @param zoneInfo   - Zone information Beacon belongs to
-     * @param dwellTime  - time spent inside the Beacon area; in minutes
+     * @param _beaconInfo - Beacon is checked out from
+     * @param _zoneInfo   - Zone information Beacon belongs to
+     * @param _dwellTime  - time spent inside the Beacon area; in minutes
+     * @param _customData - custom data associated with this Custom Action
      */
     @Override
     public void onCheckedOutFromBeacon(BeaconInfo _beaconInfo, ZoneInfo _zoneInfo, int _dwellTime, Map<String, String> _customData) {
