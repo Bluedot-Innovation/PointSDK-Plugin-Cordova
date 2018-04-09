@@ -8,6 +8,9 @@ Point SDK connects to the Bluedot web interface, Point Access (www.pointaccess.b
 
 Applications powered by the Point SDK will then download and execute such rules, both in the foreground and background.  The following provides a guide to integrate Point SDK with a Cordova or PhoneGap app across iOS and Android devices.
 
+## Adding Bluedot Dynamic framework to the Bluedot plug-in
+Contact Bluedot support <support@bluedotinnovation.com> and get the latest version of Bluedot Dynamic framework . Add BDPointSDK.framework under src\ios\ of cordova-bluedot-plugin.
+
 ## Installing the Bluedot plug-in
 Run the following standard command to add the plug-in to your Cordova app:
 
@@ -50,13 +53,13 @@ These functions are representative and should be adjusted for the use of your pa
 ## iOS Xcode Updates
 There are some differences between a default Xcode project and the project requirements for an app running the Bluedot Point SDK.  In summary:
 - The Bluedot Point SDK does not enforce Bit Code.
-- The minimum supported version of iOS for Cordova and Bluedot Point SDK is 8.0 and above.
+- The minimum supported version of iOS for Cordova and Bluedot Point SDK is 10.0 and above.
 - There are required UIApplication delegate methods that are not implemented in the default Cordova app delegate that are required by the Bluedot Point SDK.
 
 ### Updating the Xcode Project
 #### In the Xcode Project
 - Use of BitCode must be set to **NO** in **Build Settings**.
-- Minimum supported iOS version should be set to **8.0** in **General**.
+- Minimum supported iOS version should be set to **10.0** in **General**.
 
 #### In the info.plist file
 - Locate the app's info.plist file in the Supporting Files folder of the Xcode project.

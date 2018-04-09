@@ -9,7 +9,7 @@
  */
 
 #import "BluedotPointSDKCDVPlugin.h"
-#import "BDPointSDK.h"
+@import BDPointSDK;
 
 
 /*

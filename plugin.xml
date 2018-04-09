@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="au.com.bluedot.bdpointsdk"
-    version="1.10.0">
+    version="1.11.2">
 
     <!-- This plugin requires Cordova version 3.1.0 or newer. -->
     <engines>
@@ -36,55 +36,16 @@
         <source-file src="src/ios/BluedotPointSDKCDVPlugin.m" />
 
         <!--  The following lists the frameworks required for building the SDK -->
-        <framework src="Foundation.framework" />
         <framework src="CoreLocation.framework" />
         <framework src="CoreMotion.framework" />
         <framework src="CoreGraphics.framework" />
-        <framework src="AVFoundation.framework" />
         <framework src="MapKit.framework" />
-        <framework src="QuartzCore.framework" />
         <framework src="UIKit.framework" />
-        <framework src="AudioToolbox.framework" />
         <framework src="SystemConfiguration.framework" />
 
-        <!--  The files below refer to the files included in the Bluedot Point SDK -->
-        <header-file src="src/ios/BDPointSDK/include/BDPointSDK.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDAuthenticationState.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDBeaconInfo.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDBoundingBox.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDCircle.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDFenceInfo.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDGeometry.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDGeospatialUnits.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDLineString.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDLocation.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDLocationInfo.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDLocationManager.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDLocationManager+BDPointSDK.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPAuthenticationStateProvider.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPDeepCopy.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPGeometry.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPLocationDelegate.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPMKShape.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPNamedDescribed.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPoint.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPointDelegate.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPointOverlayRendererFactory.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPointSessionException.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPolygon.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPolygonal.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPRestartAlertDelegate.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPSessionDelegate.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPSpatialObject.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPSpatialObjectInfo.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDPValidatable.h" />
-        <header-file src="src/ios/BDPointSDK/include/BDZoneInfo.h" />
-        <header-file src="src/ios/BDPointSDK/include/MKMapView+BDPointSDK.h" />
-        <header-file src="src/ios/BDPointSDK/include/NSString+BDURLEncoding.h" />
+        <!-- Point SDK -->
+        <framework src="src/ios/BDPointSDK.framework" custom="true" embed="true" target-dir="src/au/com/bluedot" />
 
-        <source-file src="src/ios/BDPointSDK/libBDPointSDK.a" framework="true" />
-
-        <resource-file src="src/ios/BDPointSDK/BDDataModel.bundle" />
     </platform>
 
     <platform name="android">
@@ -94,7 +55,6 @@
             </feature>
         </config-file>
 
-        <framework src="com.android.support:support-v4:+" />
         <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
         <framework src="com.google.android.gms:play-services:8.+" />
         <!-- Adding custom gradle file to import Bluedot Android Point SDK Dependency -->
