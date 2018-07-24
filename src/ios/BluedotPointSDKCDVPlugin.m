@@ -85,16 +85,13 @@
 }
 
 /*
- *  Entry method for authentication has 3 parameters, in the order below:
- *      username
- *      apiKey
- *      packageName
+ *  Entry method for authentication has 1 parameter: apiKey
  */
 - (void)authenticate: (CDVInvokedUrlCommand *)command
 {
 
     //  Ensure that the command has the minimum number of arguments
-    if ( command.arguments.count < 3 )
+    if ( command.arguments.count != 1 )
     {
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                             messageAsString: @"Incorrect number of arguments supplied to authenticate method." ];
@@ -104,9 +101,7 @@
     }
 
     //  Retrieve the principle arguments for authentication
-    NSString  *username = command.arguments[0];
-    NSString  *apiKey = command.arguments[1];
-    NSString  *packageName = command.arguments[2];
+    NSString  *apiKey = command.arguments[0];
 
     //  If the app has already authenticated, then do not try to authenticate again
     if ( _authenticated == YES )
@@ -134,9 +129,7 @@
         //  Set the authenticating callback
         _callbackIdAuthentication = command.callbackId;
 
-        [ BDLocationManager.instance authenticateWithApiKey: apiKey
-                                                packageName: packageName
-                                                   username: username ];
+        [BDLocationManager.instance authenticateWithApiKey: apiKey];
     }
 }
 
@@ -311,11 +304,9 @@
 /*
  *  Called when an authentication is in process.
  */
-- (void)willAuthenticateWithUsername: (NSString *)username
-                              apiKey: (NSString *)apiKey
-                         packageName: (NSString *)packageName
+- (void)willAuthenticateWithApiKey: (NSString *)apiKey
 {
-    NSLog( @"Authenticating Point service with [%@:%@:%@]", username, apiKey, packageName );;
+    NSLog( @"Authenticating Point service with [%@]", apiKey);;
 }
 
 /*

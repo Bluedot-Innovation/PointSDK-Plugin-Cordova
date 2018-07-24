@@ -22,10 +22,6 @@ The Bluedot plugin supports iOS and Android platforms.  These can be added to yo
     cordova platform add ios
     cordova platform add android
 
-For Android, you will need to add the Android Support library, version 4 with the following command if you have not added it already:
-
-    cordova plugin add cordova-android-support-v4
-
 ### Provided wrappers
 To assist in getting your app up and running as quickly as possible, Javascript function wrappers are provided in the Bluedot plugin repository at the following location:
 js/bdFunctions.js
@@ -40,9 +36,7 @@ In summary, the functions relate to an HTML page that contains the following:
 - A button with an id of "authenticateButton"
 
   This will call the doAuthenticate() function with the following constants that are set at the top of the bdFunctions.js file:
-    - username
     - apiKey
-    - packageName
 
 - A button with an id of "logOutButton"
 
@@ -199,9 +193,9 @@ The functions in the plug-in encapsulate cross-platform functionality.  Should m
      *  Authenticate a Bluedot Point session.
      *  The fail function call provides a string with the reason for failure.
      */
-    exports.authenticate = function( success, fail, username, apiKey, packageName )
+    exports.authenticate = function( success, fail, apiKey )
     {
-        exec( success, fail, "BDPointSDK", "authenticate", [ username, apiKey, packageName ] );
+        exec( success, fail, "BDPointSDK", "authenticate", [ apiKey ] );
     }
 
 ### Description
@@ -221,14 +215,8 @@ This is a function that will be called if authentication with the Bluedot Point 
 ##### Function parameters
 - String - Reason for authentication failure.
 
-#### username (String)
-The username is part of the credentials returned from registering with the Bluedot Point Access web site.
-
 #### apiKey (String)
 The API Key is part of the credentials returned from creating an app on the Bluedot Point Access web site; an API Key is associated with each App that you create.
-
-#### packageName (String)
-The Package Name is part of the credentials returned from creating an app on the Bluedot Point Access web site; a Package Name is associated with each App that you create.
 
 ### Notes
 You can obtain the credentials for each app after registering and logging in to the <a href="https://www.pointaccess.bluedot.com.au/pointaccess-v1/login.html">Point Access</a> web site.

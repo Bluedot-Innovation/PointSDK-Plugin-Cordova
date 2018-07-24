@@ -81,7 +81,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     private String[] locationPermissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
 
     Context context;
-    private String userName, apiKey, packageName;
+    private String apiKey;
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         context = this.cordova.getActivity().getApplicationContext();
@@ -92,9 +92,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         boolean result = false;
         if (action.equals(ACTION_AUTHENTICATE)) {
-          userName = args.getString(0);
-          apiKey = args.getString(1);
-          packageName = args.getString(2);
+          apiKey = args.getString(0);
           if(cordova.hasPermission(Manifest.permission_group.LOCATION)) {
 
             try {
@@ -104,7 +102,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             } catch (GooglePlayServicesNotAvailableException e) {
 
             }
-            mServiceManager.sendAuthenticationRequest(packageName, apiKey, userName, this);
+            mServiceManager.sendAuthenticationRequest(apiKey, this);
 
             result = true;
           } else {
@@ -172,7 +170,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     switch(requestCode)
     {
         case PERMISSION_REQ_CODE:
-              mServiceManager.sendAuthenticationRequest(packageName, apiKey, userName, this);
+              mServiceManager.sendAuthenticationRequest(apiKey, this);
             break;
 
     }

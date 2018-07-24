@@ -12,9 +12,7 @@
  *  Setup session authentication credentials.
  *  These are obtained from creating an API in the Bluedot Point Access web site.
  */
-const username = "";
-const packageName = "";
-const apiKey = "";
+const apiKey = "46420080-7844-11e8-831b-0ab58b380bae";
 
 //  Set up enums
 const zoneInfoEnum =
@@ -135,8 +133,7 @@ function doAuthenticate()
     au.com.bluedot.checkedOutOfFenceCallback( fenceCheckOut );
     au.com.bluedot.checkedOutOfBeaconCallback( beaconCheckOut );
 
-    au.com.bluedot.authenticate( authenticationSuccessful, authenticationFailed,
-        username, apiKey, packageName );
+    au.com.bluedot.authenticate( authenticationSuccessful, authenticationFailed, apiKey);
 }
 
 /*

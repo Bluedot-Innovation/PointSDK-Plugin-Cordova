@@ -20,9 +20,9 @@ var argscheck = require( 'cordova/argscheck' ),
  *      An error code of 0 entails no additional warnings.
  *  The fail function call provides a string with the reason for failure.
  */
-exports.authenticate = function( success, fail, username, apiKey, packageName )
+exports.authenticate = function( success, fail, apiKey )
 {
-    exec( success, fail, "BDPointSDK", "authenticate", [ username, apiKey, packageName ] );
+    exec( success, fail, "BDPointSDK", "authenticate", [ apiKey ] );
 }
 
 /*
