@@ -35,6 +35,15 @@ import au.com.bluedot.model.geo.BoundingBox;
 import au.com.bluedot.model.geo.Circle;
 import au.com.bluedot.model.geo.LineString;
 import au.com.bluedot.model.geo.Point;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 
 import android.location.Location;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -59,6 +68,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public static final String ACTION_DISABLE_ZONE = "disableZone";
     public static final String ACTION_ENABLE_ZONE = "enableZone";
     public static final String ACTION_NOTIFY_PUSH_UPDATE = "notifyPushUpdate";
+    public static final String ACTION_FOREGROUND_NOTIFICATION = "foregourndNotification";
 
     private final static String TAG = "BDPointSDKWrapper";
 
@@ -149,6 +159,16 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         } else if (action.equals(ACTION_NOTIFY_PUSH_UPDATE)) {
             JSONObject jsonObject = args.getJSONObject(0);
             notifyPushUpdate(jsonObject);
+            result = true;
+        } else if(action.equals(ACTION_FOREGROUND_NOTIFICATION)) {
+            String channelId, channelName, title, content;
+            boolean targetAllAPIs = args.getBoolean(4);
+            channelId = args.getString(0);
+            channelName = args.getString(1);
+            title = args.getString(2);
+            content = args.getString(3);
+
+            mServiceManager.setForegroundServiceNotification(createNotification(channelId, channelName, title, content) , targetAllAPIs);
             result = true;
         }
 
@@ -601,5 +621,58 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
                 break;
         }
         return result;
+    }
+
+    private Notification createNotification(String channelId, String channelName, String title, String content) {
+        Intent activityIntent = new Intent(cordova.getActivity().getIntent());
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT );
+
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+           
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager.getNotificationChannel(channelId) == null) {
+                NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
+                notificationChannel.enableLights(false);
+                notificationChannel.setLightColor(Color.RED);
+                notificationChannel.enableVibration(false);
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+
+            Notification.Builder notification = new Notification.Builder(context, channelId)
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setStyle(new Notification.BigTextStyle().bigText(content))
+                    .setSmallIcon(getApplicationIcon())
+                    .setContentIntent(pendingIntent);
+
+            return notification.build();
+        } else {
+
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(context)
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(content))                
+                    .setSmallIcon(getApplicationIcon())
+                    .setContentIntent(pendingIntent);
+
+            return notification.build();
+        }
+    }
+
+
+    private int getApplicationIcon() {
+        String packageName = context.getPackageName();
+        int icon =  android.R.drawable.ic_notification_overlay;
+            try {
+                ApplicationInfo info = context.getPackageManager().getApplicationInfo(packageName, 0);
+                icon  = info.icon;
+            } catch (PackageManager.NameNotFoundException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+        return icon;
     }
 }

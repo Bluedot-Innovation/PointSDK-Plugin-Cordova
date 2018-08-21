@@ -56,7 +56,8 @@
         </config-file>
 
         <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
-        <framework src="com.google.android.gms:play-services:8.+" />
+        <framework src="com.google.android.gms:play-services-base:15.0.1" />
+
         <!-- Adding custom gradle file to import Bluedot Android Point SDK Dependency -->
         <framework src="src/android/bluedotplugin.gradle" custom="true" type="gradleReference"/>
 
