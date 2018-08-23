@@ -12,7 +12,7 @@
  *  Setup session authentication credentials.
  *  These are obtained from creating an API in the Bluedot Point Access web site.
  */
-const apiKey = "46420080-7844-11e8-831b-0ab58b380bae";
+const apiKey = "";
 
 //  Set up enums
 const zoneInfoEnum =
