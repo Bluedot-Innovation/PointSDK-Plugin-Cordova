@@ -22,10 +22,6 @@ The Bluedot plugin supports iOS and Android platforms.  These can be added to yo
     cordova platform add ios
     cordova platform add android
 
-For Android, you will need to add the Android Support library, version 4 with the following command if you have not added it already:
-
-    cordova plugin add cordova-android-support-v4
-
 ### Provided wrappers
 To assist in getting your app up and running as quickly as possible, Javascript function wrappers are provided in the Bluedot plugin repository at the following location:
 js/bdFunctions.js
@@ -40,9 +36,7 @@ In summary, the functions relate to an HTML page that contains the following:
 - A button with an id of "authenticateButton"
 
   This will call the doAuthenticate() function with the following constants that are set at the top of the bdFunctions.js file:
-    - username
     - apiKey
-    - packageName
 
 - A button with an id of "logOutButton"
 
@@ -165,8 +159,8 @@ If you are building for iOS, the instructions in the [iOS Xcode Updates](#ios-xc
 
 ## Support
 Should you require support for any issues in the Bluedot Point plug-in, then please contact us using <support@bluedotinnovation.com>.
-<br>
-<br>
+
+
 
 ## BDPoint SDK Plug-in Methods
 The following methods are available to your app to allow your app to utilise the low-energy, high accuracy Bluedot SDK.  These methods are provided in the **bluedotPointSDKCDVPlugin.js** file and provide cross-platform access to iOS and Android.
@@ -191,17 +185,18 @@ The functions in the plug-in encapsulate cross-platform functionality.  Should m
 - disableZone
 - enableZone
 - notifyPushUpdate
+- foregourndNotification
 
-<br>
+
 ## authenticate
 
     /*
      *  Authenticate a Bluedot Point session.
      *  The fail function call provides a string with the reason for failure.
      */
-    exports.authenticate = function( success, fail, username, apiKey, packageName )
+    exports.authenticate = function( success, fail, apiKey )
     {
-        exec( success, fail, "BDPointSDK", "authenticate", [ username, apiKey, packageName ] );
+        exec( success, fail, "BDPointSDK", "authenticate", [ apiKey ] );
     }
 
 ### Description
@@ -221,19 +216,13 @@ This is a function that will be called if authentication with the Bluedot Point 
 ##### Function parameters
 - String - Reason for authentication failure.
 
-#### username (String)
-The username is part of the credentials returned from registering with the Bluedot Point Access web site.
-
 #### apiKey (String)
 The API Key is part of the credentials returned from creating an app on the Bluedot Point Access web site; an API Key is associated with each App that you create.
-
-#### packageName (String)
-The Package Name is part of the credentials returned from creating an app on the Bluedot Point Access web site; a Package Name is associated with each App that you create.
 
 ### Notes
 You can obtain the credentials for each app after registering and logging in to the <a href="https://www.pointaccess.bluedot.com.au/pointaccess-v1/login.html">Point Access</a> web site.
 
-<br>
+
 ## logOut
 
     /*
@@ -260,7 +249,7 @@ This is a function that will be called if logging out with the Bluedot Point Acc
 ##### Function parameters
 - String - Reason for logging out failure.
 
-<br>
+
 ## zoneInfoCallback
 
     /*
@@ -320,7 +309,7 @@ These strings can be accessed using an enum as demonstrated in the **bdFunctions
         }  
     }
 
-<br>
+
 ## checkedIntoFenceCallback
 
     /*
@@ -422,7 +411,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         }
     }
 
-<br>
+
 ## checkedOutOfFenceCallback
 
     /*
@@ -498,7 +487,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         updateStatus( JSON.stringify(customData) );
     }
 
-<br>
+
 ## checkedIntoBeaconCallback
 
     /*
@@ -644,7 +633,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         }
     }
 
-<br>
+
 ## checkedOutOfBeaconCallback
 
     /*
@@ -764,7 +753,7 @@ These strings can be accessed using an enum as demonstrated in the bdFunctions.j
         updateStatus( JSON.stringify(customData) );
     }
 
-<br>
+
 ## startRequiringUserInterventionForBluetoothCallback
 
     /*
@@ -786,7 +775,7 @@ This is a function that will be called when Bluetooth is required by the device 
 ##### Function parameters
 - None.
 
-<br>
+
 ## stopRequiringUserInterventionForBluetoothCallback
 
     /*
@@ -811,7 +800,7 @@ This is a function that will be called when Bluetooth is no longer required by t
 ### Notes
 This function is only called on iOS devices.
 
-<br>
+
 ## startRequiringUserInterventionForLocationServicesCallback
 
     /*
@@ -833,7 +822,7 @@ This is a function that will be called when Location Services is currently not a
 ##### Function parameters
 The callback function is passed a parameter which indicate the current Location Service authorizationStatus.
 
-<br>
+
 ## stopRequiringUserInterventionForLocationServicesCallback
 
     /*
@@ -858,7 +847,7 @@ The callback function is passed a parameter which indicate the current Location 
 ### Notes
 This function is only called on iOS devices.
 
-<br>
+
 ## disableZone
 
     /*
@@ -895,7 +884,7 @@ This is a function that will be called if the app is unable to disable a zone; t
 #### zoneId (String)
 The zone Id to use for the disable command.
 
-<br>
+
 ## enableZone
 
     /*
@@ -929,3 +918,34 @@ This is a function that will be called if the app is unable to re-enable a zone;
 
 #### zoneId (String)
 The zone Id to use for the enable command.
+
+
+## foregourndNotification
+
+    /*
+    *  Sets notification for service to run in foreground, required for Android O and above   
+    */
+    exports.foregourndNotification = function( channelId, channelName, title, content, targetAllAPIs )
+    {
+    exec( null, null, "BDPointSDK", "foregourndNotification", [ channelId, channelName, title, content, targetAllAPIs ] );  
+    }
+
+### Description
+This functions sets foreground notification for the Bluedot service for Android Oreo and above devices. Foreground notification is needed as per the <a href = "https://developer.android.com/about/versions/oreo/background">  background limitation requirements </a> for Android Orea and above. <b> This function needs to be called before making the authenticate() call, to provide the notification to the SDK for foreground notificaton </b>
+
+### Parameters
+
+#### channelId (String)
+ The id of the channel. Must be unique per package. A current channel Id used by the application can be provided. 
+
+#### channelName (String)
+The name of the channel, recommended maximum length is 40 characters. A current channel name used by the applicattion can be provided.
+
+#### title (String)
+The title of the notification that will appear when the application is running.
+
+#### content (String)
+The content of the notification that will appear when the application is running.
+
+#### targetAllAPIs (Bool)
+A flag to show foreground service notification on devices running Android Nugget or lower.

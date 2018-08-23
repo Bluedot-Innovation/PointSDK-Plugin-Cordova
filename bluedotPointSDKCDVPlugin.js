@@ -20,9 +20,9 @@ var argscheck = require( 'cordova/argscheck' ),
  *      An error code of 0 entails no additional warnings.
  *  The fail function call provides a string with the reason for failure.
  */
-exports.authenticate = function( success, fail, username, apiKey, packageName )
+exports.authenticate = function( success, fail, apiKey )
 {
-    exec( success, fail, "BDPointSDK", "authenticate", [ username, apiKey, packageName ] );
+    exec( success, fail, "BDPointSDK", "authenticate", [ apiKey ] );
 }
 
 /*
@@ -218,4 +218,19 @@ exports.enableZone = function( success, fail, zoneId )
 exports.notifyPushUpdate = function( userInfo )
 {
     exec( null, null, "BDPointSDK", "notifyPushUpdate", [ userInfo ] );
+}
+
+
+/*
+ *  Sets notification for service to run in foreground, required for Android O and above
+ *  channelId (String) - channel Id of notifications
+ *  channelName (String) - channel name of notifications
+ *  title (String) - title of the notification
+ *  content (String) - content of the notification
+ *  targetAllAPIs (Bool) - TRUE to display notification on All Android version, FALSE to display only on Android O and above.
+ *   
+ */
+exports.foregourndNotification = function( channelId, channelName, title, content, targetAllAPIs )
+{
+    exec( null, null, "BDPointSDK", "foregourndNotification", [ channelId, channelName, title, content, targetAllAPIs ] );
 }

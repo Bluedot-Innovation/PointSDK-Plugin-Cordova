@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="au.com.bluedot.bdpointsdk"
-    version="1.11.2">
+    version="1.12.1">
 
-    <!-- This plugin requires Cordova version 3.1.0 or newer. -->
+    <!-- This plugin requires Cordova version 8.0.0 or newer. -->
     <engines>
-        <engine name="cordova" version=">=3.1.0" />
+        <engine name="cordova" version=">=8.0.0" />
     </engines>
 
     <name>Bluedot Point SDK</name>
@@ -56,7 +56,8 @@
         </config-file>
 
         <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
-        <framework src="com.google.android.gms:play-services:8.+" />
+        <framework src="com.google.android.gms:play-services-base:15.0.1" />
+
         <!-- Adding custom gradle file to import Bluedot Android Point SDK Dependency -->
         <framework src="src/android/bluedotplugin.gradle" custom="true" type="gradleReference"/>
 
