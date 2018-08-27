@@ -136,7 +136,7 @@ function doAuthenticate()
     var cordova = "Cordova";
     var title = "Location Based Notifications";
     var content = "--PLEASE CHANGE-- This app is utilizing the location to trigger alerts in both background and foreground modes when you visit your favourite locations."
-    au.com.bluedot.foregourndNotification(cordova + "channelId", cordova + "channelName" , title , content , false);
+    au.com.bluedot.foregroundNotification(cordova + "channelId", cordova + "channelName" , title , content , false);
 
     au.com.bluedot.authenticate( authenticationSuccessful, authenticationFailed, apiKey);
 }

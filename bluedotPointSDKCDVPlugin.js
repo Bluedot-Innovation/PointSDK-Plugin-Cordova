@@ -230,7 +230,7 @@ exports.notifyPushUpdate = function( userInfo )
  *  targetAllAPIs (Bool) - TRUE to display notification on All Android version, FALSE to display only on Android O and above.
  *   
  */
-exports.foregourndNotification = function( channelId, channelName, title, content, targetAllAPIs )
+exports.foregroundNotification = function( channelId, channelName, title, content, targetAllAPIs )
 {
-    exec( null, null, "BDPointSDK", "foregourndNotification", [ channelId, channelName, title, content, targetAllAPIs ] );
+    exec( null, null, "BDPointSDK", "foregroundNotification", [ channelId, channelName, title, content, targetAllAPIs ] );
 }

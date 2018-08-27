@@ -185,7 +185,7 @@ The functions in the plug-in encapsulate cross-platform functionality.  Should m
 - disableZone
 - enableZone
 - notifyPushUpdate
-- foregourndNotification
+- foregroundNotification
 
 
 ## authenticate
@@ -920,14 +920,14 @@ This is a function that will be called if the app is unable to re-enable a zone;
 The zone Id to use for the enable command.
 
 
-## foregourndNotification
+## foregroundNotification
 
     /*
     *  Sets notification for service to run in foreground, required for Android O and above   
     */
-    exports.foregourndNotification = function( channelId, channelName, title, content, targetAllAPIs )
+    exports.foregroundNotification = function( channelId, channelName, title, content, targetAllAPIs )
     {
-    exec( null, null, "BDPointSDK", "foregourndNotification", [ channelId, channelName, title, content, targetAllAPIs ] );  
+    exec( null, null, "BDPointSDK", "foregroundNotification", [ channelId, channelName, title, content, targetAllAPIs ] );  
     }
 
 ### Description

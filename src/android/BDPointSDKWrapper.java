@@ -68,7 +68,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public static final String ACTION_DISABLE_ZONE = "disableZone";
     public static final String ACTION_ENABLE_ZONE = "enableZone";
     public static final String ACTION_NOTIFY_PUSH_UPDATE = "notifyPushUpdate";
-    public static final String ACTION_FOREGROUND_NOTIFICATION = "foregourndNotification";
+    public static final String ACTION_FOREGROUND_NOTIFICATION = "foregroundNotification";
 
     private final static String TAG = "BDPointSDKWrapper";
 
