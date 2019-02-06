@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="au.com.bluedot.bdpointsdk"
-    version="1.12.5">
+    version="1.13.1">
 
     <!-- This plugin requires Cordova version 8.0.0 or newer. -->
     <engines>
-        <engine name="cordova" version=">=8.0.0" />
+        <engine name="cordova" version=">=8.1.2" />
     </engines>
 
     <name>Bluedot Point SDK</name>
@@ -39,6 +39,7 @@
         <framework src="CoreLocation.framework" />
         <framework src="CoreMotion.framework" />
         <framework src="CoreGraphics.framework" />
+        <framework src="CoreData.framework" />
         <framework src="MapKit.framework" />
         <framework src="UIKit.framework" />
         <framework src="SystemConfiguration.framework" />
