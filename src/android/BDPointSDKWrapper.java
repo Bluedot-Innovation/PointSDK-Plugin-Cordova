@@ -69,6 +69,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public static final String ACTION_ENABLE_ZONE = "enableZone";
     public static final String ACTION_NOTIFY_PUSH_UPDATE = "notifyPushUpdate";
     public static final String ACTION_FOREGROUND_NOTIFICATION = "foregroundNotification";
+    public static final String ACTION_SET_NOTIFICATION_ICON = "setNotificationIDResourceID";
+    public static final String ACTION_SET_CUSTOMEVENT_METADATA = "setCustomEventMetaData";
 
     private final static String TAG = "BDPointSDKWrapper";
 
@@ -170,8 +172,15 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
 
             mServiceManager.setForegroundServiceNotification(createNotification(channelId, channelName, title, content) , targetAllAPIs);
             result = true;
+        } else if (action.equals(ACTION_SET_NOTIFICATION_ICON)) {
+            int resId = args.getInt(0);
+            mServiceManager.setNotificationIDResourceID(resId);
+            result = true;
+        } else if (action.equals(ACTION_SET_CUSTOMEVENT_METADATA)) {
+            Map<String,String> customMetaData = (Map<String, String>) args.getJSONObject(0);
+            mServiceManager.setCustomEventMetaData(customMetaData);
+            result = true;
         }
-
         return result;
     }
 
@@ -628,9 +637,9 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT );
 
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-           
+
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager.getNotificationChannel(channelId) == null) {
                 NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
@@ -653,7 +662,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             NotificationCompat.Builder notification = new NotificationCompat.Builder(context)
                     .setContentTitle(title)
                     .setContentText(content)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(content))                
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
                     .setSmallIcon(getApplicationIcon())
                     .setContentIntent(pendingIntent);
 
