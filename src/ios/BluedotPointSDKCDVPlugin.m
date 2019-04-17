@@ -299,6 +299,23 @@
     [ BDLocationManager.instance notifyPushUpdateWithData: data ];
 }
 
+- (void)setCustomEventMetaData: (CDVInvokedUrlCommand *)command
+{
+    //  Ensure that the command has the minimum number of arguments
+    if ( command.arguments.count < 1 )
+    {
+        CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
+                                                            messageAsString: @"No CustomEvent Meta Data parameter supplied." ];
+        
+        [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
+        return;
+    }
+    
+    NSDictionary *data = command.arguments[0];
+    
+    [ BDLocationManager.instance setCustomEventMetaData: data ];
+}
+
 #pragma mark BDPointDelegate implementation begin
 
 /*

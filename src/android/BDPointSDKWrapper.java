@@ -69,6 +69,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
     public static final String ACTION_ENABLE_ZONE = "enableZone";
     public static final String ACTION_NOTIFY_PUSH_UPDATE = "notifyPushUpdate";
     public static final String ACTION_FOREGROUND_NOTIFICATION = "foregroundNotification";
+    public static final String ACTION_SET_NOTIFICATION_ICON = "setNotificationIDResourceID";
+    public static final String ACTION_SET_CUSTOMEVENT_METADATA = "setCustomEventMetaData";
 
     private final static String TAG = "BDPointSDKWrapper";
 
@@ -170,8 +172,26 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
 
             mServiceManager.setForegroundServiceNotification(createNotification(channelId, channelName, title, content) , targetAllAPIs);
             result = true;
-        }
+        } else if (action.equals(ACTION_SET_NOTIFICATION_ICON)) {
+            String resName = args.getString(0);
+            mServiceManager.setNotificationIDResourceID(getResourceId(resName,"drawable",context.getPackageName()));
+            result = true;
+        } else if (action.equals(ACTION_SET_CUSTOMEVENT_METADATA)) {
+            JSONObject object = args.getJSONObject(0);
+            Map<String, String> customMetaData = new HashMap<String, String>();
+            try {
+                Iterator<String> keysItr = object.keys();
+                while (keysItr.hasNext()) {
+                    String key = keysItr.next();
+                    String value = object.getString(key);
+                    customMetaData.put(key, value);
+                }
+            } catch (Exception exp) {
 
+            }
+            mServiceManager.setCustomEventMetaData(customMetaData);
+            result = true;
+        }
         return result;
     }
 
@@ -628,9 +648,9 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT );
 
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-           
+
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager.getNotificationChannel(channelId) == null) {
                 NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
@@ -653,7 +673,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             NotificationCompat.Builder notification = new NotificationCompat.Builder(context)
                     .setContentTitle(title)
                     .setContentText(content)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(content))                
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(content))
                     .setSmallIcon(getApplicationIcon())
                     .setContentIntent(pendingIntent);
 
@@ -674,5 +694,15 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             }
 
         return icon;
+    }
+
+    public int getResourceId(String pVariableName, String pResourcename, String pPackageName)
+    {
+        try {
+            return cordova.getActivity().getResources().getIdentifier(pVariableName, pResourcename, pPackageName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }

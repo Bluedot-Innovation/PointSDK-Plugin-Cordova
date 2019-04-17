@@ -67,6 +67,7 @@ const proximityEnum =
     }
 }
 
+var metaDta = {};
 
 /*
  *  Add text to the status area.
@@ -89,6 +90,9 @@ function authenticationSuccessful( errorCode, message )
     if ( typeof message === "undefined" || errorCode == 0 )
     {
         updateStatus( "Authentication successful" );
+        metaDta['key'] = 'value';
+        au.com.bluedot.setCustomEventMetaData(metaDta);
+        //au.com.bluedot.setNotificationIDResourceID('app_icon');   //set icon as per requirement
     }
     else
     {

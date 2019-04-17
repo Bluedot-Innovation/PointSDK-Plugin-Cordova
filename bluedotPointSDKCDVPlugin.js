@@ -228,9 +228,29 @@ exports.notifyPushUpdate = function( userInfo )
  *  title (String) - title of the notification
  *  content (String) - content of the notification
  *  targetAllAPIs (Bool) - TRUE to display notification on All Android version, FALSE to display only on Android O and above.
- *   
+ *
  */
 exports.foregroundNotification = function( channelId, channelName, title, content, targetAllAPIs )
 {
     exec( null, null, "BDPointSDK", "foregroundNotification", [ channelId, channelName, title, content, targetAllAPIs ] );
+}
+
+/*
+ *  Sets notification ID Resource ID for service to run in foreground, required for Android O and above
+ *  resId (int) - resource Id of notifications
+ *
+ */
+exports.setNotificationIDResourceID = function( resId )
+{
+    exec( null, null, "BDPointSDK", "setNotificationIDResourceID", [ resId ] );
+}
+
+/*
+ *  Sets CustomEventMetaData map to be used on Key Value basis by applications
+ *  customMetaData (Map<String,String>) - CustomEventMetaData map to be used on Key Value basis by applications
+ *
+ */
+exports.setCustomEventMetaData = function( customMetaData )
+{
+    exec( null, null, "BDPointSDK", "setCustomEventMetaData", [ customMetaData ] );
 }

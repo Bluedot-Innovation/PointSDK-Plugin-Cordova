@@ -37,5 +37,7 @@
 - (void)enableZone: (CDVInvokedUrlCommand *)command;
 
 - (void)notifyPushUpdate: (CDVInvokedUrlCommand *)command;
+- (void)setCustomEventMetaData: (CDVInvokedUrlCommand *)command;
+
 
 @end
