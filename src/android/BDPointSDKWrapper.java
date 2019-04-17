@@ -173,11 +173,22 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             mServiceManager.setForegroundServiceNotification(createNotification(channelId, channelName, title, content) , targetAllAPIs);
             result = true;
         } else if (action.equals(ACTION_SET_NOTIFICATION_ICON)) {
-            int resId = args.getInt(0);
-            mServiceManager.setNotificationIDResourceID(resId);
+            String resName = args.getString(0);
+            mServiceManager.setNotificationIDResourceID(getResourceId(resName,"drawable",context.getPackageName()));
             result = true;
         } else if (action.equals(ACTION_SET_CUSTOMEVENT_METADATA)) {
-            Map<String,String> customMetaData = (Map<String, String>) args.getJSONObject(0);
+            JSONObject object = args.getJSONObject(0);
+            Map<String, String> customMetaData = new HashMap<String, String>();
+            try {
+                Iterator<String> keysItr = object.keys();
+                while (keysItr.hasNext()) {
+                    String key = keysItr.next();
+                    String value = object.getString(key);
+                    customMetaData.put(key, value);
+                }
+            } catch (Exception exp) {
+
+            }
             mServiceManager.setCustomEventMetaData(customMetaData);
             result = true;
         }
@@ -683,5 +694,15 @@ public class BDPointSDKWrapper extends CordovaPlugin implements ServiceStatusLis
             }
 
         return icon;
+    }
+
+    public int getResourceId(String pVariableName, String pResourcename, String pPackageName)
+    {
+        try {
+            return cordova.getActivity().getResources().getIdentifier(pVariableName, pResourcename, pPackageName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }
