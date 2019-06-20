@@ -11,7 +11,7 @@
 #import "BluedotPointSDKCDVPlugin.h"
 @import BDPointSDK;
 
-
+static const NSString *whenInUse = @"WhenInUse";
 /*
  *  Anonymous category to implement the Bluedot point delegates, including:
  *      Session
@@ -91,7 +91,7 @@
 {
 
     //  Ensure that the command has the minimum number of arguments
-    if ( command.arguments.count != 1 )
+    if ( command.arguments.count < 1 )
     {
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                             messageAsString: @"Incorrect number of arguments supplied to authenticate method." ];
@@ -102,6 +102,7 @@
 
     //  Retrieve the principle arguments for authentication
     NSString  *apiKey = command.arguments[0];
+    BDAuthorizationLevel authorizationLevel = [command.arguments[1] isEqualToString:whenInUse] ? authorizedWhenInUse : authorizedAlways;
 
     //  If the app has already authenticated, then do not try to authenticate again
     if ( _authenticated == YES )
@@ -129,7 +130,7 @@
         //  Set the authenticating callback
         _callbackIdAuthentication = command.callbackId;
 
-        [BDLocationManager.instance authenticateWithApiKey: apiKey];
+        [BDLocationManager.instance authenticateWithApiKey: apiKey requestAuthorization: authorizationLevel];
     }
 }
 

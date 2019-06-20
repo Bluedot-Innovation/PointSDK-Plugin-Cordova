@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="au.com.bluedot.bdpointsdk"
-    version="1.13.2-1">
+    version="1.14.0">
 
     <!-- This plugin requires Cordova version 8.0.0 or newer. -->
     <engines>
