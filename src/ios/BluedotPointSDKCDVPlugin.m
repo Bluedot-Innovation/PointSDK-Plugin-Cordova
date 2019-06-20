@@ -11,7 +11,7 @@
 #import "BluedotPointSDKCDVPlugin.h"
 @import BDPointSDK;
 
-
+static const NSString *whenInUse = @"WhenInUse";
 /*
  *  Anonymous category to implement the Bluedot point delegates, including:
  *      Session
@@ -101,16 +101,8 @@
     }
 
     //  Retrieve the principle arguments for authentication
-    NSString  *apiKey = [command.arguments[0] intValue];
-    BDAuthorizationLevel authorizationLevel;
-    switch (command.arguments[1]) {
-        case authorizedWhenInUse:
-            authorizationLevel = authorizedWhenInUse;
-            break;
-        default:
-            authorizationLevel = authorizedAlways;
-            break;
-    }
+    NSString  *apiKey = command.arguments[0];
+    BDAuthorizationLevel authorizationLevel = [command.arguments[1] isEqualToString:whenInUse] ? authorizedWhenInUse : authorizedAlways;
 
     //  If the app has already authenticated, then do not try to authenticate again
     if ( _authenticated == YES )
