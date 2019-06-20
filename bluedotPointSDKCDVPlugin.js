@@ -12,6 +12,11 @@ var argscheck = require( 'cordova/argscheck' ),
     utils = require( 'cordova/utils' ),
     exec = require( 'cordova/exec' );
 
+// Location authorization level. This enum is used for iOS only.
+var BDAuthorizationLevel = {
+    Always: 0,
+    WhenInUse: 1
+};
 
 /*
  *  Authenticate a Bluedot Point session.
@@ -20,9 +25,9 @@ var argscheck = require( 'cordova/argscheck' ),
  *      An error code of 0 entails no additional warnings.
  *  The fail function call provides a string with the reason for failure.
  */
-exports.authenticate = function( success, fail, apiKey )
+exports.authenticate = function( success, fail, apiKey, authorizationLevel = BDAuthorizationLevel.Always)
 {
-    exec( success, fail, "BDPointSDK", "authenticate", [ apiKey ] );
+    exec( success, fail, "BDPointSDK", "authenticate", [ apiKey, authorizationLevel ] );
 }
 
 /*

@@ -91,7 +91,7 @@
 {
 
     //  Ensure that the command has the minimum number of arguments
-    if ( command.arguments.count != 1 )
+    if ( command.arguments.count < 1 )
     {
         CDVPluginResult  *pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                                                             messageAsString: @"Incorrect number of arguments supplied to authenticate method." ];
@@ -101,7 +101,16 @@
     }
 
     //  Retrieve the principle arguments for authentication
-    NSString  *apiKey = command.arguments[0];
+    NSString  *apiKey = [command.arguments[0] intValue];
+    BDAuthorizationLevel authorizationLevel;
+    switch (command.arguments[1]) {
+        case authorizedWhenInUse:
+            authorizationLevel = authorizedWhenInUse;
+            break;
+        default:
+            authorizationLevel = authorizedAlways;
+            break;
+    }
 
     //  If the app has already authenticated, then do not try to authenticate again
     if ( _authenticated == YES )
@@ -129,7 +138,7 @@
         //  Set the authenticating callback
         _callbackIdAuthentication = command.callbackId;
 
-        [BDLocationManager.instance authenticateWithApiKey: apiKey];
+        [BDLocationManager.instance authenticateWithApiKey: apiKey requestAuthorization: authorizationLevel];
     }
 }
 
