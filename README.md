@@ -38,6 +38,8 @@ In summary, the functions relate to an HTML page that contains the following:
   This will call the doAuthenticate() function with the following constants that are set at the top of the bdFunctions.js file:
     - apiKey
 
+  This function will authenticate the SDK with the provided apiKey. For iOS project it also requires the authorization level `au.com.bluedot.BDAuthorizationLevel.WhenInUse` or `au.com.bluedot.BDAuthorizationLevel.Always`. It will instruct SDK to request appropriate authorization during the start. This parameter will be ignored in the Android project.
+
 - A button with an id of "logOutButton"
 
   This will call the doLogOut() function
@@ -190,14 +192,19 @@ The functions in the plug-in encapsulate cross-platform functionality.  Should m
 
 ## authenticate
 
-    /*
-     *  Authenticate a Bluedot Point session.
-     *  The fail function call provides a string with the reason for failure.
-     */
-    exports.authenticate = function( success, fail, apiKey )
-    {
-        exec( success, fail, "BDPointSDK", "authenticate", [ apiKey ] );
-    }
+```JS
+/*
+ *  Authenticate a Bluedot Point session.
+ *  The success function call provides an error code and an optional string for any warnings after successful
+ *  authentication.
+ *      An error code of 0 entails no additional warnings.
+ *  The fail function call provides a string with the reason for failure.
+ */
+exports.authenticate = function( success, fail, apiKey, authorizationLevel)
+{
+    exec( success, fail, "BDPointSDK", "authenticate", [ apiKey, authorizationLevel ] );
+}
+```
 
 ### Description
 This function is utilised to start an authenticated session with the Bluedot Point SDK.  The credentials are returned from creating an App on the Bluedot <a href="https://www.pointaccess.bluedot.com.au/pointaccess-v1/login.html">Point Access</a> web site.
