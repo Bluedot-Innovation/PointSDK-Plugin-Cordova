@@ -38,6 +38,8 @@ In summary, the functions relate to an HTML page that contains the following:
   This will call the doAuthenticate() function with the following constants that are set at the top of the bdFunctions.js file:
     - apiKey
 
+  This function will authenticate the SDK with the provided apiKey. For iOS project it also requires the authorization level `au.com.bluedot.BDAuthorizationLevel.WhenInUse` or `au.com.bluedot.BDAuthorizationLevel.Always`. It will instruct SDK to request appropriate authorization during the start. This parameter will be ignored in the Android project.
+
 - A button with an id of "logOutButton"
 
   This will call the doLogOut() function
