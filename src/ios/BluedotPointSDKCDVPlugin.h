@@ -16,22 +16,29 @@
 /*
  *  Common access methods to the Bluedot Point SDK.
  */
-- (void)authenticate: (CDVInvokedUrlCommand *)command;
-- (void)logOut: (CDVInvokedUrlCommand *)command;
+- (void)initializeWithProjectId: (CDVInvokedUrlCommand *)command;
+- (void)isInitialized: (CDVInvokedUrlCommand *)command;
+- (void)reset: (CDVInvokedUrlCommand *)command;
 
-//  Setup delegate functions for call backs from the SDK
-- (void)zoneInfoCallback: (CDVInvokedUrlCommand *)command;
+- (void)requestWhenInUseAuthorization: (CDVInvokedUrlCommand *)command;
+- (void)requestAlwaysAuthorization: (CDVInvokedUrlCommand *)command;
 
-- (void)checkedIntoFenceCallback: (CDVInvokedUrlCommand *)command;
-- (void)checkedIntoBeaconCallback: (CDVInvokedUrlCommand *)command;
+- (void)startGeoTriggering: (CDVInvokedUrlCommand *)command;
+- (void)startGeoTriggeringWithAppRestartNotification: (CDVInvokedUrlCommand *)command;
+- (void)stopGeoTriggering: (CDVInvokedUrlCommand *)command;
+//- (void)isGeoTriggeringRunning: (CDVInvokedUrlCommand *)command;
 
-- (void)checkedOutOfFenceCallback: (CDVInvokedUrlCommand *)command;
-- (void)checkedOutOfBeaconCallback: (CDVInvokedUrlCommand *)command;
+- (void)startTempoWithDestinationId: (CDVInvokedUrlCommand *)command;
+- (void)stopTempoTracking: (CDVInvokedUrlCommand *)command;
+//- (void)isTempoRunning: (CDVInvokedUrlCommand *)command;
 
-- (void)startRequiringUserInterventionForBluetoothCallback: (CDVInvokedUrlCommand *)command;
-- (void)stopRequiringUserInterventionForBluetoothCallback: (CDVInvokedUrlCommand *)command;
-- (void)startRequiringUserInterventionForLocationServicesCallback: (CDVInvokedUrlCommand *)command;
-- (void)stopRequiringUserInterventionForLocationServicesCallback: (CDVInvokedUrlCommand *)command;
+//  Setup GeoTriggeringEvent delegate functions for call backs from the SDK
+- (void)zoneInfoUpdateCallback: (CDVInvokedUrlCommand *)command;
+- (void)enteredZoneCallback: (CDVInvokedUrlCommand *)command;
+- (void)exitedZoneCallback: (CDVInvokedUrlCommand *)command;
+
+- (void)didStopTrackingWithErrorCallback: (CDVInvokedUrlCommand *)command;
+- (void)tempoTrackingExpiredCallback: (CDVInvokedUrlCommand *)command;
 
 - (void)disableZone: (CDVInvokedUrlCommand *)command;
 - (void)enableZone: (CDVInvokedUrlCommand *)command;

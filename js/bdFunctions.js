@@ -12,7 +12,12 @@
  *  Setup session authentication credentials.
  *  These are obtained from creating an API in the Bluedot Point Access web site.
  */
-const apiKey = "";
+
+// Your Project Id
+const projectId = "YOUR_PROJECT_ID";
+
+// Your account will need to be Tempo Enabled to access this feature.
+const destinationId = "YOUR_DESTINATION_ID"; 
 
 //  Set up enums
 const zoneInfoEnum =
@@ -29,20 +34,6 @@ const fenceInfoEnum =
     ID: 2
 }
 
-const beaconInfoEnum =
-{
-    name: 0,
-    description: 1,
-    ID: 2,
-    isiBeacon: 3,
-    proximityUUID: 4,
-    major: 5,
-    minor: 6,
-    MACAddress: 7,
-    lat: 8,
-    lon: 9
-}
-
 const locationInfoEnum =
 {
     timestamp: 0,
@@ -52,105 +43,171 @@ const locationInfoEnum =
     speed: 4
 }
 
-const proximityEnum =
-{
-    Unknown : 0,
-    Immediate : 1,
-    Near : 2,
-    Far : 3,
-    properties:
-    {
-        0: { name: "Unknown", value: 0, code: "U" },
-        1: { name: "Immediate", value: 1, code: "I" },
-        2: { name: "Near", value: 2, code: "N" },
-        3: { name: "Far", value: 3, code: "F" }
-    }
-}
-
-var metaDta = {};
-
 /*
  *  Add text to the status area.
  */
 function updateStatus( statusText )
 {
     var textAreaId = document.getElementById( 'statusText' );
-
-    textAreaId.value += statusText + "\n";
+    let timestamp = new Intl.DateTimeFormat('en',
+                                            {
+                                               month: 'long',
+                                               day: 'numeric',
+                                               year: 'numeric',
+                                               hour: 'numeric',
+                                               minute: 'numeric',
+                                               second: 'numeric',
+                                               hourCycle: 'h23'
+                                            }
+                                           ).format(new Date())
+    
+    textAreaId.value += timestamp + ": " +  statusText + "\n";
     textAreaId.scrollTop = textAreaId.scrollHeight
 }
 
-/*
- *  The delegate function for dealing with successful authentication.
- *  If authentication was successful but has an issue, then this is passed back to the app with
- *  an associated message.
- */
-function authenticationSuccessful( errorCode, message )
+function startGeoTriggeringSuccessful( message )
 {
-    if ( typeof message === "undefined" || errorCode == 0 )
-    {
-        updateStatus( "Authentication successful" );
-        metaDta['key'] = 'value';
-        au.com.bluedot.setCustomEventMetaData(metaDta);
-        //au.com.bluedot.setNotificationIDResourceID('app_icon');   //set icon as per requirement
-    }
-    else
-    {
-        updateStatus( "Authentication successful but " + message );
-    }
+    updateStatus( message );
 }
 
-/*
- *  The delegate function for dealing with a failed authentication.
- */
-function authenticationFailed( error )
+function startGeoTriggeringFailed( error )
 {
-    updateStatus( "Authentication failed: " + error );
+    updateStatus( error );
+}
+
+function stopGeoTriggeringSuccessful( message )
+{
+    updateStatus( message );
+}
+
+function stopGeoTriggeringFailed( error )
+{
+    updateStatus( error );
+}
+
+function startTempoTrackingSuccessful( message )
+{
+    updateStatus( message );
+}
+
+function startTempoTrackingFailed( error )
+{
+    updateStatus( error );
+}
+
+function stopTempoTrackingSuccessful( message )
+{
+    updateStatus( message );
+}
+
+function stopTempoTrackingFailed( error )
+{
+    updateStatus( error );
+}
+
+function isInitializedCallback( isInitialized )
+{
+    updateStatus( "Is Initialized: " + isInitialized );
+}
+
+function initializationSuccessful( message )
+{
+    updateStatus( message );
+    au.com.bluedot.requestAlwaysAuthorization();
+}
+
+function initializationFailed( error )
+{
+    updateStatus( "Initialization failed: " + error );
 }
 
 /*
  *  The delegate function for dealing with a successful log out from an authenticated session.
  */
-function logOutSuccessful()
+function resetSuccessful()
 {
-    updateStatus( "Log out successful" );
+    updateStatus( "Reset successful" );
 }
 
 /*
  *  The delegate function for dealing with a failed log out from an authenticated session.
  */
-function logOutFailed( error )
+function resetFailed( error )
 {
-    updateStatus( "Log out failed: " + error );
+    updateStatus( "Reset failed: " + error );
 }
 
 /*
  *  Call the authentication process of the Bluedot Point SDK, passing in the details from the app.
  */
-function doAuthenticate()
+function doInitialize()
 {
+    updateStatus( "Initializing..." );
     //  Add the delegate functions for receiving data
-    au.com.bluedot.zoneInfoCallback( zoneUpdate );
-    au.com.bluedot.checkedIntoFenceCallback( fenceTrigger );
-    au.com.bluedot.checkedIntoBeaconCallback( beaconTrigger );
+    au.com.bluedot.zoneInfoUpdateCallback( zoneUpdate );
+    au.com.bluedot.enteredZoneCallback( zoneEntered );
+    au.com.bluedot.exitedZoneCallback( zoneExited );
+    au.com.bluedot.didStopTrackingWithErrorCallback( tempoTrackingStoppedWithError );
+    au.com.bluedot.tempoTrackingExpiredCallback( tempoTrackingExpired );
 
-    au.com.bluedot.checkedOutOfFenceCallback( fenceCheckOut );
-    au.com.bluedot.checkedOutOfBeaconCallback( beaconCheckOut );
-
-    var cordova = "Cordova";
-    var title = "Location Based Notifications";
-    var content = "--PLEASE CHANGE-- This app is utilizing the location to trigger alerts in both background and foreground modes when you visit your favourite locations."
-    au.com.bluedot.foregroundNotification(cordova + "channelId", cordova + "channelName" , title , content , false);
-
-    au.com.bluedot.authenticate( authenticationSuccessful, authenticationFailed, apiKey);
+    au.com.bluedot.setCustomEventMetaData( { "testKey": "testValue" } )
+    updateStatus( "Set CustomEventMetadata { \"testKey\": \"testValue\" }" );
+    //console(au.com.bluedot.BDAuthorizationLevel.WhenInUse);
+    
+    au.com.bluedot.initializeWithProjectId(initializationSuccessful, initializationFailed, projectId);
 }
 
 /*
- *  Call the log out process of the Bluedot Point SDK.
+ *  Call the isInitialized function of the Bluedot Point SDK.
  */
-function doLogOut()
+function doIsInitialized()
 {
-    au.com.bluedot.logOut( logOutSuccessful, logOutFailed );
+    au.com.bluedot.isInitialized( isInitializedCallback );
+}
+
+
+/*
+ *  Call the reset function of the Bluedot Point SDK.
+ */
+function doReset()
+{
+    au.com.bluedot.reset( resetSuccessful, resetFailed );
+}
+
+/*
+ *  Call the Start GeoTriggering function of the Bluedot Point SDK.
+ */
+function doStartGeoTriggering()
+{
+    updateStatus("Starting GeoTriggering...");
+    au.com.bluedot.startGeoTriggering( startGeoTriggeringSuccessful, startGeoTriggeringFailed);
+}
+
+/*
+ *  Call the Stop GeoTriggering function of the Bluedot Point SDK.
+ */
+function doStopGeoTriggering()
+{
+    updateStatus("Stopping GeoTriggering...");
+    au.com.bluedot.stopGeoTriggering( stopGeoTriggeringSuccessful, stopGeoTriggeringFailed);
+}
+
+/*
+ *  Call the Start Tempo Tracking function of the Bluedot Point SDK.
+ */
+function doStartTempoTracking()
+{
+    updateStatus("Starting Tempo...");
+    au.com.bluedot.startTempoWithDestinationId( startTempoTrackingSuccessful, startTempoTrackingFailed, destinationId);
+}
+
+/*
+ *  Call the Stop Tempo Tracking function of the Bluedot Point SDK.
+ */
+function doStopTempoTracking()
+{
+    updateStatus("Stopping Tempo...");
+    au.com.bluedot.stopTempoTracking( stopTempoTrackingSuccessful, stopTempoTrackingFailed);
 }
 
 /*
@@ -170,15 +227,15 @@ function zoneUpdate( zoneInfos )
         var name = zoneInfo[ zoneInfoEnum.name ];
         var description = zoneInfo[ zoneInfoEnum.description ];
 
-        updateStatus( "Zone " + name + " : " + description );
+        console.log( "Zone " + name + " : " + description );
     }
 }
 
 /*
- *  This delegate function receives the data of a fence with a Custom action that has been triggered by the SDK.
+ *  This delegate function receives the data of a Zone with a Custom action that has been triggered by the SDK.
  *  Refer to bluedotPointSDKCDVPlugin.js for more information.
  */
-function fenceTrigger( fenceInfo, zoneInfo, locationInfo, willCheckOut, customData )
+function zoneEntered( fenceInfo, zoneInfo, locationInfo, willCheckOut, customData )
 {
     //  Extract details for a status update
     var fenceName = fenceInfo[ fenceInfoEnum.name ];
@@ -187,11 +244,15 @@ function fenceTrigger( fenceInfo, zoneInfo, locationInfo, willCheckOut, customDa
     var lon = locationInfo [ locationInfoEnum.longitude ];
 
     updateStatus( fenceName + " has been triggered in " + zoneName + " at " + lat + ":" + lon );
-    updateStatus( JSON.stringify(customData) );
+    
+    if(customData)
+    {
+        console.log( JSON.stringify(customData) );
+    }
 
     if ( willCheckOut == true )
     {
-        updateStatus( "Fence is awaiting check-out" );
+        updateStatus( "Zone is awaiting check-out" );
     }
 }
 
@@ -199,7 +260,7 @@ function fenceTrigger( fenceInfo, zoneInfo, locationInfo, willCheckOut, customDa
  *  This delegate function receives the data of a fence with a Custom action that has been checked out of by the SDK.
  *  Refer to bluedotPointSDKCDVPlugin.js for more information.
  */
-function fenceCheckOut( fenceInfo, zoneInfo, date, dwellTime, customData )
+function zoneExited( fenceInfo, zoneInfo, date, dwellTime, customData )
 {
     //  Extract details for a status update
     var fenceName = fenceInfo[ fenceInfoEnum.name ];
@@ -209,43 +270,14 @@ function fenceCheckOut( fenceInfo, zoneInfo, date, dwellTime, customData )
     updateStatus( JSON.stringify(customData) );
 }
 
-/*
- *  This delegate function receives the data of a beacon with a Custom action that has been triggered by the SDK.
- *  Refer to bluedotPointSDKCDVPlugin.js for more information.
- */
-function beaconTrigger( beaconInfo, zoneInfo, locationInfo, proximity, willCheckOut, customData )
+function tempoTrackingStoppedWithError(error)
 {
-    //  Extract details for a status update
-    var beaconName = beaconInfo[ beaconInfoEnum.name ];
-    var isiBeacon = beaconInfo[ beaconInfoEnum.isiBeacon ];
-    var zoneName = zoneInfo[ zoneInfoEnum.name ];
-    var proximityName = proximityEnum.properties[ proximity ].name;
-    var lat = locationInfo [ locationInfoEnum.latitude ];
-    var lon = locationInfo [ locationInfoEnum.longitude ];
-
-    updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been triggered in " + zoneName + " with a proximity of " + proximityName + " at " + lat + ":" + lon  );
-    updateStatus( JSON.stringify(customData) );
-
-    if ( willCheckOut == true )
-    {
-        updateStatus( "Beacon is awaiting check-out" );
-    }
+    updateStatus(error);
 }
 
-/*
- *  This delegate function receives the data of a beacon with a Custom action that has been checked out of by the SDK.
- *  Refer to bluedotPointSDKCDVPlugin.js for more information.
- */
-function beaconCheckOut( beaconInfo, zoneInfo, proximity, date, dwellTime, customData )
+function tempoTrackingExpired()
 {
-    //  Extract details for a status update
-    var beaconName = beaconInfo[ beaconInfoEnum.name ];
-    var isiBeacon = beaconInfo[ beaconInfoEnum.isiBeacon ];
-    var zoneName = zoneInfo[ zoneInfoEnum.name ];
-    var proximityName = proximityEnum.properties[ proximity ].name;
-
-    updateStatus( ( ( isiBeacon == true ) ? "iBeacon " : "" ) + beaconName + " has been left in " + zoneName + " after " + dwellTime + " minutes" );
-    updateStatus( JSON.stringify(customData) );
+    updateStatus("Tempo Tracking Expired");
 }
 
 /*
@@ -255,6 +287,11 @@ function beaconCheckOut( beaconInfo, zoneInfo, proximity, date, dwellTime, custo
  */
 document.addEventListener( 'DOMContentLoaded', function()
 {
-    document.getElementById( "authenticateButton" ).addEventListener( "click", doAuthenticate );
-    document.getElementById( "logOutButton" ).addEventListener( "click", doLogOut );
-} );
+    document.getElementById( "initializeButton" ).addEventListener( "click", doInitialize );
+    document.getElementById( "resetButton" ).addEventListener( "click", doReset );
+    document.getElementById( "isInitializedButton" ).addEventListener( "click", doIsInitialized );
+    document.getElementById( "startGeoTriggeringButton" ).addEventListener( "click", doStartGeoTriggering );
+    document.getElementById( "stopGeoTriggeringButton" ).addEventListener( "click", doStopGeoTriggering  );
+    document.getElementById( "startTempoTrackingButton" ).addEventListener( "click", doStartTempoTracking );
+    document.getElementById( "stopTempoTrackingButton" ).addEventListener( "click", doStopTempoTracking );
+});

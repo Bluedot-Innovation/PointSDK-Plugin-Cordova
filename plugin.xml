@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="au.com.bluedot.bdpointsdk"
-    version="1.14.0">
+    version="2.0.0">
 
-    <!-- This plugin requires Cordova version 8.0.0 or newer. -->
     <engines>
         <engine name="cordova" version=">=9.0.0" />
     </engines>
@@ -26,6 +25,14 @@
             <string>Allow location-based actions to be triggered while in the background</string>
         </config-file>
 
+        <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+            <string>Allow location-based actions to be triggered while in use</string>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="NSLocationAlwaysAndWhenInUseUsageDescription">
+            <string>Allow location-based actions to be triggered while in use and in the background</string>
+        </config-file>
+
         <!-- The app is able to run in background through location updates -->
         <config-file target="*-Info.plist" parent="UIBackgroundModes">
             <array>
@@ -45,8 +52,16 @@
         <framework src="SystemConfiguration.framework" />
 
         <!-- Point SDK -->
-        <framework src="src/ios/BDPointSDK.framework" custom="true" embed="true" target-dir="src/au/com/bluedot" />
+        <!-- <framework src="BluedotPointSDK" type="podspec" spec="~> 15.5.1" /> -->
 
+        <podspec>
+            <config>
+                <source url="https://github.com/CocoaPods/Specs.git"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="BluedotPointSDK" spec="~> 15.5.1" />
+            </pods>
+        </podspec>
     </platform>
 
     <platform name="android">
