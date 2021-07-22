@@ -26,11 +26,11 @@
 - (void)startGeoTriggering: (CDVInvokedUrlCommand *)command;
 - (void)startGeoTriggeringWithAppRestartNotification: (CDVInvokedUrlCommand *)command;
 - (void)stopGeoTriggering: (CDVInvokedUrlCommand *)command;
-//- (void)isGeoTriggeringRunning: (CDVInvokedUrlCommand *)command;
+- (void)isGeoTriggeringRunning: (CDVInvokedUrlCommand *)command;
 
 - (void)startTempoWithDestinationId: (CDVInvokedUrlCommand *)command;
 - (void)stopTempoTracking: (CDVInvokedUrlCommand *)command;
-//- (void)isTempoRunning: (CDVInvokedUrlCommand *)command;
+- (void)isTempoRunning: (CDVInvokedUrlCommand *)command;
 
 //  Setup GeoTriggeringEvent delegate functions for call backs from the SDK
 - (void)zoneInfoUpdateCallback: (CDVInvokedUrlCommand *)command;

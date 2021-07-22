@@ -85,6 +85,11 @@ function stopGeoTriggeringFailed( error )
     updateStatus( error );
 }
 
+function isGeoTriggeringRunningCallback ( isGeoTriggeringRunning )
+{
+    updateStatus( "Is Geo Triggering Running: " + isGeoTriggeringRunning)
+}
+
 function startTempoTrackingSuccessful( message )
 {
     updateStatus( message );
@@ -103,6 +108,11 @@ function stopTempoTrackingSuccessful( message )
 function stopTempoTrackingFailed( error )
 {
     updateStatus( error );
+}
+
+function isTempoRunningCallback ( isTempoRunning )
+{
+    updateStatus( "Is Tempo Running: " + isTempoRunning)
 }
 
 function isInitializedCallback( isInitialized )
@@ -192,6 +202,11 @@ function doStopGeoTriggering()
     au.com.bluedot.stopGeoTriggering( stopGeoTriggeringSuccessful, stopGeoTriggeringFailed);
 }
 
+function doIsGeoTriggeringRunning()
+{
+    au.com.bluedot.isGeoTriggeringRunning( isGeoTriggeringRunningCallback );
+}
+
 /*
  *  Call the Start Tempo Tracking function of the Bluedot Point SDK.
  */
@@ -208,6 +223,12 @@ function doStopTempoTracking()
 {
     updateStatus("Stopping Tempo...");
     au.com.bluedot.stopTempoTracking( stopTempoTrackingSuccessful, stopTempoTrackingFailed);
+}
+
+
+function doIsTempoRunning()
+{
+    au.com.bluedot.isTempoRunning( isTempoRunningCallback );
 }
 
 /*
@@ -292,6 +313,8 @@ document.addEventListener( 'DOMContentLoaded', function()
     document.getElementById( "isInitializedButton" ).addEventListener( "click", doIsInitialized );
     document.getElementById( "startGeoTriggeringButton" ).addEventListener( "click", doStartGeoTriggering );
     document.getElementById( "stopGeoTriggeringButton" ).addEventListener( "click", doStopGeoTriggering  );
+    document.getElementById( "isGeoTriggeringRunningButton" ).addEventListener( "click", doIsGeoTriggeringRunning );
     document.getElementById( "startTempoTrackingButton" ).addEventListener( "click", doStartTempoTracking );
     document.getElementById( "stopTempoTrackingButton" ).addEventListener( "click", doStopTempoTracking );
+    document.getElementById( "isTempoRunningButton" ).addEventListener( "click", doIsTempoRunning );
 });

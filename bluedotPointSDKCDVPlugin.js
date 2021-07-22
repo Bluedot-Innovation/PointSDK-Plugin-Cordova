@@ -42,6 +42,11 @@ exports.stopGeoTriggering = function( success, fail )
     exec( success, fail, "BDPointSDK", "stopGeoTriggering", [] );
 }
     
+exports.isGeoTriggeringRunning = function( success )
+{
+    exec( success, null, "BDPointSDK", "isGeoTriggeringRunning", [] );
+}
+    
 exports.startTempoWithDestinationId = function( success, fail, destinationId )
 {
     exec( success, fail, "BDPointSDK", "startTempoWithDestinationId", [ destinationId] );
@@ -50,6 +55,11 @@ exports.startTempoWithDestinationId = function( success, fail, destinationId )
 exports.stopTempoTracking = function( success, fail )
 {
     exec( success, fail, "BDPointSDK", "stopTempoTracking", [] );
+}
+    
+exports.isTempoRunning = function( success )
+{
+    exec( success, null, "BDPointSDK", "isTempoRunning", [] );
 }
 
 /*
