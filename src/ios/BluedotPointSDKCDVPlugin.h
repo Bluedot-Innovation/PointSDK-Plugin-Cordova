@@ -32,11 +32,18 @@
 - (void)stopTempoTracking: (CDVInvokedUrlCommand *)command;
 - (void)isTempoRunning: (CDVInvokedUrlCommand *)command;
 
-//  Setup GeoTriggeringEvent delegate functions for call backs from the SDK
+//  Setup BluedotServiceDelegate functions for call backs from the SDK
+- (void)bluedotServiceDidReceiveErrorCallback: (CDVInvokedUrlCommand *)command;
+- (void)locationAuthorizationDidChangeCallback: (CDVInvokedUrlCommand *)command;
+- (void)accuracyAuthorizationDidChangeCallback: (CDVInvokedUrlCommand *)command;
+- (void)lowPowerModeDidChangeCallback: (CDVInvokedUrlCommand *)command;
+
+//  Setup GeoTriggeringEventDelegate functions for call backs from the SDK
 - (void)zoneInfoUpdateCallback: (CDVInvokedUrlCommand *)command;
 - (void)enteredZoneCallback: (CDVInvokedUrlCommand *)command;
 - (void)exitedZoneCallback: (CDVInvokedUrlCommand *)command;
 
+//  Setup TempoTrackingDelegate functions for call backs from the SDK
 - (void)didStopTrackingWithErrorCallback: (CDVInvokedUrlCommand *)command;
 - (void)tempoTrackingExpiredCallback: (CDVInvokedUrlCommand *)command;
 

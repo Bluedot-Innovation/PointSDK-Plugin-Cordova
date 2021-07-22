@@ -43,6 +43,34 @@ const locationInfoEnum =
     speed: 4
 }
 
+const CLAuthorizationStatusEnum =
+{
+    notDetermined : 0,
+    restricted : 1,
+    denied : 2,
+    authorizedAlways : 3,
+    authorizedWhenInUse: 4,
+    properties:
+    {
+        0: { name: "notDetermined" },
+        1: { name: "restricted" },
+        2: { name: "denied" },
+        3: { name: "authorizedAlways" },
+        4: { name: "authorizedWhenInUse" }
+    }
+}
+
+const CLAccuracyAuthorizationEnum =
+{
+    fullAccuracy : 0,
+    reducedAccuracy : 1,
+    properties:
+    {
+        0: { name: "fullAccuracy" },
+        1: { name: "reducedAccuracy" }
+    }
+}
+
 /*
  *  Add text to the status area.
  */
@@ -152,18 +180,27 @@ function resetFailed( error )
  */
 function doInitialize()
 {
-    updateStatus( "Initializing..." );
-    //  Add the delegate functions for receiving data
+    //  Add the BluedotServiceDelegate functions for receiving data
+    au.com.bluedot.bluedotServiceDidReceiveErrorCallback( bluedotServiceReceivedError );
+    au.com.bluedot.locationAuthorizationDidChangeCallback( locationAuthorizationChanged );
+    au.com.bluedot.accuracyAuthorizationDidChangeCallback( accuracyAuthorizationChanged );
+    au.com.bluedot.lowPowerModeDidChangeCallback( lowPowerModeChanged );
+    
+    //  Add the GeoTriggeringEventDelegate functions for receiving data
     au.com.bluedot.zoneInfoUpdateCallback( zoneUpdate );
     au.com.bluedot.enteredZoneCallback( zoneEntered );
     au.com.bluedot.exitedZoneCallback( zoneExited );
+    
+    //  Add the TempTrackingDelegate functions for receiving data
     au.com.bluedot.didStopTrackingWithErrorCallback( tempoTrackingStoppedWithError );
     au.com.bluedot.tempoTrackingExpiredCallback( tempoTrackingExpired );
 
+    // Setting the Custom Event Metadata
     au.com.bluedot.setCustomEventMetaData( { "testKey": "testValue" } )
     updateStatus( "Set CustomEventMetadata { \"testKey\": \"testValue\" }" );
-    //console(au.com.bluedot.BDAuthorizationLevel.WhenInUse);
     
+    // Initialize SDK
+    updateStatus( "Initializing with Bluedot SDK..." );
     au.com.bluedot.initializeWithProjectId(initializationSuccessful, initializationFailed, projectId);
 }
 
@@ -184,13 +221,43 @@ function doReset()
     au.com.bluedot.reset( resetSuccessful, resetFailed );
 }
 
+
+function bluedotServiceReceivedError(error)
+{
+    updateStatus(error);
+}
+
+function locationAuthorizationChanged(previousStatus, newStatus)
+{
+    updateStatus("Location Authorization Status: " + CLAuthorizationStatusEnum.properties[ newStatus ].name);
+}
+
+function accuracyAuthorizationChanged(previousStatus, newStatus)
+{
+    updateStatus("Accuracy Authorization Status: " + CLAccuracyAuthorizationEnum.properties[ newStatus ].name);
+}
+
+function lowPowerModeChanged(isLowPowerMode)
+{
+    updateStatus("Low Power Mode changed to " + isLowPowerMode);
+}
+
 /*
  *  Call the Start GeoTriggering function of the Bluedot Point SDK.
  */
 function doStartGeoTriggering()
 {
-    updateStatus("Starting GeoTriggering...");
+    updateStatus("Starting GeoTriggering");
     au.com.bluedot.startGeoTriggering( startGeoTriggeringSuccessful, startGeoTriggeringFailed);
+}
+
+/*
+ *  Call the Start GeoTriggering function of the Bluedot Point SDK.
+ */
+function doStartGeoTriggeringWithAppRestartNotification()
+{
+    updateStatus("Starting GeoTriggering with AppRestart...");
+    au.com.bluedot.startGeoTriggeringWithAppRestartNotification( startGeoTriggeringSuccessful, startGeoTriggeringFailed, "title", "buttonText");
 }
 
 /*
@@ -312,6 +379,7 @@ document.addEventListener( 'DOMContentLoaded', function()
     document.getElementById( "resetButton" ).addEventListener( "click", doReset );
     document.getElementById( "isInitializedButton" ).addEventListener( "click", doIsInitialized );
     document.getElementById( "startGeoTriggeringButton" ).addEventListener( "click", doStartGeoTriggering );
+    document.getElementById( "startGeoTriggeringWithAppRestartButton" ).addEventListener( "click", doStartGeoTriggeringWithAppRestartNotification );
     document.getElementById( "stopGeoTriggeringButton" ).addEventListener( "click", doStopGeoTriggering  );
     document.getElementById( "isGeoTriggeringRunningButton" ).addEventListener( "click", doIsGeoTriggeringRunning );
     document.getElementById( "startTempoTrackingButton" ).addEventListener( "click", doStartTempoTracking );

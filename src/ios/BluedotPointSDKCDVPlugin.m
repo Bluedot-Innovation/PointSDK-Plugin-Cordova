@@ -17,7 +17,7 @@ static const NSString *whenInUse = @"WhenInUse";
  *      Session
  *      Location
  */
-@interface BluedotPointSDKCDVPlugin() <BDPGeoTriggeringEventDelegate, BDPTempoTrackingDelegate>
+@interface BluedotPointSDKCDVPlugin() <BDPBluedotServiceDelegate, BDPGeoTriggeringEventDelegate, BDPTempoTrackingDelegate>
 @end
 
 
@@ -36,6 +36,10 @@ static const NSString *whenInUse = @"WhenInUse";
     id  _callbackIdExitedZone;
     id  _callbackIdDidStopTracking;
     id  _callbackIdTempoTrackingExpired;
+    id  _callbackIdBluedotServiceDidReceiveError;
+    id  _callbackIdLocationAuthorizationDidChange;
+    id  _callbackIdAccuracyAuthorizationDidChange;
+    id  _callbackIdlowPowerModeDidChange;
 
     //  A default date formatter
     NSDateFormatter  *_dateFormatter;
@@ -52,6 +56,7 @@ static const NSString *whenInUse = @"WhenInUse";
     BDLocationManager  *locationManager = [ BDLocationManager instance ];
 
     //  Assign the delegates to this class
+    locationManager.bluedotServiceDelegate = self;
     locationManager.geoTriggeringEventDelegate = self;
     locationManager.tempoTrackingDelegate = self;
 
@@ -66,6 +71,10 @@ static const NSString *whenInUse = @"WhenInUse";
     _callbackIdExitedZone = nil;
     _callbackIdDidStopTracking = nil;
     _callbackIdTempoTrackingExpired = nil;
+    _callbackIdBluedotServiceDidReceiveError = nil;
+    _callbackIdLocationAuthorizationDidChange = nil;
+    _callbackIdAccuracyAuthorizationDidChange = nil;
+    _callbackIdlowPowerModeDidChange = nil;
 }
 
 /*
@@ -201,7 +210,7 @@ static const NSString *whenInUse = @"WhenInUse";
     }
     
     NSString *title = command.arguments[0];
-    NSString *buttonText = command.arguments[0];
+    NSString *buttonText = command.arguments[1];
     
     [[BDLocationManager instance] startGeoTriggeringWithAppRestartNotificationTitle: title
                                    notificationButtonText: buttonText completion:^(NSError * _Nullable error){
@@ -256,6 +265,14 @@ static const NSString *whenInUse = @"WhenInUse";
         
         return;
     }];
+}
+
+- (void)isGeoTriggeringRunning:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult* pluginResult = [CDVPluginResult
+                     resultWithStatus: CDVCommandStatus_OK
+                        messageAsBool: [[BDLocationManager instance] isGeoTriggeringRunning]];
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
 }
 
 - (void)startTempoWithDestinationId:(CDVInvokedUrlCommand *)command
@@ -325,6 +342,14 @@ static const NSString *whenInUse = @"WhenInUse";
         
         return;
     }];
+}
+
+- (void)isTempoRunning:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult* pluginResult = [CDVPluginResult
+                     resultWithStatus: CDVCommandStatus_OK
+                        messageAsBool: [[BDLocationManager instance] isTempoRunning]];
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
 }
 
 /*
@@ -456,6 +481,136 @@ static const NSString *whenInUse = @"WhenInUse";
 
     return doubles;
 }
+#pragma mark BDPBluedotServiceDelegate implementation begin
+
+- (void)bluedotServiceDidReceiveError:(NSError *)error
+{
+    NSLog(@"bluedotServiceDidReceiveError: %@", error.localizedDescription);
+
+    //  Ensure that a delegate for zone info has been setup
+    if ( _callbackIdBluedotServiceDidReceiveError == nil )
+    {
+        NSLog( @"Callback for bluedotServiceDidReceiveError has not been setup." );
+        return;
+    }
+
+    CDVPluginResult  *pluginResult = [
+        CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                         messageAsString: [NSString stringWithFormat:
+                                           @"Bluedot Service Received Error: %@", error.localizedDescription]
+    ];
+
+    //  Keep the callback after returning the result
+    pluginResult.keepCallback = @(YES);
+
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdBluedotServiceDidReceiveError ];
+}
+
+- (void)locationAuthorizationDidChangeFromPreviousStatus:(CLAuthorizationStatus)previousAuthorizationStatus toNewStatus:(CLAuthorizationStatus)newAuthorizationStatus
+{
+    NSLog(@"CLAuthorizationStatus did change from %d to %d", previousAuthorizationStatus, newAuthorizationStatus);
+
+    //  Ensure that a delegate for zone info has been setup
+    if ( _callbackIdLocationAuthorizationDidChange == nil )
+    {
+        NSLog( @"Callback for locationAuthorizationDidChangeFromPreviousStatus has not been setup." );
+        return;
+    }
+    
+    CDVPluginResult *pluginResult = [
+        CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                         messageAsMultipart:@[@(previousAuthorizationStatus), @(newAuthorizationStatus)]
+    ];
+
+    //  Keep the callback after returning the result
+    pluginResult.keepCallback = @(YES);
+
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdLocationAuthorizationDidChange ];
+
+}
+
+- (void)accuracyAuthorizationDidChangeFromPreviousAuthorization:(CLAccuracyAuthorization)previousAccuracyAuthorization toNewAuthorization:(CLAccuracyAuthorization)newAccuracyAuthorization
+{
+    NSLog(@"CLAccuracyAuthorization did change from %ld to %ld", (long)previousAccuracyAuthorization, newAccuracyAuthorization);
+
+    //  Ensure that a delegate for zone info has been setup
+    if ( _callbackIdAccuracyAuthorizationDidChange == nil )
+    {
+        NSLog( @"Callback for accuracyAuthorizationDidChangeFromPreviousAuthorization has not been setup." );
+        return;
+    }
+    
+    CDVPluginResult *pluginResult = [
+        CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                         messageAsMultipart: @[@(previousAccuracyAuthorization), @(newAccuracyAuthorization)]
+    ];
+
+    //  Keep the callback after returning the result
+    pluginResult.keepCallback = @(YES);
+
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdAccuracyAuthorizationDidChange ];
+}
+
+- (void)lowPowerModeDidChange:(bool)isLowPowerMode
+{
+    NSLog(@"lowPowerModeDidChange did change to %@", isLowPowerMode ? @"true" : @"false");
+
+    //  Ensure that a delegate for zone info has been setup
+    if ( _callbackIdlowPowerModeDidChange == nil )
+    {
+        NSLog( @"Callback for lowPowerModeDidChange has not been setup." );
+        return;
+    }
+    
+    CDVPluginResult *pluginResult = [
+        CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                           messageAsBool: isLowPowerMode
+    ];
+
+    //  Keep the callback after returning the result
+    pluginResult.keepCallback = @(YES);
+
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdlowPowerModeDidChange ];
+
+}
+
+/*
+ *  Entry method for setting up the bluedotServiceDidReceiveErrorCallback delegate.
+ */
+- (void)bluedotServiceDidReceiveErrorCallback: (CDVInvokedUrlCommand *)command
+{
+    //  Set the zone info callback
+    _callbackIdBluedotServiceDidReceiveError = command.callbackId;
+}
+
+/*
+ *  Entry method for setting up the locationAuthorizationDidChangeCallback delegate.
+ */
+- (void)locationAuthorizationDidChangeCallback: (CDVInvokedUrlCommand *)command
+{
+    //  Set the zone info callback
+    _callbackIdLocationAuthorizationDidChange = command.callbackId;
+}
+
+/*
+ *  Entry method for setting up the accuracyAuthorizationDidChangeCallback delegate.
+ */
+- (void)accuracyAuthorizationDidChangeCallback: (CDVInvokedUrlCommand *)command
+{
+    //  Set the zone info callback
+    _callbackIdAccuracyAuthorizationDidChange = command.callbackId;
+}
+
+/*
+ *  Entry method for setting up the lowPowerModeDidChangeCallback delegate.
+ */
+- (void)lowPowerModeDidChangeCallback: (CDVInvokedUrlCommand *)command
+{
+    //  Set the zone info callback
+    _callbackIdlowPowerModeDidChange = command.callbackId;
+}
+
+#pragma mark BDPBluedotServiceDelegate implementation end
 
 #pragma mark BDPGeoTriggeringEventDelegate implementation begin
 
@@ -527,7 +682,7 @@ static const NSString *whenInUse = @"WhenInUse";
     //  Ensure that a delegate for fence info has been setup
     if ( _callbackIdEnteredZone == nil )
     {
-        NSLog( @"Callback for fence check-ins has not been setup." );
+        NSLog( @"Callback for zone check-ins has not been setup." );
         return;
     }
 
@@ -576,7 +731,7 @@ static const NSString *whenInUse = @"WhenInUse";
     //  Ensure that a delegate for fence info has been setup
     if ( _callbackIdExitedZone == nil )
     {
-        NSLog( @"Callback for fence check-outs has not been setup." );
+        NSLog( @"Callback for zone check-outs has not been setup." );
         return;
     }
 

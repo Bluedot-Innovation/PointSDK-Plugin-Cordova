@@ -32,9 +32,9 @@ exports.startGeoTriggering = function( success, fail )
     exec( success, fail, "BDPointSDK", "startGeoTriggering", [] );
 }
     
-exports.startGeoTriggeringWithAppRestartNotification = function( success, fail )
+exports.startGeoTriggeringWithAppRestartNotification = function( success, fail, title, buttonText )
 {
-    exec( success, fail, "BDPointSDK", "startGeoTriggeringWithAppRestartNotification", [] );
+    exec( success, fail, "BDPointSDK", "startGeoTriggeringWithAppRestartNotification", [title, buttonText] );
 }
     
 exports.stopGeoTriggering = function( success, fail )
@@ -62,6 +62,26 @@ exports.isTempoRunning = function( success )
     exec( success, null, "BDPointSDK", "isTempoRunning", [] );
 }
 
+exports.bluedotServiceDidReceiveErrorCallback = function( callback )
+{
+    exec( callback, null, "BDPointSDK", "bluedotServiceDidReceiveErrorCallback", [] );
+}
+    
+exports.locationAuthorizationDidChangeCallback = function( callback )
+{
+    exec( callback, null, "BDPointSDK", "locationAuthorizationDidChangeCallback", [] );
+}
+
+exports.accuracyAuthorizationDidChangeCallback = function( callback )
+{
+    exec( callback, null, "BDPointSDK", "accuracyAuthorizationDidChangeCallback", [] );
+}
+
+exports.lowPowerModeDidChangeCallback = function( callback )
+{
+    exec( callback, null, "BDPointSDK", "lowPowerModeDidChangeCallback", [] );
+}
+    
 /*
  *  Provide a callback to receive Zone Info updates.  The callback is called with the following parameters:
  *      Parameter 1: Array of zones
