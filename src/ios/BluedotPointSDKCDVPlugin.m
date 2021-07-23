@@ -11,7 +11,6 @@
 #import "BluedotPointSDKCDVPlugin.h"
 @import BDPointSDK;
 
-static const NSString *whenInUse = @"WhenInUse";
 /*
  *  Anonymous category to implement the Bluedot point delegates, including:
  *      Session
