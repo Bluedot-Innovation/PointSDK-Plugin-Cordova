@@ -71,13 +71,27 @@
             </feature>
         </config-file>
 
-        <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
-        <framework src="com.google.android.gms:play-services-base:15.0.1" />
-        <framework src="com.google.android.gms:play-services-location:16.0.0" />
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver
+                    android:name="au.com.bluedot.BDPointSDKWrapper$BluedotGeoTriggerReceiver"
+                    android:enabled="true"
+                    android:exported="false">
+                <intent-filter>
+                    <action android:name="io.bluedot.point.GEOTRIGGER" />
+                </intent-filter>
+            </receiver>
+        </config-file>
 
         <!-- Adding custom gradle file to import Bluedot Android Point SDK Dependency -->
         <framework src="src/android/bluedotplugin.gradle" custom="true" type="gradleReference"/>
+        <config-file target="config.xml" parent="/*">
+            <preference name="GradlePluginGoogleServicesEnabled" value="true" />
+            <preference name="GradlePluginGoogleServicesVersion" value="4.2.0" />
+        </config-file>
 
+        <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
+        <framework src="com.google.android.gms:play-services-base:17.6.0" />
+        
         <source-file src="src/android/BDPointSDKWrapper.java" target-dir="src/au/com/bluedot" />
 
     </platform>
