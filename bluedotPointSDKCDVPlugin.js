@@ -31,6 +31,18 @@ exports.startGeoTriggering = function( success, fail )
 {
     exec( success, fail, "BDPointSDK", "startGeoTriggering", [] );
 }
+
+exports.androidStartGeoTriggering = function( success,
+                                              fail,
+                                              channelId,
+                                              channelName,
+                                              androidNotificationTitle,
+                                              androidNotificationContent,
+                                              androidNotificationId )
+{
+    exec( success, fail, "BDPointSDK", "androidStartGeoTriggering",
+        [channelId, channelName, androidNotificationTitle, androidNotificationContent, androidNotificationId] );
+}
     
 exports.startGeoTriggeringWithAppRestartNotification = function( success, fail, title, buttonText )
 {

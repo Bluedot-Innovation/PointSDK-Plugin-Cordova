@@ -248,7 +248,26 @@ function lowPowerModeChanged(isLowPowerMode)
 function doStartGeoTriggering()
 {
     updateStatus("Starting GeoTriggering");
-    au.com.bluedot.startGeoTriggering( startGeoTriggeringSuccessful, startGeoTriggeringFailed);
+//    au.com.bluedot.startGeoTriggering( startGeoTriggeringSuccessful, startGeoTriggeringFailed);
+
+    const androidNotificationParams = {
+      channelId: "Bluedot Cordova",
+      channelName: "Bluedot Cordova",
+      title: "Bluedot Foreground Service - Geo-triggering",
+      content:
+        "This app is running a foreground service using location services",
+      notificationId: 123,
+    };
+
+    au.com.bluedot.androidStartGeoTriggering(
+        startGeoTriggeringSuccessful,
+        startGeoTriggeringFailed,
+        androidNotificationParams.channelId,
+        androidNotificationParams.channelName,
+        androidNotificationParams.title,
+        androidNotificationParams.content,
+        androidNotificationParams.notificationId
+        );
 }
 
 /*

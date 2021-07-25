@@ -62,14 +62,14 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     public static final String ACTION_INITIALIZE_SDK = "initializeWithProjectId";
     public static final String ACTION_RESET_SDK = "reset";
     public static final String ACTION_IS_INITIALIZED = "isInitialized";
-    public static final String ACTION_START_GEOTRIGGERING = "startGeoTriggering";
+    public static final String ACTION_ANDROID_START_GEOTRIGGERING = "androidStartGeoTriggering";
     public static final String ACTION_STOP_GEOTRIGGERING = "stopGeoTriggering";
     public static final String ACTION_IS_GEOTRIGGERING_RUNNING = "isGeoTriggeringRunning";
     public static final String ACTION_START_TEMPO_TRACKING = "startTempoWithDestinationId";
     public static final String ACTION_STOP_TEMPO_TRACKING = "stopTempoTracking";
     public static final String ACTION_ENTERED_ZONE_CALLBACK = "enteredZoneCallback";
-    public static final String ACTION_EXITED_ZONE_CALLBACK = "checkedOutOfFenceCallback";
-    public static final String ACTION_ZONE_INFO_UPDATE_CALLBACK = "zoneInfoCallback";
+    public static final String ACTION_EXITED_ZONE_CALLBACK = "exitedZoneCallback";
+    public static final String ACTION_ZONE_INFO_UPDATE_CALLBACK = "zoneInfoUpdateCallback";
     public static final String ACTION_REQUIRE_USER_INTERVENTION_FOR_LOCATION = "startRequiringUserInterventionForLocationServicesCallback";
     public static final String ACTION_DISABLE_ZONE = "disableZone";
     public static final String ACTION_ENABLE_ZONE = "enableZone";
@@ -86,11 +86,11 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     private CallbackContext mResetCallbackContext;
     private CallbackContext mStartGeoTriggeringCallbackContext;
     private CallbackContext mStopGeoTriggeringCallbackContext;
-    private CallbackContext mEnteredZoneCallbackContext;
-    private CallbackContext mExitedZoneCallbackContext;
     private CallbackContext mStartTempoTrackingCallbackContext;
-    private CallbackContext mZoneInfoUpdateCallbackContext;
-    private CallbackContext mBlueDotErrorReceiverCallbackContext;
+    private static CallbackContext mEnteredZoneCallbackContext;
+    private static CallbackContext mExitedZoneCallbackContext;
+    private static CallbackContext mZoneInfoUpdateCallbackContext;
+    private static CallbackContext mBlueDotErrorReceiverCallbackContext;
     private final int PERMISSION_REQ_CODE = 137;
     private String[] locationPermissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
 
@@ -111,7 +111,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 resetSDK(args, callbackContext);
             } else if (action.equals(ACTION_IS_INITIALIZED)) {
                 isInitialized(args, callbackContext);
-            } else if (action.equals(ACTION_START_GEOTRIGGERING)) {
+            } else if (action.equals(ACTION_ANDROID_START_GEOTRIGGERING)) {
                 startGeoTriggering(args, callbackContext);
             } else if (action.equals(ACTION_STOP_GEOTRIGGERING)) {
                 stopGeoTriggering(args, callbackContext);
@@ -280,17 +280,17 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
 
     private void zoneInfoUpdateCallback(final JSONArray args, final CallbackContext callbackContext)
     {
-        mZoneInfoUpdateCallbackContext = callbackContext;
+        BDPointSDKWrapper.mZoneInfoUpdateCallbackContext = callbackContext;
     }
 
     private void enteredZoneCallback(final JSONArray args, final CallbackContext callbackContext)
     {
-        mEnteredZoneCallbackContext = callbackContext;
+        BDPointSDKWrapper.mEnteredZoneCallbackContext = callbackContext;
     }
 
     private void exitedZoneCallback(final JSONArray args, final CallbackContext callbackContext)
     {
-        mExitedZoneCallbackContext = callbackContext;
+        BDPointSDKWrapper.mExitedZoneCallbackContext = callbackContext;
     }
 
     private void startTempoTracking(final JSONArray args, final CallbackContext callbackContext) throws JSONException
@@ -437,7 +437,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
 
     private void bluedotServiceReceivedErrorCallback(final JSONArray args, final CallbackContext callbackContext)
     {
-        mBlueDotErrorReceiverCallbackContext = callbackContext;
+        BDPointSDKWrapper.mBlueDotErrorReceiverCallbackContext = callbackContext;
     }
 
     @Override
@@ -566,7 +566,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
         }
     }
 
-    public class BluedotErrorReceiver extends BluedotServiceReceiver {
+    public static class BluedotErrorReceiver extends BluedotServiceReceiver {
 
         @Override
         public void onBluedotServiceError(@NotNull BDError bdError, @NotNull Context context) {
@@ -579,7 +579,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
         }
     }
 
-    public class BluedotGeoTriggerReceiver extends GeoTriggeringEventReceiver {
+    public static class BluedotGeoTriggerReceiver extends GeoTriggeringEventReceiver {
 
         @Override
         public void onZoneInfoUpdate(@NotNull List<ZoneInfo> zoneInfos, @NotNull Context context) {
@@ -603,8 +603,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 }
             }
 
-            if (mZoneInfoUpdateCallbackContext != null) {
-                mZoneInfoUpdateCallbackContext.success(jsonArray);
+            if (BDPointSDKWrapper.mZoneInfoUpdateCallbackContext != null) {
+                BDPointSDKWrapper.mZoneInfoUpdateCallbackContext.success(jsonArray);
             }
         }
 
@@ -670,8 +670,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
             PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
             result.setKeepCallback(true);
 
-            if (mEnteredZoneCallbackContext != null) {
-                mEnteredZoneCallbackContext.sendPluginResult(result);
+            if (BDPointSDKWrapper.mEnteredZoneCallbackContext != null) {
+                BDPointSDKWrapper.mEnteredZoneCallbackContext.sendPluginResult(result);
             }
         }
 
@@ -725,8 +725,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
             PluginResult result = new PluginResult(PluginResult.Status.OK, multipartMessages);
             result.setKeepCallback(true);
 
-            if (mExitedZoneCallbackContext != null) {
-                mExitedZoneCallbackContext.sendPluginResult(result);
+            if (BDPointSDKWrapper.mExitedZoneCallbackContext != null) {
+                BDPointSDKWrapper.mExitedZoneCallbackContext.sendPluginResult(result);
             }
 
         }
