@@ -31,9 +31,10 @@ class GeoTriggeringBuilder {
 
     start = (onSuccess, onError) => {
         if (device.platform === "iOS") {
+            console.log("Starting iOS GeoTriggering...");
             // With App Restart Notification
             if (this.iOSAppRestartNotificationTitle !== null && this.iOSAppRestartNotificationButtonText !== null) {
-                au.com.bluedot.iOSStartGeoTriggeringWithAppRestartNotification(
+                io.bluedot.cordova.plugin.iOSStartGeoTriggeringWithAppRestartNotification(
                     onSuccess,
                     onError,
                     this.iOSAppRestartNotificationTitle,
@@ -43,11 +44,12 @@ class GeoTriggeringBuilder {
             } 
 
             // With Completion
-            au.com.bluedot.iOSStartGeoTriggering(onSuccess, onError);
+            io.bluedot.cordova.plugin.iOSStartGeoTriggering(onSuccess, onError);
         }
 
         if (device.platform === "Android") {
-            au.com.bluedot.androidStartGeoTriggering(
+            console.log("Starting Android GeoTriggering...");
+            io.bluedot.cordova.plugin.androidStartGeoTriggering(
                 onSuccess, 
                 onError,
                 this.channelId,

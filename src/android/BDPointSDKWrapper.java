@@ -1,4 +1,4 @@
-package au.com.bluedot;
+package io.bluedot.cordova.plugin;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

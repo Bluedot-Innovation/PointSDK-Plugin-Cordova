@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
-    id="au.com.bluedot.bdpointsdk"
+    id="bluedot-cordova"
     version="2.0.0">
 
     <dependency id="cordova-plugin-device" version="2.0.3" />
@@ -12,11 +12,11 @@
     <name>Bluedot Point SDK</name>
 
     <js-module src="bluedotPointSDKCDVPlugin.js" name="BluedotPointSDKCDVPlugin">
-        <clobbers target="au.com.bluedot" />
+        <clobbers target="io.bluedot.cordova.plugin" />
     </js-module>
 
     <js-module src="GeoTriggeringBuilder.js" name="GeoTriggeringBuilder">
-        <clobbers target="au.com.bluedot" />
+        <clobbers target="io.bluedot.cordova.plugin.GeoTriggeringBuilder" />
     </js-module>
 
     <platform name="ios">
@@ -73,13 +73,13 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="BDPointSDK" >
-                <param name="android-package" value="au.com.bluedot.BDPointSDKWrapper"/>
+                <param name="android-package" value="io.bluedot.cordova.plugin.BDPointSDKWrapper"/>
             </feature>
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver
-                    android:name="au.com.bluedot.BDPointSDKWrapper$BluedotErrorReceiver"
+                    android:name="io.bluedot.cordova.plugin.BDPointSDKWrapper$BluedotErrorReceiver"
                     android:enabled="true"
                     android:exported="false">
                 <intent-filter>
@@ -90,7 +90,7 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver
-                    android:name="au.com.bluedot.BDPointSDKWrapper$BluedotGeoTriggerReceiver"
+                    android:name="io.bluedot.cordova.plugin.BDPointSDKWrapper$BluedotGeoTriggerReceiver"
                     android:enabled="true"
                     android:exported="false">
                 <intent-filter>
@@ -101,7 +101,7 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver
-                    android:name="au.com.bluedot.BDPointSDKWrapper$BluedotTempoReceiver"
+                    android:name="io.bluedot.cordova.plugin.BDPointSDKWrapper$BluedotTempoReceiver"
                     android:enabled="true"
                     android:exported="false">
                 <intent-filter>
@@ -120,7 +120,7 @@
         <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
         <framework src="com.google.android.gms:play-services-base:17.6.0" />
         
-        <source-file src="src/android/BDPointSDKWrapper.java" target-dir="src/au/com/bluedot" />
+        <source-file src="src/android/BDPointSDKWrapper.java" target-dir="src/io/bluedot/cordova/plugin" />
 
     </platform>
 </plugin>
