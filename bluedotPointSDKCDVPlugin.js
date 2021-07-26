@@ -27,9 +27,9 @@ exports.reset = function( success, fail )
     exec( success, fail, "BDPointSDK", "reset", [] );
 }
     
-exports.startGeoTriggering = function( success, fail )
+exports.iOSStartGeoTriggering = function( success, fail )
 {
-    exec( success, fail, "BDPointSDK", "startGeoTriggering", [] );
+    exec( success, fail, "BDPointSDK", "iOSStartGeoTriggering", [] );
 }
 
 exports.androidStartGeoTriggering = function( success,
@@ -44,9 +44,9 @@ exports.androidStartGeoTriggering = function( success,
         [channelId, channelName, androidNotificationTitle, androidNotificationContent, androidNotificationId] );
 }
     
-exports.startGeoTriggeringWithAppRestartNotification = function( success, fail, title, buttonText )
+exports.iOSStartGeoTriggeringWithAppRestartNotification = function( success, fail, title, buttonText )
 {
-    exec( success, fail, "BDPointSDK", "startGeoTriggeringWithAppRestartNotification", [title, buttonText] );
+    exec( success, fail, "BDPointSDK", "iOSStartGeoTriggeringWithAppRestartNotification", [title, buttonText] );
 }
     
 exports.stopGeoTriggering = function( success, fail )

@@ -32,5 +32,8 @@
   "bugs": {
     "url": "https://github.com/Bluedot-Innovation/PointSDK-Plugin-Cordova/issues"
   },
-  "homepage": "https://github.com/Bluedot-Innovation/PointSDK-Plugin-Cordova#readme"
+  "homepage": "https://github.com/Bluedot-Innovation/PointSDK-Plugin-Cordova#readme",
+  "dependencies": {
+    "cordova-plugin-device": "^2.0.3"
+  }
 }

@@ -32,6 +32,7 @@ import au.com.bluedot.point.net.engine.FenceInfo;
 import au.com.bluedot.point.net.engine.InitializationResultListener;
 import au.com.bluedot.point.net.engine.TempoService;
 import au.com.bluedot.point.net.engine.TempoServiceStatusListener;
+import au.com.bluedot.point.net.engine.TempoTrackingReceiver;
 import au.com.bluedot.point.net.engine.ZoneEntryEvent;
 import au.com.bluedot.point.net.engine.ZoneExitEvent;
 import au.com.bluedot.point.net.engine.ZoneInfo;
@@ -51,8 +52,6 @@ import androidx.core.app.NotificationCompat;
 import static android.app.Notification.PRIORITY_MAX;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import android.widget.Toast;
-
 /*
  * @author Bluedot Innovation
  * Copyright (c) 2018 Bluedot Innovation. All rights reserved.
@@ -65,11 +64,12 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     public static final String ACTION_ANDROID_START_GEOTRIGGERING = "androidStartGeoTriggering";
     public static final String ACTION_STOP_GEOTRIGGERING = "stopGeoTriggering";
     public static final String ACTION_IS_GEOTRIGGERING_RUNNING = "isGeoTriggeringRunning";
-    public static final String ACTION_START_TEMPO_TRACKING = "startTempoWithDestinationId";
-    public static final String ACTION_STOP_TEMPO_TRACKING = "stopTempoTracking";
     public static final String ACTION_ENTERED_ZONE_CALLBACK = "enteredZoneCallback";
     public static final String ACTION_EXITED_ZONE_CALLBACK = "exitedZoneCallback";
-    public static final String ACTION_ZONE_INFO_UPDATE_CALLBACK = "zoneInfoUpdateCallback";
+    public static final String ACTION_ZONE_INFO_UPDATE_CALLBACK = "zoneInfoUpdateCallback";    public static final String ACTION_START_TEMPO_TRACKING = "startTempoWithDestinationId";
+    public static final String ACTION_STOP_TEMPO_TRACKING = "stopTempoTracking";
+    public static final String ACTION_TEMPO_STOPPED_WITH_ERROR_CALLBACK = "didStopTrackingWithErrorCallback";
+    public static final String ACTION_TEMPO_EXPIRED_CALLBACK = "tempoTrackingExpiredCallback";
     public static final String ACTION_REQUIRE_USER_INTERVENTION_FOR_LOCATION = "startRequiringUserInterventionForLocationServicesCallback";
     public static final String ACTION_DISABLE_ZONE = "disableZone";
     public static final String ACTION_ENABLE_ZONE = "enableZone";
@@ -91,6 +91,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     private static CallbackContext mExitedZoneCallbackContext;
     private static CallbackContext mZoneInfoUpdateCallbackContext;
     private static CallbackContext mBlueDotErrorReceiverCallbackContext;
+    private static CallbackContext mTempoStoppedWithErrorCallbackContext;
+    private static CallbackContext mTempoExpiredCallbackContext;
     private final int PERMISSION_REQ_CODE = 137;
     private String[] locationPermissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
 
@@ -129,6 +131,10 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 zoneInfoUpdateCallback(args, callbackContext);
             } else if (action.equals(ACTION_EXITED_ZONE_CALLBACK)) {
                 exitedZoneCallback(args, callbackContext);
+            } else if (action.equals(ACTION_TEMPO_STOPPED_WITH_ERROR_CALLBACK)) {
+                tempoStoppedWithErrorCallback(args, callbackContext);
+            } else if (action.equals(ACTION_TEMPO_EXPIRED_CALLBACK)) {
+                tempoExpiredCallback(args, callbackContext);
             } else if (action.equals(ACTION_REQUIRE_USER_INTERVENTION_FOR_LOCATION)) {
 //                mRequiringUserInterventionForLocationServicesCallbackContext = callbackContext;
             } else if (action.equals(ACTION_DISABLE_ZONE)) {
@@ -372,6 +378,15 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
         callbackContext.sendPluginResult(result);
     }
 
+    private void tempoStoppedWithErrorCallback(final JSONArray args, final CallbackContext callbackContext)
+    {
+        BDPointSDKWrapper.mTempoStoppedWithErrorCallbackContext = callbackContext;
+    }
+
+    private void tempoExpiredCallback(final JSONArray args, final CallbackContext callbackContext)
+    {
+        BDPointSDKWrapper.mTempoExpiredCallbackContext = callbackContext;
+    }
 
     private void disableZone(final JSONArray args, final CallbackContext callbackContext) throws JSONException
     {
@@ -729,6 +744,21 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 BDPointSDKWrapper.mExitedZoneCallbackContext.sendPluginResult(result);
             }
 
+        }
+    }
+
+    public static class BluedotTempoReceiver extends TempoTrackingReceiver
+    {
+        @Override
+        public void tempoStoppedWithError(@NotNull BDError bdError, @NotNull Context context) {
+            if (mTempoStoppedWithErrorCallbackContext != null) {
+                PluginResult result = new PluginResult(
+                        PluginResult.Status.ERROR,
+                        "Tempo Stopped with Error: " + bdError.getReason()
+                );
+                result.setKeepCallback(true);
+                mTempoStoppedWithErrorCallbackContext.sendPluginResult(result);
+            }
         }
     }
 }

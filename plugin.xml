@@ -3,6 +3,8 @@
     id="au.com.bluedot.bdpointsdk"
     version="2.0.0">
 
+    <dependency id="cordova-plugin-device" version="2.0.3" />
+    
     <engines>
         <engine name="cordova" version=">=9.0.0" />
     </engines>
@@ -10,6 +12,10 @@
     <name>Bluedot Point SDK</name>
 
     <js-module src="bluedotPointSDKCDVPlugin.js" name="BluedotPointSDKCDVPlugin">
+        <clobbers target="au.com.bluedot" />
+    </js-module>
+
+    <js-module src="GeoTriggeringBuilder.js" name="GeoTriggeringBuilder">
         <clobbers target="au.com.bluedot" />
     </js-module>
 
@@ -73,11 +79,33 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver
+                    android:name="au.com.bluedot.BDPointSDKWrapper$BluedotErrorReceiver"
+                    android:enabled="true"
+                    android:exported="false">
+                <intent-filter>
+                    <action android:name="io.bluedot.point.SERVICE" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver
                     android:name="au.com.bluedot.BDPointSDKWrapper$BluedotGeoTriggerReceiver"
                     android:enabled="true"
                     android:exported="false">
                 <intent-filter>
                     <action android:name="io.bluedot.point.GEOTRIGGER" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver
+                    android:name="au.com.bluedot.BDPointSDKWrapper$BluedotTempoReceiver"
+                    android:enabled="true"
+                    android:exported="false">
+                <intent-filter>
+                    <action android:name="io.bluedot.point.TEMPO" />
                 </intent-filter>
             </receiver>
         </config-file>

@@ -259,15 +259,25 @@ function doStartGeoTriggering()
       notificationId: 123,
     };
 
-    au.com.bluedot.androidStartGeoTriggering(
-        startGeoTriggeringSuccessful,
-        startGeoTriggeringFailed,
-        androidNotificationParams.channelId,
-        androidNotificationParams.channelName,
-        androidNotificationParams.title,
-        androidNotificationParams.content,
-        androidNotificationParams.notificationId
-        );
+    // au.com.bluedot.androidStartGeoTriggering(
+    //     startGeoTriggeringSuccessful,
+    //     startGeoTriggeringFailed,
+    //     androidNotificationParams.channelId,
+    //     androidNotificationParams.channelName,
+    //     androidNotificationParams.title,
+    //     androidNotificationParams.content,
+    //     androidNotificationParams.notificationId
+    //     );
+
+    geoTriggeringBuilder
+    .androidNotification(
+      androidNotificationParams.channelId,
+      androidNotificationParams.channelName,
+      androidNotificationParams.title,
+      androidNotificationParams.content,
+      androidNotificationParams.notificationId
+    )
+    .start(startGeoTriggeringSuccessful, startGeoTriggeringFailed);
 }
 
 /*
