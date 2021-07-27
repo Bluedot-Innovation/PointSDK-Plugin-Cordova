@@ -66,17 +66,17 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     public static final String ACTION_IS_GEOTRIGGERING_RUNNING = "isGeoTriggeringRunning";
     public static final String ACTION_ENTERED_ZONE_CALLBACK = "enteredZoneCallback";
     public static final String ACTION_EXITED_ZONE_CALLBACK = "exitedZoneCallback";
-    public static final String ACTION_ZONE_INFO_UPDATE_CALLBACK = "zoneInfoUpdateCallback";    public static final String ACTION_START_TEMPO_TRACKING = "startTempoWithDestinationId";
+    public static final String ACTION_ZONE_INFO_UPDATE_CALLBACK = "zoneInfoUpdateCallback";    
+    public static final String ACTION_START_TEMPO_TRACKING = "androidStartTempoTracking";
     public static final String ACTION_STOP_TEMPO_TRACKING = "stopTempoTracking";
-    public static final String ACTION_TEMPO_STOPPED_WITH_ERROR_CALLBACK = "didStopTrackingWithErrorCallback";
-    public static final String ACTION_TEMPO_EXPIRED_CALLBACK = "tempoTrackingExpiredCallback";
-    public static final String ACTION_REQUIRE_USER_INTERVENTION_FOR_LOCATION = "startRequiringUserInterventionForLocationServicesCallback";
+    public static final String ACTION_TEMPO_STOPPED_WITH_ERROR_CALLBACK = "tempoStoppedWithErrorCallback";
     public static final String ACTION_DISABLE_ZONE = "disableZone";
     public static final String ACTION_ENABLE_ZONE = "enableZone";
     public static final String ACTION_NOTIFY_PUSH_UPDATE = "notifyPushUpdate";
-    public static final String ACTION_FOREGROUND_NOTIFICATION = "foregroundNotification";
-    public static final String ACTION_SET_NOTIFICATION_ICON = "setNotificationIDResourceID";
     public static final String ACTION_SET_CUSTOMEVENT_METADATA = "setCustomEventMetaData";
+    public static final String ACTION_GET_ZONES_AND_FENCES = "getZonesAndFences";
+    public static final String ACTION_GET_SDK_VERSION = "getSdkVersion";
+    public static final String ACTION_GET_INSTALL_REF = "getInstallRef";
     public static final String ACTION_BLUEDOT_SERVICE_RECEIVED_ERROR = "bluedotServiceDidReceiveErrorCallback";
 
     private final static String TAG = "BDPointSDKWrapper";
@@ -92,7 +92,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     private static CallbackContext mZoneInfoUpdateCallbackContext;
     private static CallbackContext mBlueDotErrorReceiverCallbackContext;
     private static CallbackContext mTempoStoppedWithErrorCallbackContext;
-    private static CallbackContext mTempoExpiredCallbackContext;
     private final int PERMISSION_REQ_CODE = 137;
     private String[] locationPermissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
 
@@ -133,10 +132,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 exitedZoneCallback(args, callbackContext);
             } else if (action.equals(ACTION_TEMPO_STOPPED_WITH_ERROR_CALLBACK)) {
                 tempoStoppedWithErrorCallback(args, callbackContext);
-            } else if (action.equals(ACTION_TEMPO_EXPIRED_CALLBACK)) {
-                tempoExpiredCallback(args, callbackContext);
-            } else if (action.equals(ACTION_REQUIRE_USER_INTERVENTION_FOR_LOCATION)) {
-//                mRequiringUserInterventionForLocationServicesCallbackContext = callbackContext;
             } else if (action.equals(ACTION_DISABLE_ZONE)) {
                 disableZone(args, callbackContext);
             } else if (action.equals(ACTION_ENABLE_ZONE)) {
@@ -145,12 +140,14 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 notifyPushUpdate(args, callbackContext);
             } else if (action.equals(ACTION_BLUEDOT_SERVICE_RECEIVED_ERROR)) {
                 bluedotServiceReceivedErrorCallback(args, callbackContext);
-            } else if(action.equals(ACTION_FOREGROUND_NOTIFICATION)) {
-                setForegroundNotification(args, callbackContext);
-            } else if (action.equals(ACTION_SET_NOTIFICATION_ICON)) {
-                setNotificationIcon(args, callbackContext);
             } else if (action.equals(ACTION_SET_CUSTOMEVENT_METADATA)) {
                 setCustomEventMetaData(args, callbackContext);
+            } else if (action.equals(ACTION_GET_ZONES_AND_FENCES)) {
+                getZonesAndFences(args, callbackContext);
+            } else if (action.equals(ACTION_GET_SDK_VERSION)) {
+                getSdkVersion(args, callbackContext);
+            } else if (action.equals(ACTION_GET_INSTALL_REF)) {
+                getInstallRef(args, callbackContext);
             } else {
                 return false;
             }
@@ -181,7 +178,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     private void isInitialized(final JSONArray args, final CallbackContext callbackContext)
     {
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, mServiceManager.isBluedotServiceInitialized());
-        pluginResult.setKeepCallback(true);
         callbackContext.sendPluginResult(pluginResult);
     }
 
@@ -218,7 +214,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                         PluginResult.Status.ERROR,
                         "Missing channelId and channelName for Notification"
                 );
-                pluginResult.setKeepCallback(true);
                 mStartGeoTriggeringCallbackContext.sendPluginResult(pluginResult);
             }
 
@@ -280,7 +275,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     private void isGeoTriggeringRunning(final JSONArray args, final CallbackContext callbackContext)
     {
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, GeoTriggeringService.isRunning());
-        pluginResult.setKeepCallback(true);
         callbackContext.sendPluginResult(pluginResult);
     }
 
@@ -311,7 +305,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
 
         if (destinationId.isEmpty()) {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "destinationId is null");
-            pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
             return;
         }
@@ -320,7 +313,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
             PluginResult pluginResult = new PluginResult(
                     PluginResult.Status.ERROR,
                     "Missing param from channelId/channelName/androidNotificationTitle/androidNotificationContent");
-            pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
             return;
         }
@@ -368,24 +360,17 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                     PluginResult.Status.ERROR,
                     "Stop Tempo Tracking Failed with Error: " + error.getReason()
             );
-            result.setKeepCallback(true);
             callbackContext.sendPluginResult(result);
             return;
         }
 
         PluginResult result = new PluginResult(PluginResult.Status.OK, "Stop Tempo Successful");
-        result.setKeepCallback(true);
         callbackContext.sendPluginResult(result);
     }
 
     private void tempoStoppedWithErrorCallback(final JSONArray args, final CallbackContext callbackContext)
     {
         BDPointSDKWrapper.mTempoStoppedWithErrorCallbackContext = callbackContext;
-    }
-
-    private void tempoExpiredCallback(final JSONArray args, final CallbackContext callbackContext)
-    {
-        BDPointSDKWrapper.mTempoExpiredCallbackContext = callbackContext;
     }
 
     private void disableZone(final JSONArray args, final CallbackContext callbackContext) throws JSONException
@@ -432,23 +417,43 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
         mServiceManager.setCustomEventMetaData(customMetaData);
     }
 
-    private void setForegroundNotification(final JSONArray args, final CallbackContext callbackContext) throws JSONException
+    public void getZonesAndFences(final JSONArray args, final CallbackContext callbackContext)
     {
-        String channelId, channelName, title, content;
-        boolean targetAllAPIs = args.getBoolean(4);
-        channelId = args.getString(0);
-        channelName = args.getString(1);
-        title = args.getString(2);
-        content = args.getString(3);
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject;
 
-        mServiceManager.setForegroundServiceNotification(createNotification(channelId, channelName, title, content) , targetAllAPIs);
+        List<ZoneInfo> list = mServiceManager.getZonesAndFences();
+        if(list != null) {
+            try {
+
+                for (int i = 0; i < list.size(); i++) {
+                    jsonObject = new JSONObject();
+                    jsonObject.put("name", list.get(i).getZoneName());
+                    jsonObject.put("id", list.get(i).getZoneId());
+                    jsonArray.put(jsonObject);
+                }
+
+            } catch (Exception e) {
+                Log.e("bluedot-cordova", "Exception", e);
+            }
+        }
+
+        PluginResult result = new PluginResult(PluginResult.Status.OK, jsonArray);
+        callbackContext.sendPluginResult(result);
     }
 
-    private void setNotificationIcon(final JSONArray args, final CallbackContext callbackContext) throws JSONException
+    public void getSdkVersion(final JSONArray args, final CallbackContext callbackContext)
     {
-        String resName = args.getString(0);
-        mServiceManager.setNotificationIDResourceID(getResourceId(resName,"drawable",context.getPackageName()));
+        PluginResult result = new PluginResult(PluginResult.Status.OK, mServiceManager.getSdkVersion());
+        callbackContext.sendPluginResult(result);
     }
+
+    public void getInstallRef(final JSONArray args, final CallbackContext callbackContext)
+    {
+        PluginResult result = new PluginResult(PluginResult.Status.OK, mServiceManager.getInstallRef());
+        callbackContext.sendPluginResult(result);
+    }
+
 
     private void bluedotServiceReceivedErrorCallback(final JSONArray args, final CallbackContext callbackContext)
     {
@@ -529,16 +534,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
         }
 
         return icon;
-    }
-
-    public int getResourceId(String pVariableName, String pResourcename, String pPackageName)
-    {
-        try {
-            return cordova.getActivity().getResources().getIdentifier(pVariableName, pResourcename, pPackageName);
-        } catch (Exception e) {
-            Log.e("bluedot-cordova", "Exception", e);
-            return -1;
-        }
     }
 
     @Override

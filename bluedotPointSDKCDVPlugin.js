@@ -59,9 +59,23 @@ exports.isGeoTriggeringRunning = function( success )
     exec( success, null, "BDPointSDK", "isGeoTriggeringRunning", [] );
 }
     
-exports.startTempoWithDestinationId = function( success, fail, destinationId )
+exports.iOSStartTempoTracking = function( success, fail, destinationId )
 {
-    exec( success, fail, "BDPointSDK", "startTempoWithDestinationId", [ destinationId] );
+    exec( success, fail, "BDPointSDK", "iOSStartTempoTracking", [ destinationId] );
+}
+              
+exports.androidStartTempoTracking = function( 
+    success,
+    fail,
+    destinationId,
+    channelId,
+    channelName,
+    androidNotificationTitle,
+    androidNotificationContent,
+    androidNotificationId )
+{
+exec( success, fail, "BDPointSDK", "androidStartTempoTracking",
+[destinationId, channelId, channelName, androidNotificationTitle, androidNotificationContent, androidNotificationId] );
 }
 
 exports.stopTempoTracking = function( success, fail )
@@ -93,89 +107,37 @@ exports.lowPowerModeDidChangeCallback = function( callback )
 {
     exec( callback, null, "BDPointSDK", "lowPowerModeDidChangeCallback", [] );
 }
-    
-/*
- *  Provide a callback to receive Zone Info updates.  The callback is called with the following parameters:
- *      Parameter 1: Array of zones
- *          Array of strings identifying each zone:
- *              name (String)
- *              description (String)
- *              ID (String)
- */
+
 exports.zoneInfoUpdateCallback = function( callback )
 {
     exec( callback, null, "BDPointSDK", "zoneInfoUpdateCallback", [] );
 }
 
-/*
- *  Provide a multi-part callback for a fence with a Custom Action being checked into.
- *
- *  Returns the following multipart status to the callback function:
- *      Parameter 1: Array identifying fence:
- *          name (String)
- *          description (String)
- *          ID (String)
- *      Parameter 2: Array of strings identifying zone containing fence:
- *          name (String)
- *          description (String)
- *          ID (String)
- *      Parameter 3: Array of doubles identifying location which triggers fence:
- *          Date of check-in (Integer - UNIX timestamp)
- *          Latitude of check-in (Double)
- *          Longitude of check-in (Double)
- *          Bearing of check-in (Double)
- *          Speed of check-in (Double)
- *      Parameter 4: Fence is awaiting check-out (Boolean)
- *      Parameter 5: JSON Object of custom data (JSON Object)
- */
 exports.enteredZoneCallback = function( callback )
 {
     exec( callback, null, "BDPointSDK", "enteredZoneCallback", [] );
 }
 
-/*
- *  A Zone with a Custom Action has been checked out of.
- *
- *  Returns the following multipart status:
- *      Parameter 1: Array identifying fence:
- *          name (String)
- *          description (String)
- *          ID (String)
- *      Parameter 2: Array of strings identifying zone containing fence:
- *          name (String)
- *          description (String)
- *          ID (String)
- *      Parameter 3: Date of check-out (Integer - UNIX timestamp)
- *      Parameter 4: Dwell time in minutes (Unsigned integer)
- *      Parameter 5: JSON Object of custom data (JSON Object)
- */
 exports.exitedZoneCallback = function( callback )
 {
     exec( callback, null, "BDPointSDK", "exitedZoneCallback", [] );
 }
-
     
-exports.didStopTrackingWithErrorCallback = function( callback )
+exports.tempoStoppedWithErrorCallback = function( callback )
 {
-    exec( callback, null, "BDPointSDK", "didStopTrackingWithErrorCallback", [] );
+    exec( callback, null, "BDPointSDK", "tempoStoppedWithErrorCallback", [] );
 }
 
 exports.tempoTrackingExpiredCallback = function()
 {
     exec( null, null, "BDPointSDK", "tempoTrackingExpiredCallback", [] );
 }
-    
-/*
- *  Disable a zone from within the app using the Zone Id.
- */
+
 exports.disableZone = function( success, fail, zoneId )
 {
     exec( null, null, "BDPointSDK", "disableZone", [ zoneId ] );
 }
 
-/*
- *  Enable a zone previously disabled from within the app using the Zone Id.
- */
 exports.enableZone = function( success, fail, zoneId )
 {
     exec( null, null, "BDPointSDK", "enableZone", [ zoneId ] );
@@ -196,36 +158,22 @@ exports.requestAlwaysAuthorization = function()
     exec( null, null, "BDPointSDK", "requestAlwaysAuthorization", [] );
 }
 
-/*
- *  Sets notification for service to run in foreground, required for Android O and above
- *  channelId (String) - channel Id of notifications
- *  channelName (String) - channel name of notifications
- *  title (String) - title of the notification
- *  content (String) - content of the notification
- *  targetAllAPIs (Bool) - TRUE to display notification on All Android version, FALSE to display only on Android O and above.
- *
- */
-exports.foregroundNotification = function( channelId, channelName, title, content, targetAllAPIs )
-{
-    exec( null, null, "BDPointSDK", "foregroundNotification", [ channelId, channelName, title, content, targetAllAPIs ] );
-}
-
-/*
- *  Sets notification ID Resource ID for service to run in foreground, required for Android O and above
- *  resId (int) - resource Id of notifications
- *
- */
-exports.setNotificationIDResourceID = function( resId )
-{
-    exec( null, null, "BDPointSDK", "setNotificationIDResourceID", [ resId ] );
-}
-
-/*
- *  Sets CustomEventMetaData map to be used on Key Value basis by applications
- *  customMetaData (Map<String,String>) - CustomEventMetaData map to be used on Key Value basis by applications
- *
- */
 exports.setCustomEventMetaData = function( customMetaData )
 {
     exec( null, null, "BDPointSDK", "setCustomEventMetaData", [ customMetaData ] );
+}
+
+exports.getZonesAndFences = function(callback)
+{
+    exec( callback, null, "BDPointSDK", "setCustomEventMetaData", [] );
+}
+
+exports.getSdkVersion = function(callback)
+{
+    exec( callback, null, "BDPointSDK", "getSdkVersion", [] );
+}
+
+exports.getInstallRef = function(callback)
+{
+    exec( callback, null, "BDPointSDK", "getInstallRef", [] );
 }

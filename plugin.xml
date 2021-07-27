@@ -19,6 +19,10 @@
         <clobbers target="io.bluedot.cordova.plugin.GeoTriggeringBuilder" />
     </js-module>
 
+    <js-module src="TempoBuilder.js" name="TempoBuilder">
+        <clobbers target="io.bluedot.cordova.plugin.TempoBuilder" />
+    </js-module>
+
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
             <feature name="BDPointSDK">
