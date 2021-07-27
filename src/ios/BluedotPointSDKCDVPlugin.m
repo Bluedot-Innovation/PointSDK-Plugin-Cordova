@@ -129,16 +129,6 @@
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
 }
 
-- (void)requestWhenInUseAuthorization:(CDVInvokedUrlCommand *)command
-{
-    [[BDLocationManager instance] requestWhenInUseAuthorization];
-}
-
-- (void)requestAlwaysAuthorization:(CDVInvokedUrlCommand *)command
-{
-    [[BDLocationManager instance] requestAlwaysAuthorization];
-}
-
 - (void)reset:(CDVInvokedUrlCommand *)command
 {
     

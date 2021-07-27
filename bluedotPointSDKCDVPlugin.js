@@ -147,16 +147,6 @@ exports.notifyPushUpdate = function( userInfo )
 {
     exec( null, null, "BDPointSDK", "notifyPushUpdate", [ userInfo ] );
 }
-    
-exports.requestWhenInUseAuthorization = function()
-{
-    exec( null, null, "BDPointSDK", "requestWhenInUseAuthorization", [] );
-}
-    
-exports.requestAlwaysAuthorization = function()
-{
-    exec( null, null, "BDPointSDK", "requestAlwaysAuthorization", [] );
-}
 
 exports.setCustomEventMetaData = function( customMetaData )
 {

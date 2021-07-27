@@ -20,9 +20,6 @@
 - (void)isInitialized: (CDVInvokedUrlCommand *)command;
 - (void)reset: (CDVInvokedUrlCommand *)command;
 
-- (void)requestWhenInUseAuthorization: (CDVInvokedUrlCommand *)command;
-- (void)requestAlwaysAuthorization: (CDVInvokedUrlCommand *)command;
-
 - (void)iOSStartGeoTriggering: (CDVInvokedUrlCommand *)command;
 - (void)iOSStartGeoTriggeringWithAppRestartNotification: (CDVInvokedUrlCommand *)command;
 - (void)stopGeoTriggering: (CDVInvokedUrlCommand *)command;
