@@ -165,7 +165,7 @@ exports.setCustomEventMetaData = function( customMetaData )
 
 exports.getZonesAndFences = function(callback)
 {
-    exec( callback, null, "BDPointSDK", "setCustomEventMetaData", [] );
+    exec( callback, null, "BDPointSDK", "getZonesAndFences", [] );
 }
 
 exports.getSdkVersion = function(callback)

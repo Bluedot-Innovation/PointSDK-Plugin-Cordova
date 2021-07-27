@@ -168,7 +168,7 @@
     }];
 }
 
-- (void)startGeoTriggering:(CDVInvokedUrlCommand *)command
+- (void)iOSStartGeoTriggering:(CDVInvokedUrlCommand *)command
 {
     [[BDLocationManager instance] startGeoTriggeringWithCompletion:^(NSError * _Nullable error) {
         if(error != nil)
@@ -195,7 +195,7 @@
     }];
 }
 
-- (void)startGeoTriggeringWithAppRestartNotification:(CDVInvokedUrlCommand *)command
+- (void)iOSStartGeoTriggeringWithAppRestartNotification:(CDVInvokedUrlCommand *)command
 {
     //  Ensure that the command has the correct number of arguments
     if ( command.arguments.count != 2 )
@@ -274,7 +274,7 @@
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
 }
 
-- (void)startTempoWithDestinationId:(CDVInvokedUrlCommand *)command
+- (void)iOSStartTempoTracking:(CDVInvokedUrlCommand *)command
 {
     //  Ensure that the command has the correct number of arguments
     if ( command.arguments.count != 1 )
@@ -424,6 +424,44 @@
     NSDictionary *data = command.arguments[0];
     
     [ BDLocationManager.instance setCustomEventMetaData: data ];
+}
+
+- (void)getZonesAndFences: (CDVInvokedUrlCommand *)command
+{
+    NSSet *zoneInfos = [ BDLocationManager.instance zoneInfos ];
+    NSMutableArray *returnZones = [ NSMutableArray new ];
+        
+    for( BDZoneInfo *zone in zoneInfos )
+    {
+        [ returnZones addObject: [ self zoneToArray: zone ] ];
+    }
+        
+    CDVPluginResult  *pluginResult = [
+        CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                          messageAsArray: returnZones
+    ];
+
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
+}
+
+- (void)getSdkVersion: (CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult  *pluginResult = [
+        CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                          messageAsString: [ BDLocationManager.instance sdkVersion ]
+    ];
+
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
+}
+
+- (void)getInstallRef: (CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult  *pluginResult = [
+        CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                          messageAsString: [ BDLocationManager.instance installRef ]
+    ];
+
+    [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
 }
 
 /*
@@ -848,7 +886,7 @@
 /*
  *  Entry method for setting up the didStopTrackingWithError delegate.
  */
-- (void)didStopTrackingWithErrorCallback: (CDVInvokedUrlCommand *)command
+- (void)tempoStoppedWithErrorCallback: (CDVInvokedUrlCommand *)command
 {
     //  Set the callback when triggering a fence
     _callbackIdDidStopTracking = command.callbackId;

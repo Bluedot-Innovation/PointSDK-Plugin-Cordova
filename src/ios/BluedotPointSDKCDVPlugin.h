@@ -23,12 +23,12 @@
 - (void)requestWhenInUseAuthorization: (CDVInvokedUrlCommand *)command;
 - (void)requestAlwaysAuthorization: (CDVInvokedUrlCommand *)command;
 
-- (void)startGeoTriggering: (CDVInvokedUrlCommand *)command;
-- (void)startGeoTriggeringWithAppRestartNotification: (CDVInvokedUrlCommand *)command;
+- (void)iOSStartGeoTriggering: (CDVInvokedUrlCommand *)command;
+- (void)iOSStartGeoTriggeringWithAppRestartNotification: (CDVInvokedUrlCommand *)command;
 - (void)stopGeoTriggering: (CDVInvokedUrlCommand *)command;
 - (void)isGeoTriggeringRunning: (CDVInvokedUrlCommand *)command;
 
-- (void)startTempoWithDestinationId: (CDVInvokedUrlCommand *)command;
+- (void)iOSStartTempoTracking: (CDVInvokedUrlCommand *)command;
 - (void)stopTempoTracking: (CDVInvokedUrlCommand *)command;
 - (void)isTempoRunning: (CDVInvokedUrlCommand *)command;
 
@@ -44,14 +44,15 @@
 - (void)exitedZoneCallback: (CDVInvokedUrlCommand *)command;
 
 //  Setup TempoTrackingDelegate functions for call backs from the SDK
-- (void)didStopTrackingWithErrorCallback: (CDVInvokedUrlCommand *)command;
+- (void)tempoStoppedWithErrorCallback: (CDVInvokedUrlCommand *)command;
 - (void)tempoTrackingExpiredCallback: (CDVInvokedUrlCommand *)command;
 
 - (void)disableZone: (CDVInvokedUrlCommand *)command;
 - (void)enableZone: (CDVInvokedUrlCommand *)command;
-
 - (void)notifyPushUpdate: (CDVInvokedUrlCommand *)command;
 - (void)setCustomEventMetaData: (CDVInvokedUrlCommand *)command;
-
+- (void)getZonesAndFences: (CDVInvokedUrlCommand *)command;
+- (void)getSdkVersion: (CDVInvokedUrlCommand *)command;
+- (void)getInstallRef: (CDVInvokedUrlCommand *)command;
 
 @end
