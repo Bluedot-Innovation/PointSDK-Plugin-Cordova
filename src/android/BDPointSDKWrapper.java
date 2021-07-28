@@ -61,7 +61,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     public static final String ACTION_INITIALIZE_SDK = "initializeWithProjectId";
     public static final String ACTION_RESET_SDK = "reset";
     public static final String ACTION_IS_INITIALIZED = "isInitialized";
-    public static final String ACTION_ANDROID_START_GEOTRIGGERING = "androidStartGeoTriggering";
+    public static final String ACTION_START_GEOTRIGGERING = "androidStartGeoTriggering";
     public static final String ACTION_STOP_GEOTRIGGERING = "stopGeoTriggering";
     public static final String ACTION_IS_GEOTRIGGERING_RUNNING = "isGeoTriggeringRunning";
     public static final String ACTION_ENTERED_ZONE_CALLBACK = "enteredZoneCallback";
@@ -113,7 +113,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 resetSDK(args, callbackContext);
             } else if (action.equals(ACTION_IS_INITIALIZED)) {
                 isInitialized(args, callbackContext);
-            } else if (action.equals(ACTION_ANDROID_START_GEOTRIGGERING)) {
+            } else if (action.equals(ACTION_START_GEOTRIGGERING)) {
                 startGeoTriggering(args, callbackContext);
             } else if (action.equals(ACTION_STOP_GEOTRIGGERING)) {
                 stopGeoTriggering(args, callbackContext);
@@ -131,8 +131,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 exitedZoneCallback(args, callbackContext);
             } else if (action.equals(ACTION_ZONE_INFO_UPDATE_CALLBACK)) {
                 zoneInfoUpdateCallback(args, callbackContext);
-            } else if (action.equals(ACTION_EXITED_ZONE_CALLBACK)) {
-                exitedZoneCallback(args, callbackContext);
             } else if (action.equals(ACTION_TEMPO_STOPPED_WITH_ERROR_CALLBACK)) {
                 tempoStoppedWithErrorCallback(args, callbackContext);
             } else if (action.equals(ACTION_DISABLE_ZONE)) {
@@ -696,7 +694,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
 
         @Override
         public void onZoneExitEvent(@NotNull ZoneExitEvent zoneExitEvent, @NotNull Context context) {
-            Log.d(TAG, "onZoneEntryEvent()");
+            Log.d(TAG, "onZoneExitEvent()");
 
             FenceInfo _fence = zoneExitEvent.getFenceInfo();
             ZoneInfo _zoneInfo = zoneExitEvent.getZoneInfo();
