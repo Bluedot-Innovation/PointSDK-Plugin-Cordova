@@ -69,6 +69,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     public static final String ACTION_ZONE_INFO_UPDATE_CALLBACK = "zoneInfoUpdateCallback";    
     public static final String ACTION_START_TEMPO_TRACKING = "androidStartTempoTracking";
     public static final String ACTION_STOP_TEMPO_TRACKING = "stopTempoTracking";
+    public static final String ACTION_IS_TEMPO_RUNNING = "isTempoRunning";
     public static final String ACTION_TEMPO_STOPPED_WITH_ERROR_CALLBACK = "tempoStoppedWithErrorCallback";
     public static final String ACTION_DISABLE_ZONE = "disableZone";
     public static final String ACTION_ENABLE_ZONE = "enableZone";
@@ -122,6 +123,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 startTempoTracking(args, callbackContext);
             } else if (action.equals(ACTION_STOP_TEMPO_TRACKING)) {
                 stopTempoTracking(args, callbackContext);
+            } else if (action.equals(ACTION_IS_TEMPO_RUNNING)) {
+                isTempoRunning(args, callbackContext);
             } else if (action.equals(ACTION_ENTERED_ZONE_CALLBACK)) {
                 enteredZoneCallback(args, callbackContext);
             } else if (action.equals(ACTION_EXITED_ZONE_CALLBACK)) {
@@ -365,6 +368,12 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
         }
 
         PluginResult result = new PluginResult(PluginResult.Status.OK, "Stop Tempo Successful");
+        callbackContext.sendPluginResult(result);
+    }
+
+    private void isTempoRunning(final JSONArray args, final CallbackContext callbackContext)
+    {
+        PluginResult result = new PluginResult(PluginResult.Status.OK, TempoService.isRunning(context));
         callbackContext.sendPluginResult(result);
     }
 
