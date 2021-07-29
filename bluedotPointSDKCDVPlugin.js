@@ -133,12 +133,12 @@ exports.tempoTrackingExpiredCallback = function()
     exec( null, null, "BDPointSDK", "tempoTrackingExpiredCallback", [] );
 }
 
-exports.disableZone = function( success, fail, zoneId )
+exports.disableZone = function( zoneId )
 {
     exec( null, null, "BDPointSDK", "disableZone", [ zoneId ] );
 }
 
-exports.enableZone = function( success, fail, zoneId )
+exports.enableZone = function( zoneId )
 {
     exec( null, null, "BDPointSDK", "enableZone", [ zoneId ] );
 }
