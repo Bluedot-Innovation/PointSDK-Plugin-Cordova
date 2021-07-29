@@ -202,7 +202,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 return;
             }
 
-            PluginResult result = new PluginResult(PluginResult.Status.OK, "Start GeoTriggering Successful");
+            PluginResult result = new PluginResult(PluginResult.Status.OK);
             result.setKeepCallback(true);
             mStartGeoTriggeringCallbackContext.sendPluginResult(result);
         };
@@ -265,7 +265,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 return;
             }
             triggered.set(true);
-            PluginResult result = new PluginResult(PluginResult.Status.OK, "Stop GeoTriggering Successful");
+            PluginResult result = new PluginResult(PluginResult.Status.OK);
             result.setKeepCallback(true);
             mStopGeoTriggeringCallbackContext.sendPluginResult(result);
         };

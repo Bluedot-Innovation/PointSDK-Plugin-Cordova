@@ -161,7 +161,6 @@
         
         CDVPluginResult  *pluginResult = [
             CDVPluginResult resultWithStatus: CDVCommandStatus_OK
-                             messageAsString: @"Start GeoTriggering successful"
         ];
         
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
@@ -231,8 +230,6 @@
         
         CDVPluginResult  *pluginResult = [
             CDVPluginResult resultWithStatus: CDVCommandStatus_OK
-                             messageAsString: [NSString stringWithFormat:
-                @"stopGeoTriggering successful"]
         ];
         
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
