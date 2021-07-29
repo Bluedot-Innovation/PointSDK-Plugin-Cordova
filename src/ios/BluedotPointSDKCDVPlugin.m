@@ -96,8 +96,6 @@
         
         CDVPluginResult  *pluginResult = [
             CDVPluginResult resultWithStatus: CDVCommandStatus_OK
-                             messageAsString: [NSString stringWithFormat:
-                @"Initialization successful"]
         ];
         
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
@@ -133,8 +131,6 @@
         
         CDVPluginResult  *pluginResult = [
             CDVPluginResult resultWithStatus: CDVCommandStatus_OK
-                             messageAsString: [NSString stringWithFormat:
-                @"Reset successful"]
         ];
         
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
@@ -202,8 +198,6 @@
         
         CDVPluginResult  *pluginResult = [
             CDVPluginResult resultWithStatus: CDVCommandStatus_OK
-                             messageAsString: [NSString stringWithFormat:
-                @"startGeoTriggeringWithAppRestartNotification successful"]
         ];
         
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
@@ -277,8 +271,6 @@
         
         CDVPluginResult  *pluginResult = [
             CDVPluginResult resultWithStatus: CDVCommandStatus_OK
-                             messageAsString: [NSString stringWithFormat:
-                @"Start Tempo successful"]
         ];
         
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
@@ -305,8 +297,6 @@
         
         CDVPluginResult  *pluginResult = [
             CDVPluginResult resultWithStatus: CDVCommandStatus_OK
-                             messageAsString: [NSString stringWithFormat:
-                @"Stop Tempo successful"]
         ];
         
         [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];

@@ -329,7 +329,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 return;
             }
 
-            PluginResult result = new PluginResult(PluginResult.Status.OK, "Start Tempo Successful");
+            PluginResult result = new PluginResult(PluginResult.Status.OK);
             result.setKeepCallback(true);
             mStartTempoTrackingCallbackContext.sendPluginResult(result);
         };
@@ -365,7 +365,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
             return;
         }
 
-        PluginResult result = new PluginResult(PluginResult.Status.OK, "Stop Tempo Successful");
+        PluginResult result = new PluginResult(PluginResult.Status.OK);
         callbackContext.sendPluginResult(result);
     }
 
@@ -557,7 +557,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 return;
             }
 
-            PluginResult result = new PluginResult(PluginResult.Status.OK, "Initialization successful");
+            PluginResult result = new PluginResult(PluginResult.Status.OK);
             result.setKeepCallback(true);
             mInitializeCallbackContext.sendPluginResult(result);
         }
@@ -577,7 +577,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 return;
             }
 
-            PluginResult result = new PluginResult(PluginResult.Status.OK, "Reset successful");
+            PluginResult result = new PluginResult(PluginResult.Status.OK);
             result.setKeepCallback(true);
             mResetCallbackContext.sendPluginResult(result);
         }
