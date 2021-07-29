@@ -1,11 +1,8 @@
 /****
  *  BluedotPointSDKCDVPlugin.h
  *
- *  This is the entry point into the plug-in; these methods provide access for both the
- *  the iOS and Android SDKs.
- *
  * Bluedot Innovation
- * Copyright (c) 2018 Bluedot Innovation. All rights reserved.
+ * Copyright (c) 2021 Bluedot Innovation. All rights reserved.
  */
 
 #import <Foundation/Foundation.h>

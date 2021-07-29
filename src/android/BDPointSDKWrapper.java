@@ -54,7 +54,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /*
  * @author Bluedot Innovation
- * Copyright (c) 2018 Bluedot Innovation. All rights reserved.
+ * Copyright (c) 2021 Bluedot Innovation. All rights reserved.
  */
 
 public class BDPointSDKWrapper extends CordovaPlugin implements InitializationResultListener, ResetResultReceiver {
