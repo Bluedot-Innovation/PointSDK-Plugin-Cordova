@@ -750,7 +750,9 @@
     }
     
     CDVPluginResult  *pluginResult = [
-        CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+        CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
+        messageAsString: [NSString stringWithFormat:
+                          @"Tempo Stopped with Error: %@", error.localizedDescription]
     ];
 
     //  Keep the callback after returning the result
@@ -772,7 +774,6 @@
     
     CDVPluginResult  *pluginResult = [
         CDVPluginResult resultWithStatus: CDVCommandStatus_OK
-                         messageAsString: @"Tempo Tracking Expired"
     ];
 
     //  Keep the callback after returning the result

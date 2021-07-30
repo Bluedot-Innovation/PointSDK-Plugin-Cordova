@@ -90,7 +90,7 @@ exports.isTempoRunning = function( success )
 
 exports.bluedotServiceDidReceiveErrorCallback = function( callback )
 {
-    exec( callback, null, "BDPointSDK", "bluedotServiceDidReceiveErrorCallback", [] );
+    exec( null, callback, "BDPointSDK", "bluedotServiceDidReceiveErrorCallback", [] );
 }
     
 exports.locationAuthorizationDidChangeCallback = function( callback )
@@ -125,12 +125,12 @@ exports.exitedZoneCallback = function( callback )
     
 exports.tempoStoppedWithErrorCallback = function( callback )
 {
-    exec( callback, null, "BDPointSDK", "tempoStoppedWithErrorCallback", [] );
+    exec( null, callback, "BDPointSDK", "tempoStoppedWithErrorCallback", [] );
 }
 
-exports.tempoTrackingExpiredCallback = function()
+exports.tempoTrackingExpiredCallback = function( callback )
 {
-    exec( null, null, "BDPointSDK", "tempoTrackingExpiredCallback", [] );
+    exec( callback, null, "BDPointSDK", "tempoTrackingExpiredCallback", [] );
 }
 
 exports.disableZone = function( zoneId )
