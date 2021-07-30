@@ -378,14 +378,14 @@
     [ BDLocationManager.instance setCustomEventMetaData: data ];
 }
 
-- (void)getZonesAndFences: (CDVInvokedUrlCommand *)command
+- (void)getZones: (CDVInvokedUrlCommand *)command
 {
     NSSet *zoneInfos = [ BDLocationManager.instance zoneInfos ];
     NSMutableArray *returnZones = [ NSMutableArray new ];
         
     for( BDZoneInfo *zone in zoneInfos )
     {
-        [ returnZones addObject: [ self zoneToArray: zone ] ];
+        [ returnZones addObject: [ self zoneToDict: zone ] ];
     }
         
     CDVPluginResult  *pluginResult = [
@@ -416,60 +416,6 @@
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: command.callbackId ];
 }
 
-/*
- *  Return an array with extrapolated zone details into Cordova variable types.
- */
-- (NSArray *)zoneToArray: (BDZoneInfo *)zone
-{
-    NSMutableArray  *strings = [ NSMutableArray new ];
-
-    [ strings addObject: zone.name ];
-    [ strings addObject: ( zone.description == nil ) ? @"" : zone.description ];
-    [ strings addObject: zone.ID ];
-
-    return strings;
-}
-
-/*
- *  Return an array with extrapolated fence details into Cordova variable types.
- *      Array identifying fence:
- *          name (String)
- *          description (String)
- *          ID (String)
- */
-- (NSArray *)fenceToArray: (BDFenceInfo *)fence
-{
-    NSMutableArray  *strings = [ NSMutableArray new ];
-
-    [ strings addObject: fence.name ];
-    [ strings addObject: ( fence.description == nil ) ? @"" : fence.description ];
-    [ strings addObject: fence.ID ];
-
-    return strings;
-}
-
-/*
- *  Return an array with extrapolated location details into Cordova variable types.
- *      Array identifying location:
- *          Date of check-in (Integer - UNIX timestamp)
- *          Latitude of check-in (Double)
- *          Longitude of check-in (Double)
- *          Bearing of check-in (Double)
- *          Speed of check-in (Double)
- */
-- (NSArray *)locationToArray: (BDLocationInfo *)location
-{
-    NSMutableArray  *doubles = [ NSMutableArray new ];
-
-    NSTimeInterval  unixDate = [ location.timestamp timeIntervalSince1970 ];
-    [ doubles addObject: @( unixDate ) ];
-    [ doubles addObject: @( location.latitude ) ];
-    [ doubles addObject: @( location.longitude ) ];
-    [ doubles addObject: @( location.bearing ) ];
-    [ doubles addObject: @( location.speed ) ];
-
-    return doubles;
-}
 #pragma mark BDPBluedotServiceDelegate implementation begin
 
 - (void)bluedotServiceDidReceiveError:(NSError *)error
@@ -612,7 +558,7 @@
 
     for( BDZoneInfo *zone in zoneInfos )
     {
-        [ returnZones addObject: [ self zoneToArray: zone ] ];
+        [ returnZones addObject: [ self zoneToDict: zone ]  ];
     }
 
     CDVPluginResult  *pluginResult = [
@@ -659,9 +605,9 @@
         return;
     }
 
-    NSArray  *returnFence = [ self fenceToArray: enterEvent.fence ];
-    NSArray  *returnZone = [ self zoneToArray: enterEvent.zone ];
-    NSArray  *returnLocation = [ self locationToArray: enterEvent.location ];
+    NSDictionary *returnFence = [ self fenceToDict: enterEvent.fence ];
+    NSDictionary *returnZone = [ self zoneToDict: enterEvent.zone ];
+    NSDictionary *returnLocation = [ self locationToDict: enterEvent.location ];
 
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects:
                                  returnFence,
@@ -694,8 +640,8 @@
         return;
     }
 
-    NSArray  *returnFence = [ self fenceToArray: exitEvent.fence ];
-    NSArray  *returnZone = [ self zoneToArray: exitEvent.zone ];
+    NSDictionary *returnFence = [ self fenceToDict: exitEvent.fence ];
+    NSDictionary *returnZone = [ self zoneToDict: exitEvent.zone ];
     NSTimeInterval  unixDate = [ exitEvent.date timeIntervalSince1970 ];
 
     NSArray  *returnMultiPart = [ [ NSArray alloc ] initWithObjects:
@@ -795,5 +741,47 @@
 
 #pragma mark BDPTempoTrackingDelegate implementation end
 
+/*
+ *  Return an NSDictionary with extrapolated zone details
+ */
+- (NSDictionary *)zoneToDict: (BDZoneInfo *)zone
+{
+    NSMutableDictionary  *dict = [ NSMutableDictionary new ];
+
+    [ dict setObject:zone.name forKey:@"name"];
+    [ dict setObject:zone.ID forKey:@"ID"];
+
+    return dict;
+}
+
+/*
+ *  Return a NSDictionary with extrapolated fence details into
+ */
+- (NSDictionary *)fenceToDict: (BDFenceInfo *)fence
+{
+    NSMutableDictionary  *dict = [ NSMutableDictionary new ];
+
+    [ dict setObject:fence.name forKey:@"name"];
+    [ dict setObject:fence.ID forKey:@"ID"];
+
+    return dict;
+}
+
+/*
+ *  Return an NSDictionary with extrapolated location details into
+ */
+- (NSDictionary *)locationToDict: (BDLocationInfo *)location
+{
+    NSMutableDictionary  *dict = [ NSMutableDictionary new ];
+    NSTimeInterval  unixDate = [ location.timestamp timeIntervalSince1970 ];
+    
+    [ dict setObject:@( unixDate ) forKey:@"unixDate"];
+    [ dict setObject:@( location.latitude ) forKey:@"latitude"];
+    [ dict setObject:@( location.longitude ) forKey:@"longitude"];
+    [ dict setObject:@( location.bearing ) forKey:@"bearing"];
+    [ dict setObject:@( location.speed ) forKey:@"speed"];
+
+    return dict;
+}
 
 @end

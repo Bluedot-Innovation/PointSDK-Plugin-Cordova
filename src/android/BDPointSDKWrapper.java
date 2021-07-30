@@ -75,7 +75,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     public static final String ACTION_ENABLE_ZONE = "enableZone";
     public static final String ACTION_NOTIFY_PUSH_UPDATE = "notifyPushUpdate";
     public static final String ACTION_SET_CUSTOMEVENT_METADATA = "setCustomEventMetaData";
-    public static final String ACTION_GET_ZONES_AND_FENCES = "getZonesAndFences";
+    public static final String ACTION_GET_ZONES = "getZones";
     public static final String ACTION_GET_SDK_VERSION = "getSdkVersion";
     public static final String ACTION_GET_INSTALL_REF = "getInstallRef";
     public static final String ACTION_BLUEDOT_SERVICE_RECEIVED_ERROR = "bluedotServiceDidReceiveErrorCallback";
@@ -143,8 +143,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 bluedotServiceReceivedErrorCallback(args, callbackContext);
             } else if (action.equals(ACTION_SET_CUSTOMEVENT_METADATA)) {
                 setCustomEventMetaData(args, callbackContext);
-            } else if (action.equals(ACTION_GET_ZONES_AND_FENCES)) {
-                getZonesAndFences(args, callbackContext);
+            } else if (action.equals(ACTION_GET_ZONES)) {
+                getZones(args, callbackContext);
             } else if (action.equals(ACTION_GET_SDK_VERSION)) {
                 getSdkVersion(args, callbackContext);
             } else if (action.equals(ACTION_GET_INSTALL_REF)) {
@@ -424,7 +424,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
         mServiceManager.setCustomEventMetaData(customMetaData);
     }
 
-    public void getZonesAndFences(final JSONArray args, final CallbackContext callbackContext)
+    public void getZones(final JSONArray args, final CallbackContext callbackContext)
     {
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject;
@@ -609,9 +609,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
 
                     for (int i = 0; i < zoneInfos.size(); i++) {
                         jsonObject = new JSONObject();
-                        jsonObject.put("0", zoneInfos.get(i).getZoneName());
-                        jsonObject.put("1", zoneInfos.get(i).getDescription());
-                        jsonObject.put("2", zoneInfos.get(i).getZoneId());
+                        jsonObject.put("name", zoneInfos.get(i).getZoneName());
+                        jsonObject.put("ID", zoneInfos.get(i).getZoneId());
                         jsonArray.put(jsonObject);
                     }
 
@@ -637,9 +636,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
             JSONObject jsonObjectFence = new JSONObject();
 
             try {
-                jsonObjectFence.put("0", _fence.getName());
-                jsonObjectFence.put("1", _fence.getDescription());
-                jsonObjectFence.put("2", _fence.getId());
+                jsonObjectFence.put("name", _fence.getName());
+                jsonObjectFence.put("ID", _fence.getId());
             } catch (Exception e) {
                 jsonObjectFence = null;
             }
@@ -647,9 +645,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
             JSONObject jsonObjectZone = new JSONObject();
 
             try {
-                jsonObjectZone.put("0", _zoneInfo.getZoneName());
-                jsonObjectZone.put("1", _zoneInfo.getDescription());
-                jsonObjectZone.put("2", _zoneInfo.getZoneId());
+                jsonObjectZone.put("name", _zoneInfo.getZoneName());
+                jsonObjectZone.put("ID", _zoneInfo.getZoneId());
             } catch (Exception e) {
                 jsonObjectZone = null;
             }
@@ -657,11 +654,11 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
             JSONObject jsonObjectLocation = new JSONObject();
 
             try {
-                jsonObjectLocation.put("0", _locationInfo.getTimeStamp());
-                jsonObjectLocation.put("1", _locationInfo.getLatitude());
-                jsonObjectLocation.put("2", _locationInfo.getLongitude());
-                jsonObjectLocation.put("3", _locationInfo.getBearing());
-                jsonObjectLocation.put("4", _locationInfo.getSpeed());
+                jsonObjectLocation.put("unixDate", _locationInfo.getTimeStamp());
+                jsonObjectLocation.put("latitude", _locationInfo.getLatitude());
+                jsonObjectLocation.put("longitude", _locationInfo.getLongitude());
+                jsonObjectLocation.put("bearing", _locationInfo.getBearing());
+                jsonObjectLocation.put("speed", _locationInfo.getSpeed());
             } catch (Exception e) {
                 jsonObjectLocation = null;
             }
@@ -669,7 +666,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
             PluginResult fenceInfo = new PluginResult(PluginResult.Status.OK, jsonObjectFence);
             PluginResult zoneInfo = new PluginResult(PluginResult.Status.OK, jsonObjectZone);
             PluginResult locationInfo = new PluginResult(PluginResult.Status.OK, jsonObjectLocation);
-            PluginResult isCheckOut = new PluginResult(PluginResult.Status.OK, "" + _zoneInfo.isCheckOut());
+            PluginResult isCheckOut = new PluginResult(PluginResult.Status.OK, _zoneInfo.isCheckOut());
 
             List < PluginResult > multipartMessages = new ArrayList < PluginResult > ();
 
@@ -704,9 +701,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
             JSONObject jsonObjectFence = new JSONObject();
 
             try {
-                jsonObjectFence.put("0", _fence.getName());
-                jsonObjectFence.put("1", _fence.getDescription());
-                jsonObjectFence.put("2", _fence.getId());
+                jsonObjectFence.put("name", _fence.getName());
+                jsonObjectFence.put("ID", _fence.getId());
             } catch (Exception e) {
                 jsonObjectFence = null;
             }
@@ -714,9 +710,8 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
             JSONObject jsonObjectZone = new JSONObject();
 
             try {
-                jsonObjectZone.put("0", _zoneInfo.getZoneName());
-                jsonObjectZone.put("1", _zoneInfo.getDescription());
-                jsonObjectZone.put("2", _zoneInfo.getZoneId());
+                jsonObjectZone.put("name", _zoneInfo.getZoneName());
+                jsonObjectZone.put("ID", _zoneInfo.getZoneId());
             } catch (Exception e) {
                 jsonObjectZone = null;
             }

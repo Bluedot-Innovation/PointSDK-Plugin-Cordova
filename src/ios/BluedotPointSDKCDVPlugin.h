@@ -45,7 +45,7 @@
 - (void)enableZone: (CDVInvokedUrlCommand *)command;
 - (void)notifyPushUpdate: (CDVInvokedUrlCommand *)command;
 - (void)setCustomEventMetaData: (CDVInvokedUrlCommand *)command;
-- (void)getZonesAndFences: (CDVInvokedUrlCommand *)command;
+- (void)getZones: (CDVInvokedUrlCommand *)command;
 - (void)getSdkVersion: (CDVInvokedUrlCommand *)command;
 - (void)getInstallRef: (CDVInvokedUrlCommand *)command;
 
