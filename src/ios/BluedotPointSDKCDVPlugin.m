@@ -484,7 +484,7 @@
     }
 
     CDVPluginResult  *pluginResult = [
-        CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+        CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR
                          messageAsString: [NSString stringWithFormat:
                                            @"Bluedot Service Received Error: %@", error.localizedDescription]
     ];
