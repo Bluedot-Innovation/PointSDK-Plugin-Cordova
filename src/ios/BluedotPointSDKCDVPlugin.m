@@ -464,6 +464,7 @@
 
 }
 
+#if defined(__IPHONE_14_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_14_0
 - (void)accuracyAuthorizationDidChangeFromPreviousAuthorization:(CLAccuracyAuthorization)previousAccuracyAuthorization toNewAuthorization:(CLAccuracyAuthorization)newAccuracyAuthorization
 {
     NSLog(@"CLAccuracyAuthorization did change from %ld to %ld", (long)previousAccuracyAuthorization, newAccuracyAuthorization);
@@ -485,6 +486,7 @@
 
     [ self.commandDelegate sendPluginResult: pluginResult callbackId: _callbackIdAccuracyAuthorizationDidChange ];
 }
+#endif
 
 - (void)lowPowerModeDidChange:(bool)isLowPowerMode
 {
