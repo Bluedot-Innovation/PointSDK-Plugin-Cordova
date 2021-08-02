@@ -540,8 +540,8 @@
  *      Array of zones
  *          Array of strings identifying zone:
  *              name
- *              description
  *              ID
+ *              Custom fields setup in the <b>Canvas</b> web-interface.</p>
  */
 - (void)onZoneInfoUpdate:(NSSet<BDZoneInfo *> *)zoneInfos
 {
@@ -750,7 +750,7 @@
 
     [ dict setObject:zone.name forKey:@"name"];
     [ dict setObject:zone.ID forKey:@"ID"];
-
+    [ dict setObject:zone.customData != nil ? zone.customData : @{} forKey:@"customData"];
     return dict;
 }
 

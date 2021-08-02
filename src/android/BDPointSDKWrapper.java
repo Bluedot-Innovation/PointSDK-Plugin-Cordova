@@ -611,6 +611,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                         jsonObject = new JSONObject();
                         jsonObject.put("name", zoneInfos.get(i).getZoneName());
                         jsonObject.put("ID", zoneInfos.get(i).getZoneId());
+                        jsonObject.put("customData", zoneInfos.get(i).getCustomData() != null ? zoneInfos.get(i).getCustomData() : new HashMap<String, String>());
                         jsonArray.put(jsonObject);
                     }
 
