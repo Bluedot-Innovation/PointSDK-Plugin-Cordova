@@ -1,4 +1,4 @@
-# bluedot-cordova
+# @bluedot-innovation/cordova-plugin
 
 Bluedot Cordova is a plugin around the [Android Point SDK](https://docs.bluedot.io/android-sdk/) and [iOS Point SDK](https://docs.bluedot.io/ios-sdk/), allowing for Bluedot integration in Cordova apps. 
 Functionality is provided through one single npm package so you can use it for both platforms without downloading any extra packages.
