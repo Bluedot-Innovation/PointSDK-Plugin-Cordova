@@ -1,11 +1,8 @@
 /****
  *  BluedotPointSDKCDVPlugin.h
  *
- *  This is the entry point into the plug-in; these methods provide access for both the
- *  the iOS and Android SDKs.
- *
  * Bluedot Innovation
- * Copyright (c) 2018 Bluedot Innovation. All rights reserved.
+ * Copyright (c) 2021 Bluedot Innovation. All rights reserved.
  */
 
 #import <Foundation/Foundation.h>
@@ -16,28 +13,40 @@
 /*
  *  Common access methods to the Bluedot Point SDK.
  */
-- (void)authenticate: (CDVInvokedUrlCommand *)command;
-- (void)logOut: (CDVInvokedUrlCommand *)command;
+- (void)initializeWithProjectId: (CDVInvokedUrlCommand *)command;
+- (void)isInitialized: (CDVInvokedUrlCommand *)command;
+- (void)reset: (CDVInvokedUrlCommand *)command;
 
-//  Setup delegate functions for call backs from the SDK
-- (void)zoneInfoCallback: (CDVInvokedUrlCommand *)command;
+- (void)iOSStartGeoTriggering: (CDVInvokedUrlCommand *)command;
+- (void)iOSStartGeoTriggeringWithAppRestartNotification: (CDVInvokedUrlCommand *)command;
+- (void)stopGeoTriggering: (CDVInvokedUrlCommand *)command;
+- (void)isGeoTriggeringRunning: (CDVInvokedUrlCommand *)command;
 
-- (void)checkedIntoFenceCallback: (CDVInvokedUrlCommand *)command;
-- (void)checkedIntoBeaconCallback: (CDVInvokedUrlCommand *)command;
+- (void)iOSStartTempoTracking: (CDVInvokedUrlCommand *)command;
+- (void)stopTempoTracking: (CDVInvokedUrlCommand *)command;
+- (void)isTempoRunning: (CDVInvokedUrlCommand *)command;
 
-- (void)checkedOutOfFenceCallback: (CDVInvokedUrlCommand *)command;
-- (void)checkedOutOfBeaconCallback: (CDVInvokedUrlCommand *)command;
+//  Setup BluedotServiceDelegate functions for call backs from the SDK
+- (void)bluedotServiceDidReceiveErrorCallback: (CDVInvokedUrlCommand *)command;
+- (void)locationAuthorizationDidChangeCallback: (CDVInvokedUrlCommand *)command;
+- (void)accuracyAuthorizationDidChangeCallback: (CDVInvokedUrlCommand *)command;
+- (void)lowPowerModeDidChangeCallback: (CDVInvokedUrlCommand *)command;
 
-- (void)startRequiringUserInterventionForBluetoothCallback: (CDVInvokedUrlCommand *)command;
-- (void)stopRequiringUserInterventionForBluetoothCallback: (CDVInvokedUrlCommand *)command;
-- (void)startRequiringUserInterventionForLocationServicesCallback: (CDVInvokedUrlCommand *)command;
-- (void)stopRequiringUserInterventionForLocationServicesCallback: (CDVInvokedUrlCommand *)command;
+//  Setup GeoTriggeringEventDelegate functions for call backs from the SDK
+- (void)zoneInfoUpdateCallback: (CDVInvokedUrlCommand *)command;
+- (void)enteredZoneCallback: (CDVInvokedUrlCommand *)command;
+- (void)exitedZoneCallback: (CDVInvokedUrlCommand *)command;
+
+//  Setup TempoTrackingDelegate functions for call backs from the SDK
+- (void)tempoStoppedWithErrorCallback: (CDVInvokedUrlCommand *)command;
+- (void)tempoTrackingExpiredCallback: (CDVInvokedUrlCommand *)command;
 
 - (void)disableZone: (CDVInvokedUrlCommand *)command;
 - (void)enableZone: (CDVInvokedUrlCommand *)command;
-
 - (void)notifyPushUpdate: (CDVInvokedUrlCommand *)command;
 - (void)setCustomEventMetaData: (CDVInvokedUrlCommand *)command;
-
+- (void)getZones: (CDVInvokedUrlCommand *)command;
+- (void)getSdkVersion: (CDVInvokedUrlCommand *)command;
+- (void)getInstallRef: (CDVInvokedUrlCommand *)command;
 
 @end

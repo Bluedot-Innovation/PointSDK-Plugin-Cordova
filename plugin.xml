@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
-    id="au.com.bluedot.bdpointsdk"
-    version="1.14.0">
+    id="@bluedot-innovation/cordova-plugin"
+    version="2.0.0">
 
-    <!-- This plugin requires Cordova version 8.0.0 or newer. -->
+    <dependency id="cordova-plugin-device" version="2.0.3" />
+    
     <engines>
         <engine name="cordova" version=">=9.0.0" />
     </engines>
@@ -11,7 +12,15 @@
     <name>Bluedot Point SDK</name>
 
     <js-module src="bluedotPointSDKCDVPlugin.js" name="BluedotPointSDKCDVPlugin">
-        <clobbers target="au.com.bluedot" />
+        <clobbers target="io.bluedot.cordova.plugin" />
+    </js-module>
+
+    <js-module src="GeoTriggeringBuilder.js" name="GeoTriggeringBuilder">
+        <clobbers target="io.bluedot.cordova.plugin.GeoTriggeringBuilder" />
+    </js-module>
+
+    <js-module src="TempoBuilder.js" name="TempoBuilder">
+        <clobbers target="io.bluedot.cordova.plugin.TempoBuilder" />
     </js-module>
 
     <platform name="ios">
@@ -24,6 +33,14 @@
         <!-- The app provides a description for the use of background location updates -->
         <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
             <string>Allow location-based actions to be triggered while in the background</string>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+            <string>Allow location-based actions to be triggered while in use</string>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="NSLocationAlwaysAndWhenInUseUsageDescription">
+            <string>Allow location-based actions to be triggered while in use and in the background</string>
         </config-file>
 
         <!-- The app is able to run in background through location updates -->
@@ -45,25 +62,69 @@
         <framework src="SystemConfiguration.framework" />
 
         <!-- Point SDK -->
-        <framework src="src/ios/BDPointSDK.framework" custom="true" embed="true" target-dir="src/au/com/bluedot" />
+        <!-- <framework src="BluedotPointSDK" type="podspec" spec="~> 15.5.1" /> -->
 
+        <podspec>
+            <config>
+                <source url="https://github.com/CocoaPods/Specs.git"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="BluedotPointSDK" spec="~> 15.5.1" />
+            </pods>
+        </podspec>
     </platform>
 
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="BDPointSDK" >
-                <param name="android-package" value="au.com.bluedot.BDPointSDKWrapper"/>
+                <param name="android-package" value="io.bluedot.cordova.plugin.BDPointSDKWrapper"/>
             </feature>
         </config-file>
 
-        <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
-        <framework src="com.google.android.gms:play-services-base:15.0.1" />
-        <framework src="com.google.android.gms:play-services-location:16.0.0" />
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver
+                    android:name="io.bluedot.cordova.plugin.BDPointSDKWrapper$BluedotErrorReceiver"
+                    android:enabled="true"
+                    android:exported="false">
+                <intent-filter>
+                    <action android:name="io.bluedot.point.SERVICE" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver
+                    android:name="io.bluedot.cordova.plugin.BDPointSDKWrapper$BluedotGeoTriggerReceiver"
+                    android:enabled="true"
+                    android:exported="false">
+                <intent-filter>
+                    <action android:name="io.bluedot.point.GEOTRIGGER" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver
+                    android:name="io.bluedot.cordova.plugin.BDPointSDKWrapper$BluedotTempoReceiver"
+                    android:enabled="true"
+                    android:exported="false">
+                <intent-filter>
+                    <action android:name="io.bluedot.point.TEMPO" />
+                </intent-filter>
+            </receiver>
+        </config-file>
 
         <!-- Adding custom gradle file to import Bluedot Android Point SDK Dependency -->
         <framework src="src/android/bluedotplugin.gradle" custom="true" type="gradleReference"/>
+        <config-file target="config.xml" parent="/*">
+            <preference name="GradlePluginGoogleServicesEnabled" value="true" />
+            <preference name="GradlePluginGoogleServicesVersion" value="4.2.0" />
+        </config-file>
 
-        <source-file src="src/android/BDPointSDKWrapper.java" target-dir="src/au/com/bluedot" />
+        <!-- google-play-services is not used by Bluedot Point SDK but is required for installing security providers https://developer.android.com/training/articles/security-gms-provider.html -->
+        <framework src="com.google.android.gms:play-services-base:17.6.0" />
+        
+        <source-file src="src/android/BDPointSDKWrapper.java" target-dir="src/io/bluedot/cordova/plugin" />
 
     </platform>
 </plugin>
