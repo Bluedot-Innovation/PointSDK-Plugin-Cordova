@@ -153,7 +153,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 return false;
             }
         } catch (JSONException exception) {
-            Log.e("bluedot-cordova", "JSONException", exception);
+            Log.e("@bluedot-innovation/cordova-plugin", "JSONException", exception);
             return false;
         }
         return true;
@@ -441,7 +441,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                 }
 
             } catch (Exception e) {
-                Log.e("bluedot-cordova", "Exception", e);
+                Log.e("@bluedot-innovation/cordova-plugin", "Exception", e);
             }
         }
 
@@ -616,7 +616,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
                     }
 
                 } catch (Exception e) {
-                    Log.e("bluedot-cordova", "Exception", e);
+                    Log.e("@bluedot-innovation/cordova-plugin", "Exception", e);
                 }
             }
 
