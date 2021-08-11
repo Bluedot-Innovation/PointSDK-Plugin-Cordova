@@ -1,9 +1,9 @@
 {
   "name": "@bluedot-innovation/cordova-plugin",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Bluedot Point SDK; integrates the Android and iOS Point SDK libraries through a Cordova / PhoneGap plugin",
   "cordova": {
-    "id": "io.bluedot.bdpointsdk",
+    "id": "@bluedot-innovation/cordova-plugin",
     "platforms": [
       "ios",
       "android"
