@@ -4,13 +4,11 @@
  *  This contains Javascript wrapper methods for accessing the Bluedot Point SDK.
  *
  * Bluedot Innovation
- * Copyright (c) 2018 Bluedot Innovation. All rights reserved.
+ * Copyright (c) 2021 Bluedot Innovation. All rights reserved.
  */
 
 //  Setup a standard Cordova environment
-var argscheck = require( 'cordova/argscheck' ),
-    utils = require( 'cordova/utils' ),
-    exec = require( 'cordova/exec' );
+var exec = require('cordova/exec');
         
 exports.initializeWithProjectId = function( success, fail, projectId )
 {

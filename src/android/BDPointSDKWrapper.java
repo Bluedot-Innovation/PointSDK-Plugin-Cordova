@@ -94,7 +94,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     private static CallbackContext mBlueDotErrorReceiverCallbackContext;
     private static CallbackContext mTempoStoppedWithErrorCallbackContext;
     private final int PERMISSION_REQ_CODE = 137;
-    private String[] locationPermissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
+    private String[] locationPermissions = { Manifest.permission.ACCESS_FINE_LOCATION };
 
     Context context;
     private String projectId;
