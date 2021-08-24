@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="@bluedot-innovation/cordova-plugin"
-    version="2.0.0">
+    version="3.0.0">
 
     <dependency id="cordova-plugin-device" version="2.0.3" />
     
@@ -11,16 +11,8 @@
 
     <name>Bluedot Point SDK</name>
 
-    <js-module src="bluedotPointSDKCDVPlugin.js" name="BluedotPointSDKCDVPlugin">
+    <js-module src="www/bluedotPointSDKCDVPlugin.js" name="BluedotPointSDKCDVPlugin">
         <clobbers target="io.bluedot.cordova.plugin" />
-    </js-module>
-
-    <js-module src="GeoTriggeringBuilder.js" name="GeoTriggeringBuilder">
-        <clobbers target="io.bluedot.cordova.plugin.GeoTriggeringBuilder" />
-    </js-module>
-
-    <js-module src="TempoBuilder.js" name="TempoBuilder">
-        <clobbers target="io.bluedot.cordova.plugin.TempoBuilder" />
     </js-module>
 
     <platform name="ios">
@@ -62,8 +54,6 @@
         <framework src="SystemConfiguration.framework" />
 
         <!-- Point SDK -->
-        <!-- <framework src="BluedotPointSDK" type="podspec" spec="~> 15.5.1" /> -->
-
         <podspec>
             <config>
                 <source url="https://github.com/CocoaPods/Specs.git"/>
