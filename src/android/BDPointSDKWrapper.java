@@ -93,8 +93,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     private static CallbackContext mZoneInfoUpdateCallbackContext;
     private static CallbackContext mBlueDotErrorReceiverCallbackContext;
     private static CallbackContext mTempoStoppedWithErrorCallbackContext;
-    private final int PERMISSION_REQ_CODE = 137;
-    private String[] locationPermissions = { Manifest.permission.ACCESS_FINE_LOCATION };
 
     Context context;
     private String projectId;
@@ -162,12 +160,7 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     private void initializeSDK(final JSONArray args, final CallbackContext callbackContext) throws JSONException {
         mInitializeCallbackContext = callbackContext;
         projectId = args.getString(0);
-
-        if(cordova.hasPermission(Manifest.permission_group.LOCATION)) {
-            mServiceManager.initialize(projectId, this);
-        } else {
-            cordova.requestPermissions(this, PERMISSION_REQ_CODE, locationPermissions);
-        }
+        mServiceManager.initialize(projectId, this);
     }
 
     private void resetSDK(final JSONArray args, final CallbackContext callbackContext)
@@ -465,28 +458,6 @@ public class BDPointSDKWrapper extends CordovaPlugin implements InitializationRe
     private void bluedotServiceReceivedErrorCallback(final JSONArray args, final CallbackContext callbackContext)
     {
         BDPointSDKWrapper.mBlueDotErrorReceiverCallbackContext = callbackContext;
-    }
-
-    @Override
-    public void onRequestPermissionResult(int requestCode, String[] permissions,
-                                          int[] grantResults) throws JSONException
-    {
-        for(int r:grantResults)
-        {
-            if(r == PackageManager.PERMISSION_DENIED)
-            {
-                mInitializeCallbackContext.sendPluginResult(new PluginResult(
-                        PluginResult.Status.ERROR,
-                        "Bluedot Point SDK requires Location Services to start. Therefore granting the Location permission is mandatory, without that the SDK will not initialize."));
-                return;
-            }
-        }
-        switch(requestCode)
-        {
-            case PERMISSION_REQ_CODE:
-                mServiceManager.initialize(projectId, this);
-                break;
-        }
     }
 
     private Notification createNotification(String channelId,String channelName,String title, String content) {

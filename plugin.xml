@@ -59,7 +59,7 @@
                 <source url="https://github.com/CocoaPods/Specs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="BluedotPointSDK" spec="~> 15.5.1" />
+                <pod name="BluedotPointSDK" spec="~> 15.6.0" />
             </pods>
         </podspec>
     </platform>
