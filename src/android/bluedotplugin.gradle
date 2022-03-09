@@ -6,5 +6,5 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.gitlab.bluedotio.android:point_sdk_android:15.4.0'
+    implementation 'com.gitlab.bluedotio.android:point_sdk_android:15.4.1'
 }
